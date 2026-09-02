@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="netlify-disable-badge" content="true">
+<style>.netlify-badge { display: none !important; }</style>
+<title>Elevated OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#0a0a0b;--surface-1:#151517;--surface-2:#1c1c1f;--surface-3:#232326;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --border-accent:#2F6FED;--border-danger:rgba(255,107,107,0.35);
+  --border-success:rgba(74,222,128,0.35);--border-warning:rgba(251,191,36,0.35);
+  --bg-accent:rgba(47,111,237,0.16);--bg-success:rgba(74,222,128,0.10);
+  --fill-accent:#2F6FED;--on-accent:#fff;
+  --text-primary:#f2f2f3;--text-secondary:#a8a8ad;--text-muted:#6e6e73;
+  --text-accent:#79a3ff;--text-danger:#ff6b6b;--text-success:#4ade80;--text-warning:#fbbf24;
+  --radius:8px;--font-sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text-primary)}
+body{font-family:var(--font-sans);min-height:100vh;display:flex;justify-content:center;padding:32px 16px;overflow-x:hidden}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.shell{width:100%;max-width:600px;overflow-x:hidden}
+.app{padding:1rem 0;min-height:580px;display:flex;flex-direction:column}
+.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:0.5px solid var(--border);margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:32px;height:32px;border-radius:50%;background:var(--bg-accent);display:flex;align-items:center;justify-content:center}
+.brand-icon i{font-size:16px;color:var(--text-accent)}
+.brand-name{font-size:15px;font-weight:600;color:var(--text-primary)}
+.brand-sub{font-size:12px;color:var(--text-muted)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{font-size:12px;padding:5px 11px;border-radius:20px;border:0.5px solid var(--border-strong);color:var(--text-secondary);cursor:pointer;background:transparent;transition:all 0.15s;font-family:var(--font-sans)}
+.tab:hover{background:var(--surface-1)}
+.tab.active{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.section{display:none;flex-direction:column;gap:14px;flex:1}
+.section.on{display:flex}
+.card{background:var(--surface-1);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem}
+.card-title{font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
+.lbl{font-size:13px;color:var(--text-secondary);margin-bottom:5px}
+textarea,input[type=text],select{width:100%;font-family:var(--font-sans);font-size:14px;padding:8px 11px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);resize:vertical}
+textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--border-accent)}
+.btn{font-size:13px;padding:7px 13px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--font-sans);white-space:nowrap}
+.btn:hover{background:var(--surface-1)}
+.btn.primary{background:var(--fill-accent);border-color:var(--fill-accent);color:var(--on-accent)}
+.btn.primary:hover{opacity:0.88}
+.btn.sm{font-size:12px;padding:4px 9px}
+.btn.danger{color:var(--text-danger);border-color:var(--border-danger)}
+.btn.success{color:var(--text-success);border-color:var(--border-success)}
+.btn.warning{color:var(--text-warning);border-color:var(--border-warning)}
+.btn.accent{color:var(--text-accent);border-color:var(--border-accent)}
+.goal-area{background:var(--surface-1);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
+.goal-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.goal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.goal-dot.business{background:#79a3ff}
+.goal-dot.health{background:#4ade80}
+.goal-dot.other{background:#fbbf24}
+.proj{background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px}
+.proj-name{font-size:14px;font-weight:600;color:var(--text-primary)}
+.proj-meta{font-size:12px;color:var(--text-muted);margin-top:2px}
+.proj-archived{opacity:0.45;border-style:dashed}
+.proj-archived .proj-name{text-decoration:line-through}
+.add-proj-form{background:var(--surface-3);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px;display:none}
+.step-list{margin:6px 0}
+.step-item{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:13px;color:var(--text-secondary)}
+.step-item:last-child{border-bottom:none}
+.step-item.current{color:var(--text-primary);font-weight:500}
+.step-num{font-size:11px;color:var(--text-muted);width:16px;flex-shrink:0}
+/* Today tab */
+.today-vision-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:4px}
+.today-vision{font-size:14px;color:var(--text-secondary);line-height:1.6;font-style:italic;padding:8px 0;border-bottom:0.5px solid var(--border);margin-bottom:16px}
+.today-area{margin-bottom:18px}
+.today-area-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.today-area-title.business{color:#79a3ff}
+.today-area-title.health{color:#4ade80}
+.today-area-title.other{color:#fbbf24}
+.move-card{background:var(--surface-2);border:0.5px solid var(--border-accent);border-radius:var(--radius);padding:12px;margin-bottom:8px;transition:all 0.2s}
+.move-card.done{border-color:var(--border-success);background:rgba(74,222,128,0.06);opacity:0.8}
+.move-header{display:flex;align-items:flex-start;gap:10px}
+.move-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-accent);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all 0.15s}
+.move-check.checked{background:var(--text-success);border-color:var(--text-success)}
+.move-check.checked i{display:block}
+.move-check i{display:none;font-size:12px;color:#0a0a0b}
+.move-body{flex:1;min-width:0}
+.move-proj-name{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.move-card.done .move-proj-name{color:var(--text-muted)}
+.move-90day{font-size:11px;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.move-90day-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-accent);background:var(--bg-accent);padding:1px 5px;border-radius:3px;flex-shrink:0}
+.move-step{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.move-card.done .move-step{text-decoration:line-through;color:var(--text-muted)}
+.move-step-arrow{font-size:11px;color:var(--text-accent);flex-shrink:0}
+.move-why{font-size:12px;color:var(--text-muted)}
+.next-prompt{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
+.prompt-lbl{font-size:13px;color:var(--text-success);margin-bottom:8px;font-weight:500}
+.step-option{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--surface-1);margin-bottom:5px;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:all 0.15s}
+.step-option:hover{border-color:var(--border-accent);color:var(--text-accent)}
+.or-divider{font-size:12px;color:var(--text-muted);margin:8px 0 6px;text-align:center}
+.prompt-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.waiting-item{background:var(--surface-2);border:0.5px solid var(--border-warning);border-radius:var(--radius);padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.idea-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border);gap:8px;flex-wrap:wrap}
+.idea-row:last-child{border-bottom:none}
+.idea-text{font-size:14px;color:var(--text-primary);flex:1;min-width:0}
+.idea-btns{display:flex;gap:5px;flex-shrink:0}
+.convert-form{background:var(--surface-2);border:0.5px solid var(--border-accent);border-radius:var(--radius);padding:10px 12px;margin-top:6px;display:none}
+.msgs{display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto;max-height:340px;padding:2px 0}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg.u{flex-direction:row-reverse}
+.av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.av.c{background:var(--bg-accent);color:var(--text-accent)}
+.av.u{background:var(--surface-1);border:0.5px solid var(--border);color:var(--text-secondary)}
+.bubble{max-width:82%;padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.6;color:var(--text-primary);white-space:pre-wrap}
+.bubble.c{background:var(--surface-1);border:0.5px solid var(--border);border-radius:4px 12px 12px 12px}
+.bubble.u{background:var(--bg-accent);border:0.5px solid var(--border-accent);border-radius:12px 4px 12px 12px}
+.bubble.loading{color:var(--text-muted);font-style:italic}
+.input-row{display:flex;gap:8px;align-items:flex-end;padding-top:10px;border-top:0.5px solid var(--border)}
+.input-row textarea{min-height:38px;max-height:80px;resize:none}
+.send-btn{width:34px;height:34px;border-radius:var(--radius);background:var(--fill-accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.send-btn i{font-size:15px;color:var(--on-accent)}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed}
+.key-note{font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px}
+.vision-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0 12px;margin-bottom:4px}
+.vision-thumb{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s}
+.vision-thumb:hover{border-color:var(--border-accent)}
+.vision-thumb-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.vision-thumb-label{font-size:10px;color:var(--text-muted);text-align:center;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vision-img-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)}
+.vision-img-item:last-child{border-bottom:none}
+.vision-img-preview{width:48px;height:48px;border-radius:6px;object-fit:cover;flex-shrink:0}
+.empty{font-size:14px;color:var(--text-muted);text-align:center;padding:1.5rem 0}
+.ok-msg{font-size:13px;color:var(--text-success);padding:4px 0}
+</style>
+</head>
+<body>
+<div id="splash" style="position:fixed;inset:0;background:#0a0a0b;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s ease">
+  <div id="splash-words" style="text-align:center;font-family:'Inter',system-ui,sans-serif">
+    <div id="sw1" style="font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:12px;opacity:0;transition:opacity 0.4s">Focus.</div>
+    <div id="sw2" style="font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:12px;opacity:0;transition:opacity 0.4s">Action.</div>
+    <div id="sw3" style="font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:20px;opacity:0;transition:opacity 0.4s">You.</div>
+    <div id="sw4" style="font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;opacity:0;transition:opacity 0.5s">Elevated.</div>
+  </div>
+</div>
+<div id="img-lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;cursor:pointer">
+  <img id="lightbox-img" src="" style="max-width:90%;max-height:90%;border-radius:8px;object-fit:contain"/>
+  <div id="lightbox-label" style="position:absolute;bottom:24px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.8);font-size:14px;font-family:var(--font-sans)"></div>
+</div>
+<div class="shell">
+<div class="app">
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-bolt"></i></div>
+      <div><div class="brand-name">Elevated OS</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:1px">by Chris Crawford</div><div class="brand-sub">State &rarr; Clarity &rarr; Action</div></div><div id="sync-status" style="font-size:11px;color:var(--text-muted);opacity:0.4;transition:opacity 0.5s;align-self:center">Connecting...</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" id="tab-today" onclick="show('today')">This Week</button>
+      <button class="tab" id="tab-setup" onclick="show('setup')">Plan</button>
+      <button class="tab" id="tab-coach" onclick="show('coach')">Coach</button>
+      <button class="tab" id="tab-capture" onclick="show('capture')">Ideas</button>
+      <button class="tab" id="tab-celebrations" onclick="show('celebrations')">Celebrations</button>
+      <button class="tab" id="tab-settings" onclick="show('settings')">Settings</button>
+    </div>
+  </div>
+
+  <!-- TODAY -->
+  <div class="section on" id="sec-today">
+    
+    <div class="card">
+      <div id="vision-board-strip"></div>
+      <div class="today-vision-label">Vision</div>
+      <div class="today-vision" id="tv-vision">No vision saved yet.</div>
+      <div id="tv-areas"></div>
+      <div id="tv-waiting"></div>
+      <div id="today-celebration" style="display:none;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)"></div>
+    </div>
+  </div>
+
+  <!-- PLAN -->
+  <div class="section" id="sec-setup">
+    <div class="card">
+      <div class="card-title">Vision (3&ndash;5 years)</div>
+      <div class="lbl">What does life look like? Who's there? How does it feel?</div>
+      <textarea id="vision-in" rows="6" placeholder="Write your vision in your own words..."></textarea>
+    </div>
+    <div class="card">
+      <div class="card-title">Vision board (up to 8 images)</div>
+      <div class="lbl">Add images that represent your ideal life. Paste an image URL and give it a label.</div>
+      <div id="vision-images-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <input type="text" id="vi-label" placeholder="Label (e.g. Dream home)" style="width:140px"/>
+        <input type="text" id="vi-url" placeholder="Paste image URL..." style="flex:1;min-width:150px"/>
+        <button class="btn sm primary" onclick="addVisionImage()"><i class="ti ti-plus"></i> Add</button>
+      </div>
+    </div>
+    <div id="goal-areas-setup"></div>
+    <div class="card">
+      <div class="card-title">Waiting on</div>
+      <div id="waiting-list-setup"></div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <input type="text" id="w-what" placeholder="What are you waiting on?" style="flex:1;min-width:140px"/>
+        <input type="text" id="w-who" placeholder="From who?" style="width:130px"/>
+        <button class="btn sm primary" onclick="addWaiting()"><i class="ti ti-plus"></i> Add</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" onclick="save()"><i class="ti ti-device-floppy"></i> Save everything</button>
+      <span class="ok-msg" id="save-ok" style="display:none">Saved.</span>
+    </div>
+  </div>
+
+  <!-- COACH -->
+  <div class="section" id="sec-coach">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+      <div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:2px">Elevated OS Coach</div>
+        <div style="font-size:12px;color:var(--text-muted)">A Chris Crawford Method</div>
+      </div>
+      <button class="btn sm" onclick="resetCoach()" style="color:var(--text-muted);font-size:12px"><i class="ti ti-refresh"></i> Start over</button>
+    </div>
+    <div class="msgs" id="coach-msgs"></div>
+    <div class="input-row">
+      <textarea id="coach-in" placeholder="Type here..." rows="1" onkeydown="ck(event)" oninput="ar(this)"></textarea>
+      <button class="send-btn" id="coach-send" onclick="csend()"><i class="ti ti-arrow-up"></i></button>
+    </div>
+  </div>
+
+  <!-- CELEBRATIONS -->
+  <div class="section" id="sec-celebrations">
+    <div class="card">
+      <div class="card-title">Add a celebration</div>
+      <input type="text" id="cel-title" placeholder="What happened?" style="margin-bottom:6px"/>
+      <textarea id="cel-note" rows="2" placeholder="What made it special? How did it feel?" style="margin-bottom:6px"></textarea>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn sm" id="cat-business" onclick="setCat('business')" style="border-color:var(--border-accent)">Business</button>
+        <button class="btn sm" id="cat-health" onclick="setCat('health')" style="border-color:var(--border-success)">Health</button>
+        <button class="btn sm" id="cat-family" onclick="setCat('family')" style="border-color:var(--border-warning)">Loved ones</button>
+        <button class="btn sm" id="cat-other" onclick="setCat('other')">Other</button>
+      </div>
+      <button class="btn primary" onclick="addCelebration()"><i class="ti ti-star"></i> Save celebration</button>
+      <span class="ok-msg" id="cel-ok" style="display:none;margin-left:8px">Saved!</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Your celebrations</div>
+      <div id="cel-list"><div class="empty">Nothing saved yet. Start celebrating!</div></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="section" id="sec-settings">
+    <div class="card">
+      <div class="card-title">Sync profile</div>
+      <div class="lbl">Your user ID - copy this and paste it on any other device to sync your data.</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="text" id="uid-display" readonly style="flex:1;color:var(--text-accent);background:var(--surface-2);cursor:text"/>
+        <button class="btn sm" onclick="copyUID()"><i class="ti ti-copy"></i> Copy</button>
+      </div>
+      <div class="lbl">To use this account on another device - paste your user ID here and click Apply.</div>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="uid-input" placeholder="Paste user ID from another device..." style="flex:1"/>
+        <button class="btn sm primary" onclick="applyUID()"><i class="ti ti-check"></i> Apply</button>
+      </div>
+      <span class="ok-msg" id="uid-ok" style="display:none;margin-top:6px">Applied - reloading your data...</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Backup</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="exportData()"><i class="ti ti-download"></i> Export backup</button>
+        <label class="btn" style="cursor:pointer"><i class="ti ti-upload"></i> Import backup<input type="file" accept=".json" onchange="importData(event)" style="display:none"/></label>
+      </div>
+      <span class="ok-msg" id="import-ok" style="display:none;margin-top:6px">Imported successfully.</span>
+    </div>
+    <div class="card">
+      <div class="card-title">About</div>
+      <div style="font-size:14px;color:var(--text-secondary);line-height:1.7">
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px">Elevated OS</div>
+        <div style="color:var(--text-muted);margin-bottom:10px">A coaching system by Chris Crawford</div>
+        <div>Elevated OS helps you operate from your best version - focused, in flow, moving what matters. Built on the principle that from the right state of mind, the right actions become obvious and natural.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEAS -->
+  <div class="section" id="sec-capture">
+    <div class="card">
+      <div class="card-title">Capture an idea</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="text" id="idea-in" placeholder="What just came to mind?" onkeydown="if(event.key==='Enter')capIdea()" style="flex:1"/>
+        <button class="btn primary" onclick="capIdea()"><i class="ti ti-inbox"></i> Save</button>
+      </div>
+      <span class="ok-msg" id="cap-ok" style="display:none">Captured.</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Idea parking lot</div>
+      <div id="idea-list"><div class="empty">No ideas yet.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+var COACH_SYS = "You are the Elevated OS Coach - a coaching system built on Chris Crawford's methodology. You are warm, direct, and conversational. You follow the energy, never a script. You never announce what you are doing - you just do it.\n\nCore identity: state first, always. From the right state of mind, the right actions become obvious. Your job is to get them elevated before any planning, deciding, or prioritizing happens.\n\nOne question at a time. Ask. Stop. Wait. Never stack questions.\n\nUse their exact words back - never coach jargon. When something lands emotionally, slow down there. Let it breathe before moving on.\n\nCORE PRINCIPLES:\n- Outcomes not actions - if they name a task, surface the result behind it\n- Nothing gets abandoned, everything gets sequenced\n- Default mode interrupt: From your elevated version - what would that person do?\n- Let feeling moments breathe\n- Brainstorm wide before narrowing - minimum 6-8 ideas, always ask what else\n- Needle-mover: which one move makes the others easier or unnecessary\n- State activation before and after every decision\n- Purpose chain: This could [result]. That [deeper]. That opens [vision]. Use could on first link only\n\nPROCRASTINATION: Find what they avoid, ask them to guess why - do not suggest first. Listen for PRACTICAL block (missing info, unclear plan) or EMOTIONAL block (fear, belief, resistance). Practical: solve the gap. Emotional: cost of avoiding, gain of doing, feel the gain, activate. Watch for beliefs.\n\nCELEBRATIONS: When someone mentions a win or progress - offer to save it. If yes: SAVE_WIN:{title:x,note:x,category:business or health or family or other}\n\nSAVE COMMANDS (output on own line):\nSAVE_TO_PLAN:{name:x,why:x,step:x,area:business or health or other,sequence:1}\nSAVE_VISION:{their exact words}\nSAVE_IDEA:{one clear sentence}\nSAVE_WIN:{title:x,note:x,category:x}\n\nNEW PROJECT: Understand outcome, why it matters, brainstorm wide, find needle-mover, save 2-3 steps. Never skip the brainstorm.\n\nWhen stuck: Why does this matter? What becomes possible? Stay curious. Stay warm.";
+
+var AREAS = [
+  {key:'business',label:'Business',color:'business'},
+  {key:'health',label:'Health',color:'health'},
+  {key:'other',label:'Other',color:'other'}
+];
+
+var D = {
+  vision:'',
+  goals:{
+    business:{label:'Business',goal:'',projects:[]},
+    health:{label:'Health',goal:'',projects:[]},
+    other:{label:'Other',goal:'',projects:[]}
+  },
+  waiting:[],
+  ideas:[],
+  stateAnchor:'',
+  celebrations:[],
+  lastReviewPrompt:0,
+  visionImages:[]
+};
+var selectedCat = 'other';
+
+var voices=[];
+var chat=[], busy=false;
+
+// Supabase config
+var SB_URL = 'https://svkjpgmnpigjgebpxusc.supabase.co';
+var SB_KEY = 'sb_publishable_af9TU79cU-WV244U5dD3Sw_Xg1YWgtE';
+var syncTimer = null;
+
+function getUserId(){
+  var id = localStorage.getItem('eos6-userid');
+  if(!id){ id = 'user-'+Math.random().toString(36).substr(2,9); localStorage.setItem('eos6-userid', id); }
+  return id;
+}
+
+function sbHeaders(){
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer '+SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
+}
+
+async function sbLoad(){
+  try{
+    var uid = getUserId();
+    var resp = await fetch(SB_URL+'/rest/v1/elevated_os_users?user_id=eq.'+uid+'&limit=1', {
+      method:'GET',
+      headers:sbHeaders()
+    });
+    var data = await resp.json();
+    if(data && data.length > 0){
+      var row = data[0];
+      if(row.vision) D.vision = row.vision;
+      if(row.goals){ try{ D.goals = typeof row.goals === 'object' ? row.goals : JSON.parse(row.goals); }catch(e){} }
+      if(row.waiting){ try{ D.waiting = typeof row.waiting === 'object' ? row.waiting : JSON.parse(row.waiting); }catch(e){} }
+      if(row.ideas){ try{ D.ideas = typeof row.ideas === 'object' ? row.ideas : JSON.parse(row.ideas); }catch(e){} }
+      if(row.vision_images){ try{ D.visionImages = typeof row.vision_images === 'object' ? row.vision_images : JSON.parse(row.vision_images); }catch(e){} }
+      if(row.celebrations){ try{ D.celebrations = typeof row.celebrations === 'object' ? row.celebrations : JSON.parse(row.celebrations); }catch(e){} }
+      showSyncStatus('Loaded');
+    } else {
+      await sbSave();
+    }
+  }catch(e){
+    console.error('Supabase load error:', e);
+    showSyncStatus('Offline - using local data');
+  }
+}
+
+async function sbSave(){
+  try{
+    var uid = getUserId();
+    var payload = {
+      user_id: uid,
+      vision: D.vision||'',
+      goals: D.goals||{},
+      waiting: D.waiting||[],
+      ideas: D.ideas||[],
+      vision_images: D.visionImages||[],
+      celebrations: D.celebrations||[]
+    };
+    var resp = await fetch(SB_URL+'/rest/v1/elevated_os_users?on_conflict=user_id', {
+      method:'POST',
+      headers:Object.assign({}, sbHeaders(), {'Prefer':'resolution=merge-duplicates,return=minimal'}),
+      body:JSON.stringify(payload)
+    });
+    if(resp.ok){
+      showSyncStatus('Synced');
+    } else {
+      var err = await resp.text();
+      console.error('Supabase save error:', err);
+      showSyncStatus('Sync failed - saved locally');
+    }
+  }catch(e){
+    console.error('Supabase save error:', e);
+    showSyncStatus('Sync failed - saved locally');
+  }
+}
+
+function showSyncStatus(msg){
+  var el = document.getElementById('sync-status');
+  if(el){ el.textContent = msg; el.style.opacity='1'; setTimeout(function(){ el.style.opacity='0.4'; },3000); }
+}
+
+function debouncedSync(){
+  if(syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(function(){ sbSave(); },2000);
+}
+
+function persist(){
+  try{ localStorage.setItem('eos6',JSON.stringify(D)); }catch(e){}
+  debouncedSync();
+}
+
+function load(){
+  try{ var r=localStorage.getItem('eos6'); if(r) D=JSON.parse(r); }catch(e){}
+  render();
+  sbLoad().then(function(){ render(); });
+}
+
+function save(){
+  D.vision=document.getElementById('vision-in').value.trim();
+  AREAS.forEach(function(a){
+    var g=document.getElementById('goal-text-'+a.key);
+    if(g) D.goals[a.key].goal=g.value.trim();
+    var l=document.getElementById('goal-label-'+a.key);
+    if(l&&l.value.trim()) D.goals[a.key].label=l.value.trim();
+  });
+  persist();
+  var el=document.getElementById('save-ok');
+  el.style.display='inline';
+  setTimeout(function(){ el.style.display='none'; },2500);
+  render();
+}
+
+// saveKey removed - API key hardcoded
+
+
+function render(){
+  document.getElementById('vision-in').value=D.vision||'';
+  renderSetupGoals();
+  renderSetupWaiting();
+  renderToday();
+  renderIdeas();
+  renderCelebrations();
+  renderTodayCelebration();
+  renderVisionImagesList();
+  renderVisionStrip();
+}
+
+function esc(str){
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function renderSetupGoals(){
+  var el=document.getElementById('goal-areas-setup');
+  var html='';
+  AREAS.forEach(function(a){
+    var g=D.goals[a.key];
+    var projs=g.projects||[];
+    html+='<div class="goal-area">';
+    html+='<div class="goal-header"><div class="goal-dot '+a.color+'"></div>';
+    html+='<input type="text" id="goal-label-'+a.key+'" value="'+esc(g.label||a.label)+'" style="width:120px;font-size:13px;font-weight:600;padding:3px 7px;border-radius:6px"/>';
+    html+='</div>';
+    html+='<div class="lbl">Where do you want to be 3 months from now?</div>';
+    html+='<input type="text" id="goal-text-'+a.key+'" value="'+esc(g.goal||'')+'" placeholder="Your 90-day result..." style="margin-bottom:12px"/>';
+    html+='<div style="font-size:13px;color:var(--text-accent);font-style:italic;margin-bottom:8px;padding:6px 10px;background:var(--bg-accent);border-radius:var(--radius)">What needs to move first this week?</div>';
+    html+='<div id="projs-'+a.key+'">'+renderProjList(a.key,projs)+'</div>';
+    html+='<div style="display:flex;gap:6px;margin-top:6px">';
+    html+='<button class="btn sm primary" onclick="planProjectWithCoach(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-messages"></i> Find steps</button>';
+    html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')"><i class="ti ti-pencil"></i> Add manually</button>';
+    html+='</div>';
+    html+='<div class="add-proj-form" id="add-form-'+a.key+'">';
+    html+='<div class="lbl">Project name</div>';
+    html+='<input type="text" id="pn-'+a.key+'" placeholder="e.g. Get coaching program live" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">What do you want? (goal)</div>';
+    html+='<input type="text" id="pd-'+a.key+'" placeholder="e.g. First 5 clients enrolled and paying" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">Why it matters</div>';
+    html+='<input type="text" id="pw-'+a.key+'" placeholder="e.g. Income through work I love" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">How do you get there? (Steps - one per line)</div>';
+    html+='<textarea id="ps-'+a.key+'" rows="4" placeholder="Write each step on its own line..." style="margin-bottom:8px"></textarea>';
+    html+='<div style="display:flex;gap:6px">';
+    html+='<button class="btn sm primary" onclick="addProj(\''+a.key+'\')"><i class="ti ti-check"></i> Add project</button>';
+    html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')">Cancel</button>';
+    html+='</div></div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function renderProjList(akey,projs){
+  if(!projs.length) return '';
+  var html='';
+  projs.forEach(function(p,i){
+    var steps=p.steps||[];
+    var curIdx=-1;
+    for(var s=0;s<steps.length;s++){ if(!steps[s].done){ curIdx=s; break; } }
+    html+='<div class="proj'+(p.archived?' proj-archived':'')+'">';
+    html+='<div class="proj-name">'+esc(p.name)+(p.archived?' (complete)':'')+'</div>';
+    html+='<div class="proj-meta">Goal: '+esc(p.done||'-')+'</div>';
+    html+='<div class="proj-meta">Why: '+esc(p.why||'-')+'</div>';
+    if(steps.length){
+      html+='<div class="step-list">';
+      steps.forEach(function(s,si){
+        var isCur=(si===curIdx);
+        var style=s.done?' style="text-decoration:line-through;color:var(--text-muted)"':'';
+        html+='<div class="step-item'+(isCur?' current':'')+'"'+style+' style="display:flex;align-items:center;gap:4px;padding:4px 0;border-bottom:0.5px solid var(--border)">';
+        html+='<span class="step-num" style="min-width:16px">'+(si+1)+'.</span>';
+        html+='<span style="flex:1">'+esc(s.text)+'</span>';
+        if(!s.done){
+          html+='<div style="display:flex;gap:2px;flex-shrink:0">';
+          if(si>0){ html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-si="'+si+'" data-dir="-1" onclick="moveStepBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move up">↑</button>'; }
+          if(si<steps.length-1){ html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-si="'+si+'" data-dir="1" onclick="moveStepBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move down">↓</button>'; }
+          html+='</div>';
+        }
+        html+='</div>';
+      });
+      html+='</div>';
+    } else {
+      html+='<div class="proj-meta" style="margin-top:4px">No steps added.</div>';
+    }
+    // Add priority step button
+    if(!p.archived){
+      html+='<div id="priority-form-'+akey+'-'+i+'" style="display:none;margin-top:6px">';
+      html+='<div style="display:flex;gap:6px">';
+      html+='<input type="text" id="priority-input-'+akey+'-'+i+'" placeholder="New priority step..." style="flex:1"/>';
+      html+='<button class="btn sm primary" data-ak="'+akey+'" data-pi="'+i+'" onclick="addPriorityStepById(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-check"></i></button>';
+      html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" onclick="hidePF(this)">Cancel</button>';
+      html+='</div></div>';
+    }
+    html+='<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">';
+    
+    if(!p.archived) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" onclick="findStepsForProject(this.dataset.ak,parseInt(this.dataset.pi))" style="color:var(--text-accent);border-color:var(--border-accent)"><i class="ti ti-messages"></i> Plan with coach</button>';
+    // Project reorder buttons
+    if(!p.archived && i > 0) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-dir="-1" onclick="moveProjBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move up">↑</button>';
+    if(!p.archived && i < (D.goals[akey].projects.filter(function(x){ return !x.archived; }).length-1)) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-dir="1" onclick="moveProjBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move down">↓</button>';
+    if(!p.archived) html+='<button class="btn sm" onclick="toggleEditProj(\''+akey+'\','+i+')"><i class="ti ti-edit"></i> Edit</button>';
+    if(p.archived) html+='<button class="btn sm success" onclick="unarchiveProj(\''+akey+'\','+i+')"><i class="ti ti-refresh"></i> Reopen</button>';
+    html+='<button class="btn sm danger" onclick="delProj(\''+akey+'\','+i+')"><i class="ti ti-trash"></i> Remove</button>';
+    html+='</div>';
+    html+='<div class="add-proj-form" id="edit-proj-'+akey+'-'+i+'">';
+    html+='<div class="lbl" style="margin-top:4px">Project name</div>';
+    html+='<input type="text" id="ep-name-'+akey+'-'+i+'" value="'+esc(p.name)+'" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">What do you want? (goal)</div>';
+    html+='<input type="text" id="ep-done-'+akey+'-'+i+'" value="'+esc(p.done||'')+'" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">Why it matters</div>';
+    html+='<input type="text" id="ep-why-'+akey+'-'+i+'" value="'+esc(p.why||'')+'" style="margin-bottom:8px"/>';
+    html+='<div class="lbl">How do you get there? (Steps)</div>';
+    steps.forEach(function(s,si){
+      html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">';
+      html+='<span style="font-size:12px;color:var(--text-muted);width:18px">'+(si+1)+'.</span>';
+      html+='<input type="text" id="ep-step-'+akey+'-'+i+'-'+si+'" value="'+esc(s.text)+'" style="flex:1"/>';
+      if(si>0) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-si="'+si+'" data-dir="-1" onclick="moveStepBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1">↑</button>';
+      if(si<steps.length-1) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-si="'+si+'" data-dir="1" onclick="moveStepBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1">↓</button>';
+      html+='<button class="btn sm danger" onclick="delStep(\''+akey+'\','+i+','+si+')"><i class="ti ti-x"></i></button>';
+      html+='</div>';
+    });
+    html+='<div style="display:flex;gap:6px;margin-bottom:10px;margin-top:4px">';
+    html+='<input type="text" id="ep-newstep-'+akey+'-'+i+'" placeholder="Add a new step..." style="flex:1"/>';
+    html+='<button class="btn sm" onclick="addStepInline(\''+akey+'\','+i+')"><i class="ti ti-plus"></i> Add</button>';
+    html+='</div>';
+    // Show reorder arrows in edit mode too
+    if(steps.length > 1){
+      html+='<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Drag to reorder: use arrows on each step above</div>';
+    }
+    html+='<div style="display:flex;gap:6px">';
+    html+='<button class="btn sm primary" onclick="saveEditProj(\''+akey+'\','+i+')"><i class="ti ti-device-floppy"></i> Save changes</button>';
+    html+='<button class="btn sm" onclick="toggleEditProj(\''+akey+'\','+i+')">Cancel</button>';
+    html+='</div></div></div>';
+  });
+  return html;
+}
+
+function toggleAddForm(akey){
+  var f=document.getElementById('add-form-'+akey);
+  f.style.display=f.style.display==='block'?'none':'block';
+  if(f.style.display==='block') document.getElementById('pn-'+akey).focus();
+}
+
+function addProj(akey){
+  var n=document.getElementById('pn-'+akey).value.trim();
+  if(!n) return;
+  var stepsRaw=document.getElementById('ps-'+akey).value;
+  var steps=stepsRaw.split('\n').map(function(s){ return s.trim(); }).filter(Boolean).map(function(t){ return {text:t,done:false,createdAt:new Date().toISOString()}; });
+  D.goals[akey].projects.push({name:n,done:document.getElementById('pd-'+akey).value.trim(),why:document.getElementById('pw-'+akey).value.trim(),steps:steps,archived:false,todayDone:false});
+  persist(); renderSetupGoals(); renderToday();
+}
+
+function toggleEditProj(akey,i){
+  var el=document.getElementById('edit-proj-'+akey+'-'+i);
+  el.style.display=el.style.display==='block'?'none':'block';
+  if(el.style.display==='block') document.getElementById('ep-name-'+akey+'-'+i).focus();
+}
+
+function saveEditProj(akey,i){
+  var p=D.goals[akey].projects[i];
+  var n=document.getElementById('ep-name-'+akey+'-'+i).value.trim();
+  if(n) p.name=n;
+  p.done=document.getElementById('ep-done-'+akey+'-'+i).value.trim();
+  p.why=document.getElementById('ep-why-'+akey+'-'+i).value.trim();
+  var steps=p.steps||[];
+  steps.forEach(function(s,si){
+    var inp=document.getElementById('ep-step-'+akey+'-'+i+'-'+si);
+    if(inp&&inp.value.trim()) s.text=inp.value.trim();
+  });
+  persist(); renderSetupGoals(); renderToday();
+}
+
+function delStep(akey,i,si){
+  D.goals[akey].projects[i].steps.splice(si,1);
+  persist(); renderSetupGoals(); renderToday();
+}
+
+function addStepInline(akey,i){
+  var inp=document.getElementById('ep-newstep-'+akey+'-'+i);
+  var v=inp.value.trim();
+  if(!v) return;
+  if(!D.goals[akey].projects[i].steps) D.goals[akey].projects[i].steps=[];
+  D.goals[akey].projects[i].steps.push({text:v,done:false,createdAt:new Date().toISOString()});
+  inp.value='';
+  persist(); renderSetupGoals(); renderToday();
+}
+
+function moveProjBtn(btn){
+  var akey = btn.dataset.ak;
+  var i = parseInt(btn.dataset.pi);
+  var dir = parseInt(btn.dataset.dir);
+  var projs = D.goals[akey].projects;
+  // Find next non-archived project in direction
+  var newIdx = i + dir;
+  while(newIdx >= 0 && newIdx < projs.length && projs[newIdx].archived){
+    newIdx += dir;
+  }
+  if(newIdx < 0 || newIdx >= projs.length) return;
+  var tmp = projs[i];
+  projs[i] = projs[newIdx];
+  projs[newIdx] = tmp;
+  persist();
+  renderSetupGoals();
+  renderToday();
+}
+
+function moveStepBtn(btn){
+  moveStep(btn.dataset.ak, parseInt(btn.dataset.pi), parseInt(btn.dataset.si), parseInt(btn.dataset.dir));
+}
+
+function moveStep(akey,i,si,dir){
+  var steps = D.goals[akey].projects[i].steps;
+  var newIdx = si + dir;
+  if(newIdx < 0 || newIdx >= steps.length) return;
+  var tmp = steps[si];
+  steps[si] = steps[newIdx];
+  steps[newIdx] = tmp;
+  persist(); renderSetupGoals(); renderToday();
+}
+
+function addPriorityStepById(akey,i){
+  addPriorityStep(akey,i);
+}
+function showPF(btn){ var f=document.getElementById('pf-'+btn.dataset.ak+'-'+btn.dataset.pi); if(f){f.style.display='block'; var inp=document.getElementById('pi-'+btn.dataset.ak+'-'+btn.dataset.pi); if(inp)inp.focus();} }
+function hidePF(btn){ var f=document.getElementById('pf-'+btn.dataset.ak+'-'+btn.dataset.pi); if(f)f.style.display='none'; }
+function apsByData(btn){ var inp=document.getElementById('pi-'+btn.dataset.ak+'-'+btn.dataset.pi); if(inp&&inp.value.trim()) addPriorityStep(btn.dataset.ak, parseInt(btn.dataset.pi), inp.value.trim()); }
+function addPriorityStep(akey,i,v){
+  var inp = document.getElementById('priority-input-'+akey+'-'+i);
+  var v = inp ? inp.value.trim() : '';
+  if(!v) return;
+  if(!D.goals[akey].projects[i].steps) D.goals[akey].projects[i].steps = [];
+  // Insert at top (position 0) before any undone steps
+  var firstUndone = D.goals[akey].projects[i].steps.findIndex(function(s){ return !s.done; });
+  if(firstUndone >= 0){
+    D.goals[akey].projects[i].steps.splice(firstUndone, 0, {text:v, done:false});
+  } else {
+    D.goals[akey].projects[i].steps.unshift({text:v, done:false});
+  }
+  persist(); renderSetupGoals(); renderToday();
+  var pf=document.getElementById('pf-'+akey+'-'+i); if(pf)pf.style.display='none';
+}
+
+function delProj(akey,i){ D.goals[akey].projects.splice(i,1); persist(); renderSetupGoals(); renderToday(); }
+function unarchiveProj(akey,i){ D.goals[akey].projects[i].archived=false; D.goals[akey].projects[i].todayDone=false; persist(); renderSetupGoals(); renderToday(); }
+
+function renderSetupWaiting(){
+  var el=document.getElementById('waiting-list-setup');
+  if(!D.waiting||!D.waiting.length){ el.innerHTML=''; return; }
+  var html='';
+  D.waiting.forEach(function(w,i){
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)">';
+    html+='<div><div style="font-size:13px;color:var(--text-primary)">'+esc(w.what)+'</div>';
+    if(w.who) html+='<div style="font-size:12px;color:var(--text-warning)">'+esc(w.who)+'</div>';
+    html+='</div><button class="btn sm danger" onclick="delWaiting('+i+')"><i class="ti ti-x"></i></button></div>';
+  });
+  el.innerHTML=html;
+}
+
+function addWaiting(){
+  var what=document.getElementById('w-what').value.trim();
+  if(!what) return;
+  if(!D.waiting) D.waiting=[];
+  D.waiting.push({what:what,who:document.getElementById('w-who').value.trim()});
+  document.getElementById('w-what').value='';
+  document.getElementById('w-who').value='';
+  persist(); renderSetupWaiting(); renderToday();
+}
+
+function delWaiting(i){ D.waiting.splice(i,1); persist(); renderSetupWaiting(); renderToday(); }
+
+function renderToday(){
+  document.getElementById('tv-vision').textContent=D.vision||'No vision saved yet - go to Plan.';
+  var areasEl=document.getElementById('tv-areas');
+  var html='';
+  AREAS.forEach(function(a){
+    var g=D.goals[a.key];
+    var active=(g.projects||[]).filter(function(p){ return !p.archived; });
+    if(!active.length) return;
+    html+='<div class="today-area">';
+    html+='<div class="today-area-title '+a.color+'"><span>'+(g.label||a.label)+'</span></div>';
+    if(g.goal) html+='<div class="today-area-goal" style="margin-bottom:14px;padding-bottom:4px">'+esc(g.goal)+'</div>';
+    // Show only the first (highest priority) active project
+    var topProject = active[0];
+    active = topProject ? [topProject] : [];
+    active.forEach(function(p){
+      var ri=(g.projects||[]).indexOf(p);
+      var steps=p.steps||[];
+      var curIdx=-1;
+      for(var s=0;s<steps.length;s++){ if(!steps[s].done){ curIdx=s; break; } }
+      var curStep=curIdx>=0?steps[curIdx]:null;
+      var remaining=steps.filter(function(s,si){ return !s.done&&si!==curIdx; });
+      // Check if current step is stale (7+ days old)
+      var isStale=false;
+      if(curStep && curStep.createdAt){
+        var daysSince=(Date.now()-new Date(curStep.createdAt).getTime())/(1000*60*60*24);
+        if(daysSince>=7) isStale=true;
+      }
+      html+='<div class="move-card'+(p.todayDone?' done':'')+'" id="mc-'+a.key+'-'+ri+'">';
+      html+='<div class="move-header">';
+      html+='<div class="move-check'+(p.todayDone?' checked':'')+'" onclick="toggleDone(\''+a.key+'\','+ri+')">';
+      html+='<i class="ti ti-check"></i></div>';
+      html+='<div class="move-body">';
+      // Project name
+      html+='<div class="move-proj-name" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.2)" data-ak="'+a.key+'" data-pi="'+ri+'" onclick="jumpToPlan(this.dataset.ak,parseInt(this.dataset.pi))" title="Go to project in Plan">'+esc(p.name)+'</div>';
+
+      // Action item (next step)
+      var stepText=curStep?curStep.text:(steps.length?'All steps complete':'No next step - go to Plan');
+      html+='<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:2px">Next Step:</div>';
+      html+='<div class="move-step" style="display:flex;align-items:center;gap:6px"><span class="move-step-arrow">&rarr;</span><span>'+esc(stepText)+'</span>'+(isStale?'<span data-ak="'+a.key+'" data-pi="'+ri+'" onclick="openStaleCoach(this.dataset.ak,parseInt(this.dataset.pi))" style="cursor:pointer;font-size:14px;color:var(--text-warning);flex-shrink:0" title="This has been sitting a while - get some coaching on it">&#8987;</span>':'')+'</div>';
+      // Why it matters
+      if(p.why) html+='<div class="move-why">'+esc(p.why)+'</div>';
+      html+='</div></div>';
+      // Next prompt
+      html+='<div class="next-prompt" id="np-'+a.key+'-'+ri+'" style="display:'+(p.todayDone?'block':'none')+';margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)">';
+      html+='<div class="prompt-lbl"><i class="ti ti-bolt"></i> You\'re moving. Keep it going.</div>';
+      if(remaining.length){
+        remaining.forEach(function(s){
+          var st=s.text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+          html+='<div class="step-option" onclick="selectStep(\''+a.key+'\','+ri+',\''+st+'\')"><span>'+esc(s.text)+'</span><i class="ti ti-arrow-right"></i></div>';
+        });
+        html+='<div class="or-divider">or type something else</div>';
+      }
+      html+='<input type="text" id="nm-'+a.key+'-'+ri+'" placeholder="Type a different next step..." style="margin-bottom:8px"/>';
+      // Find next project in sequence
+      var nextProj = active.length > 1 ? active[1] : null;
+      var nextActive = (g.projects||[]).filter(function(x){ return !x.archived && x !== p; });
+      var nextP = nextActive.length > 0 ? nextActive[0] : null;
+      html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">';
+      html+='<button class="btn sm primary" data-ak="'+a.key+'" data-pi="'+ri+'" onclick="keepGoing(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-arrow-right"></i> Keep going on '+esc(p.name)+'</button>';
+      if(nextP) html+='<button class="btn sm" data-ak="'+a.key+'" data-npi="'+(g.projects||[]).indexOf(nextP)+'" onclick="moveToNext(this.dataset.ak,parseInt(this.dataset.npi))">Move to '+esc(nextP.name)+'</button>';
+      html+='</div></div></div>';
+    });
+    html+='</div>';
+  });
+  if(!html) html='<div class="empty">No active projects - go to Plan to add some.</div>';
+  areasEl.innerHTML=html;
+  var waitEl=document.getElementById('tv-waiting');
+  if(D.waiting&&D.waiting.length){
+    var whtml='<div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)">';
+    whtml+='<div class="card-title" style="margin-bottom:8px;color:var(--text-warning)"><i class="ti ti-clock"></i> Waiting on</div>';
+    D.waiting.forEach(function(w){
+      whtml+='<div class="waiting-item"><div><div style="font-size:13px;color:var(--text-primary)">'+esc(w.what)+'</div>';
+      if(w.who) whtml+='<div style="font-size:12px;color:var(--text-warning)">'+esc(w.who)+'</div>';
+      whtml+='</div></div>';
+    });
+    whtml+='</div>';
+    waitEl.innerHTML=whtml;
+  } else { waitEl.innerHTML=''; }
+}
+
+function toggleDone(akey,i){
+  var p=D.goals[akey].projects[i];
+  p.todayDone=!p.todayDone;
+  if(p.todayDone){
+    var steps=p.steps||[];
+    for(var s=0;s<steps.length;s++){ if(!steps[s].done){ steps[s].done=true; break; } }
+  }
+  persist(); renderToday();
+  if(p.todayDone){ setTimeout(function(){ var inp=document.getElementById('nm-'+akey+'-'+i); if(inp) inp.focus(); },150); }
+}
+
+function selectStep(akey,i,text){
+  var inp=document.getElementById('nm-'+akey+'-'+i);
+  if(inp) inp.value=text;
+}
+
+function saveNextStep(akey,i){
+  var v=document.getElementById('nm-'+akey+'-'+i).value.trim();
+  if(v){
+    if(!D.goals[akey].projects[i].steps) D.goals[akey].projects[i].steps=[];
+    var exists=D.goals[akey].projects[i].steps.some(function(s){ return s.text===v&&!s.done; });
+    if(!exists) D.goals[akey].projects[i].steps.push({text:v,done:false,createdAt:new Date().toISOString()});
+  }
+  D.goals[akey].projects[i].todayDone=false;
+  persist(); renderToday(); renderSetupGoals();
+}
+
+function completeProj(akey,i){
+  D.goals[akey].projects[i].archived=true;
+  D.goals[akey].projects[i].todayDone=false;
+  persist(); renderToday(); renderSetupGoals();
+}
+
+function renderIdeas(){
+  var el=document.getElementById('idea-list');
+  if(!D.ideas||!D.ideas.length){ el.innerHTML='<div class="empty">No ideas yet.</div>'; return; }
+  var html='';
+  D.ideas.forEach(function(x,i){
+    html+='<div class="idea-row"><span class="idea-text">'+esc(x)+'</span>';
+    html+='<div class="idea-btns">';
+    html+='<button class="btn sm accent" onclick="toggleConvert('+i+')"><i class="ti ti-folder-plus"></i> To project</button>';
+    html+='<button class="btn sm danger" onclick="delIdea('+i+')"><i class="ti ti-x"></i></button>';
+    html+='</div></div>';
+    html+='<div class="convert-form" id="cf-'+i+'">';
+    html+='<div class="lbl">Add to area</div>';
+    html+='<select id="cf-area-'+i+'" style="margin-bottom:6px">';
+    AREAS.forEach(function(a){ html+='<option value="'+a.key+'">'+esc(D.goals[a.key].label||a.label)+'</option>'; });
+    html+='</select>';
+    html+='<div class="lbl">Why it matters</div>';
+    html+='<input type="text" id="cf-why-'+i+'" placeholder="e.g. Builds the business I love" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">First next step</div>';
+    html+='<input type="text" id="cf-step-'+i+'" placeholder="e.g. Research this weekend" style="margin-bottom:8px"/>';
+    html+='<div style="display:flex;gap:6px">';
+    html+='<button class="btn sm primary" onclick="convertToProj('+i+')"><i class="ti ti-check"></i> Create project</button>';
+    html+='<button class="btn sm" onclick="toggleConvert('+i+')">Cancel</button>';
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function toggleConvert(i){
+  var f=document.getElementById('cf-'+i);
+  f.style.display=f.style.display==='block'?'none':'block';
+}
+
+function convertToProj(i){
+  var akey=document.getElementById('cf-area-'+i).value;
+  var why=document.getElementById('cf-why-'+i).value.trim();
+  var step=document.getElementById('cf-step-'+i).value.trim();
+  var idea=D.ideas[i];
+  D.goals[akey].projects.push({name:idea,done:'',why:why,steps:step?[{text:step,done:false}]:[],archived:false,todayDone:false});
+  D.ideas.splice(i,1);
+  persist(); renderIdeas(); renderSetupGoals(); renderToday();
+}
+
+function capIdea(){
+  var v=document.getElementById('idea-in').value.trim();
+  if(!v) return;
+  if(!D.ideas) D.ideas=[];
+  D.ideas.push(v);
+  document.getElementById('idea-in').value='';
+  persist(); renderIdeas();
+  var el=document.getElementById('cap-ok');
+  el.style.display='inline';
+  setTimeout(function(){ el.style.display='none'; },2000);
+}
+
+function delIdea(i){ D.ideas.splice(i,1); persist(); renderIdeas(); }
+
+function copyUID(){
+  var uid = getUserId();
+  navigator.clipboard.writeText(uid).then(function(){
+    var btn = document.querySelector('[onclick="copyUID()"]');
+    if(btn){ btn.innerHTML='<i class="ti ti-check"></i> Copied'; setTimeout(function(){ btn.innerHTML='<i class="ti ti-copy"></i> Copy'; },2000); }
+  }).catch(function(){
+    var inp = document.getElementById('uid-display');
+    inp.select(); document.execCommand('copy');
+  });
+}
+
+function applyUID(){
+  var val = document.getElementById('uid-input').value.trim();
+  if(!val) return;
+  localStorage.setItem('eos6-userid', val);
+  D = {vision:'',goals:{business:{label:'Business',goal:'',projects:[]},health:{label:'Health',goal:'',projects:[]},other:{label:'Other',goal:'',projects:[]}},waiting:[],ideas:[]};
+  sbLoad().then(function(){
+    render();
+    document.getElementById('uid-display').value = val;
+    document.getElementById('uid-input').value = '';
+    showSyncStatus('Switched account - done');
+  });
+}
+
+function initUID(){
+  var uid = getUserId();
+  var el = document.getElementById('uid-display');
+  if(el) el.value = uid;
+  // Also store for when settings tab opens
+  window._currentUID = uid;
+}
+
+function exportData(){
+  var now=new Date();
+  var stamp=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+  var blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='elevated-os-backup-'+stamp+'.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(event){
+  var file=event.target.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var imported=JSON.parse(e.target.result);
+      if(imported.vision!==undefined||imported.goals!==undefined){
+        D=imported;
+        persist();
+        render();
+        var el=document.getElementById('import-ok');
+        el.style.display='inline';
+        setTimeout(function(){ el.style.display='none'; },3000);
+      } else {
+        alert('This does not look like a valid Elevated OS backup file.');
+      }
+    }catch(err){
+      alert('Could not read the file. Make sure it is a valid JSON backup.');
+    }
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ctx(){
+  var v=D.vision?'Vision: '+D.vision:'';
+  var parts=[v];
+  AREAS.forEach(function(a){
+    var g=D.goals[a.key];
+    if(g.goal) parts.push((g.label||a.label)+' 90-day goal: '+g.goal);
+    var active=(g.projects||[]).filter(function(p){ return !p.archived; });
+    if(active.length){
+      parts.push((g.label||a.label)+' projects: '+active.map(function(p){
+        var steps=p.steps||[];
+        var cur=null;
+        for(var i=0;i<steps.length;i++){ if(!steps[i].done){ cur=steps[i]; break; } }
+        return p.name+(p.why?' (why: '+p.why+')':'')+(cur?' next step: '+cur.text:'');
+      }).join('; '));
+    }
+  });
+  if(D.waiting&&D.waiting.length) parts.push('Waiting on: '+D.waiting.map(function(w){ return w.what+(w.who?' from '+w.who:''); }).join(', '));
+  if(D.stateAnchor) parts.push('Their state activation anchor: '+D.stateAnchor);
+  return parts.filter(Boolean).join('\n');
+}
+
+function addMsg(role,text){
+  var c=document.getElementById('coach-msgs');
+  var d=document.createElement('div'); d.className='msg '+role;
+  var av=document.createElement('div'); av.className='av '+role; av.textContent=role==='c'?'EO':'You';
+  var b=document.createElement('div'); b.className='bubble '+role;
+
+  // Check for save commands
+  if(role==='c' && (text.indexOf('SAVE_TO_PLAN:') >= 0 || text.indexOf('SAVE_VISION:') >= 0 || text.indexOf('SAVE_IDEA:') >= 0 || text.indexOf('SAVE_WIN:') >= 0)){
+    var lines = text.split('\n');
+    var displayLines = [];
+    lines.forEach(function(line){
+      var trimmed = line.trim();
+      if(trimmed.indexOf('SAVE_TO_PLAN:') === 0){
+        try{
+          var raw = trimmed.replace('SAVE_TO_PLAN:','').trim();
+          var data = {};
+          try{ data = JSON.parse(raw); }catch(e){
+            raw.replace(/^{|}$/g,'').split(',').forEach(function(pair){
+              var parts = pair.split(':');
+              if(parts.length>=2) data[parts[0].trim()] = parts.slice(1).join(':').trim();
+            });
+          }
+          savePlanFromCoach(data);
+        }catch(e){ console.error('Save plan error:', e); }
+      } else if(trimmed.indexOf('SAVE_VISION:') === 0){
+        var vision = trimmed.replace('SAVE_VISION:','').trim();
+        if(vision){ D.vision = vision; persist(); var vi=document.getElementById('vision-in'); if(vi)vi.value=vision; showSyncStatus('Vision saved'); }
+      } else if(trimmed.indexOf('SAVE_IDEA:') === 0){
+        var idea = trimmed.replace('SAVE_IDEA:','').trim();
+        if(idea){ if(!D.ideas)D.ideas=[]; D.ideas.push(idea); persist(); renderIdeas(); showSyncStatus('Idea captured'); }
+      } else if(trimmed.indexOf('SAVE_WIN:') === 0){
+        var winRaw = trimmed.replace('SAVE_WIN:','').trim();
+        var winData = {};
+        try{ winData=JSON.parse(winRaw); }catch(e){
+          winRaw.replace(/^{|}$/g,'').split(',').forEach(function(pair){
+            var pts=pair.split(':'); if(pts.length>=2) winData[pts[0].trim()]=pts.slice(1).join(':').trim();
+          });
+        }
+        if(winData.title){ addCelebration(winData.title, winData.note||'', winData.category||'other'); showSyncStatus('Celebration saved'); }
+      } else {
+        displayLines.push(line);
+      }
+    });
+    b.textContent = displayLines.join('\n').trim();
+  } else {
+    b.textContent = text;
+  }
+
+  d.appendChild(av); d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+
+function savePlanFromCoach(data){
+  var akey = data.area || 'business';
+  if(!['business','health','other'].includes(akey)) akey = 'business';
+  if(!D.goals[akey].projects) D.goals[akey].projects = [];
+
+  // Find existing project by name similarity
+  var existing = D.goals[akey].projects.find(function(p){
+    return p.name.toLowerCase().indexOf((data.name||'').toLowerCase()) >= 0 ||
+           (data.name||'').toLowerCase().indexOf(p.name.toLowerCase()) >= 0;
+  });
+
+  if(existing && data.step){
+    // If sequence:1 it means this is the start of a new sequence - ask replace or add
+    if(data.sequence === '1' || data.sequence === 1){
+      var undone = existing.steps ? existing.steps.filter(function(s){ return !s.done; }) : [];
+      if(undone.length > 0){
+        // Store pending steps and ask user
+        window._pendingSteps = window._pendingSteps || {};
+        window._pendingSteps[existing.name] = window._pendingSteps[existing.name] || [];
+        window._pendingSteps[existing.name].push({text:data.step, done:false});
+        // Will be prompted via coach message - for now insert at top
+        var firstUndone = existing.steps.findIndex(function(s){ return !s.done; });
+        existing.steps.splice(firstUndone, 0, {text:data.step, done:false});
+      } else {
+        if(!existing.steps) existing.steps = [];
+        existing.steps.push({text:data.step, done:false});
+      }
+    } else {
+      // Subsequent steps in sequence - insert after last coach-added step
+      if(!existing.steps) existing.steps = [];
+      var firstUndone = existing.steps.findIndex(function(s){ return !s.done; });
+      var insertAt = firstUndone >= 0 ? firstUndone + (parseInt(data.sequence)||1) - 1 : existing.steps.length;
+      existing.steps.splice(Math.min(insertAt, existing.steps.length), 0, {text:data.step, done:false});
+    }
+    if(data.why) existing.why = data.why;
+  } else if(existing && data.step) {
+    if(!existing.steps) existing.steps = [];
+    existing.steps.push({text:data.step, done:false});
+  } else if(!existing) {
+    // Create new project
+    D.goals[akey].projects.push({
+      name: data.name || 'New project',
+      done: '',
+      why: data.why || '',
+      steps: data.step ? [{text:data.step, done:false, createdAt:new Date().toISOString()}] : [],
+      archived: false,
+      todayDone: false
+    });
+  }
+  persist();
+  renderSetupGoals();
+  renderToday();
+  showSyncStatus('Saved to plan');
+}
+
+function addLoad(){
+  var c=document.getElementById('coach-msgs');
+  var d=document.createElement('div'); d.className='msg c'; d.id='load';
+  var av=document.createElement('div'); av.className='av c'; av.textContent='EO';
+  var b=document.createElement('div'); b.className='bubble c loading'; b.textContent='...';
+  d.appendChild(av); d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+
+function rmLoad(){ var e=document.getElementById('load'); if(e) e.remove(); }
+
+async function csend(){
+  if(busy) return;
+  var inp=document.getElementById('coach-in');
+  var t=inp.value.trim(); if(!t) return;
+  inp.value=''; inp.style.height='auto';
+  addMsg('u',t);
+  busy=true; document.getElementById('coach-send').disabled=true;
+  chat.push({role:'user',content:t});
+  addLoad();
+  try{
+    var payload = {
+      message: t,
+      sessionId: window._agentSessionId || null,
+      userContext: ctx()
+    };
+    var r = await fetch('/.netlify/functions/coach', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    var data = await r.json();
+    if(data.error){
+      if(data.sessionExpired){
+        window._agentSessionId = null;
+        rmLoad(); addMsg('c','Session expired - please send your message again.');
+      } else {
+        rmLoad(); addMsg('c','Error: '+data.error);
+        chat.pop();
+      }
+    } else {
+      if(data.sessionId) window._agentSessionId = data.sessionId;
+      rmLoad();
+      if(data.reply){ addMsg('c',data.reply); chat.push({role:'assistant',content:data.reply}); }
+    }
+  }catch(e){
+    console.error('Coach error:', e);
+    rmLoad(); addMsg('c','Connection error - try again.');
+    chat.pop();
+  }
+  busy=false; document.getElementById('coach-send').disabled=false;
+}
+
+
+
+function saveAnchor(text){
+  D.stateAnchor = text;
+  persist();
+  showSyncStatus('State anchor saved');
+}
+
+function renderCoachPrompts(){
+  var c=document.getElementById('coach-msgs');
+  var d=document.createElement('div');
+  d.id='coach-prompts';
+  d.style.cssText='display:flex;flex-direction:column;gap:8px;padding:4px 0';
+  var intro=document.createElement('div');
+  intro.className='bubble c';
+  intro.textContent='What would you like to work on?';
+  intro.style.cssText='max-width:100%;margin-bottom:4px';
+  d.appendChild(intro);
+  var prompts=[
+    {label:'Find my needle-mover this week', key:'needle'},
+    {label:'I am avoiding or procrastinating something - help me', key:'procrastination'},
+    {label:'I have too many competing priorities', key:'priorities'},
+    {label:'Activate my state for something important', key:'activate'},
+    {label:'Help me find the steps on a project', key:'findsteps'}
+  ];
+  prompts.forEach(function(p){
+    var btn=document.createElement('button');
+    btn.className='btn';
+    btn.style.cssText='text-align:left;white-space:normal;line-height:1.4;padding:8px 12px;font-size:13px;';
+    btn.textContent=p.label;
+    btn.onclick=function(){ startPrompt(p.key, p.label); };
+    d.appendChild(btn);
+  });
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+}
+
+function startPrompt(key, label){
+  var el=document.getElementById('coach-prompts');
+  if(el) el.remove();
+  addMsg('u', label);
+  var openers={
+    needle:"Let's find it. What are the big things competing for your attention right now?",
+    procrastination:"Tell me what you've been avoiding or procrastinating on. What is it?",
+    priorities:"Let's get everything out first. What are all the things competing for your attention right now? No filter - just get them all out.",
+    findsteps:"Which project do you want to find the steps for? Tell me about it - what are you trying to accomplish?",
+    activate:"What's the thing you need to get moving on?"
+  };
+  var opener = openers[key] || "What would you like to work on?";
+  chat.push({role:'user',content:label});
+  chat.push({role:'assistant',content:opener});
+  addMsg('c', opener);
+}
+
+function planProjectWithCoach(akey){
+  var g = D.goals[akey];
+  var goal = g ? g.goal : '';
+  var label = g ? (g.label || akey) : akey;
+  // Switch to coach tab
+  show('coach');
+  setTimeout(function(){
+    var el = document.getElementById('coach-prompts');
+    if(el) el.remove();
+    window._newProjectArea = akey;
+    var userMsg = 'Help me plan a new project for ' + label;
+    chat.push({role:'user', content:userMsg});
+    addMsg('u', userMsg);
+    var goalLine = goal ? ' Your 90-day goal for ' + label + ' is: ' + goal + '.' : '';
+    var opener = 'Let\'s build this out properly.' + goalLine + ' What project or initiative are you thinking about that could move you toward that? Tell me about it - what are you trying to accomplish?';
+    chat.push({role:'assistant', content:opener});
+    addMsg('c', opener);
+  }, 100);
+}
+
+function findStepsForProject(akey, i){
+  var p = D.goals[akey].projects[i];
+  if(!p) return;
+  var prompt = 'I want to find the steps for my project: ' + p.name + (p.why ? '. The reason this matters to me is: ' + p.why : '') + '. Help me brainstorm and find the right sequence.';
+  // Switch to coach tab
+  show('coach');
+  // If chat is empty show prompts first, then auto-start
+  if(chat.length === 0){
+    setTimeout(function(){
+      // Remove prompts if showing
+      var el = document.getElementById('coach-prompts');
+      if(el) el.remove();
+      // Set context
+      window._activeProject = {akey:akey, i:i, name:p.name};
+      chat.push({role:'user', content:prompt});
+      addMsg('u', 'Plan with coach: ' + p.name);
+      var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
+      chat.push({role:'assistant', content:opener});
+      addMsg('c', opener);
+    }, 100);
+  } else {
+    // Clear and start fresh
+    chat = [];
+    document.getElementById('coach-msgs').innerHTML = '';
+    window._activeProject = {akey:akey, i:i, name:p.name};
+    chat.push({role:'user', content:prompt});
+    addMsg('u', 'Plan with coach: ' + p.name);
+    var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
+    chat.push({role:'assistant', content:opener});
+    addMsg('c', opener);
+  }
+}
+
+function keepGoing(akey, i){
+  // Add a new step to this project and reset todayDone
+  var p = D.goals[akey].projects[i];
+  if(!p) return;
+  p.todayDone = false;
+  persist();
+  renderToday();
+  // Focus the step input area
+  setTimeout(function(){
+    var inp = document.getElementById('nm-'+akey+'-'+i);
+    if(inp){ inp.focus(); inp.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }, 150);
+}
+
+function moveToNext(akey, nextPi){
+  // Mark current top project as rotated, show next project
+  var p = D.goals[akey].projects[nextPi];
+  if(!p) return;
+  // Move next project to top of sequence
+  var projs = D.goals[akey].projects;
+  var proj = projs.splice(nextPi, 1)[0];
+  // Find position after current top active project
+  var firstActive = projs.findIndex(function(x){ return !x.archived; });
+  projs.splice(firstActive + 1, 0, proj);
+  // Reset todayDone on all
+  projs.forEach(function(x){ x.todayDone = false; });
+  persist();
+  renderToday();
+  renderSetupGoals();
+  showSyncStatus('Moved to '+proj.name);
+}
+
+function jumpToPlan(akey, i){
+  show('setup');
+  // Scroll to project after tab switch
+  setTimeout(function(){
+    var el = document.getElementById('projs-'+akey);
+    if(el){
+      var projCards = el.querySelectorAll('.proj');
+      if(projCards[i]) projCards[i].scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }, 150);
+}
+
+function openStaleCoach(akey, i){
+  var p = D.goals[akey] ? D.goals[akey].projects[i] : null;
+  if(!p) return;
+  var steps = p.steps||[];
+  var curIdx = steps.findIndex(function(s){ return !s.done; });
+  var curStep = curIdx>=0 ? steps[curIdx] : null;
+  if(!curStep) return;
+  show('coach');
+  setTimeout(function(){
+    var el=document.getElementById('coach-prompts');
+    if(el) el.remove();
+    var prompt = 'I notice "'+curStep.text+'" on my project "'+p.name+'" has been sitting for a while. Help me figure out what is going on.';
+    chat=[];
+    document.getElementById('coach-msgs').innerHTML='';
+    chat.push({role:'user',content:prompt});
+    addMsg('u','Coach me on a step that has been sitting');
+    var opener = 'Let\'s look at this. "'+curStep.text+'" - you haven\'t moved on it. What do you think is going on?';
+    chat.push({role:'assistant',content:opener});
+    addMsg('c',opener);
+  },100);
+}
+
+function resetCoach(){
+  chat=[];
+  window._agentSessionId = null;
+  document.getElementById('coach-msgs').innerHTML='';
+  renderCoachPrompts();
+}
+
+function ck(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); csend(); } }
+function ar(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
+
+function setCat(cat){
+  selectedCat = cat;
+  ['business','health','family','other'].forEach(function(c){
+    var btn = document.getElementById('cat-'+c);
+    if(btn) btn.style.fontWeight = c===cat ? '600' : '400';
+    if(btn) btn.style.background = c===cat ? 'var(--bg-accent)' : 'transparent';
+  });
+}
+
+function addCelebration(title, note, cat){
+  var t = title || (document.getElementById('cel-title') ? document.getElementById('cel-title').value.trim() : '');
+  if(!t) return;
+  var n = note || (document.getElementById('cel-note') ? document.getElementById('cel-note').value.trim() : '');
+  var c = cat || selectedCat || 'other';
+  if(!D.celebrations) D.celebrations=[];
+  D.celebrations.unshift({title:t, note:n, category:c, date:new Date().toISOString()});
+  persist();
+  if(document.getElementById('cel-title')) document.getElementById('cel-title').value='';
+  if(document.getElementById('cel-note')) document.getElementById('cel-note').value='';
+  renderCelebrations();
+  renderTodayCelebration();
+  var ok=document.getElementById('cel-ok');
+  if(ok){ok.style.display='inline';setTimeout(function(){ok.style.display='none';},2000);}
+}
+
+function renderCelebrations(){
+  var el=document.getElementById('cel-list');
+  if(!el) return;
+  if(!D.celebrations||!D.celebrations.length){el.innerHTML='<div class="empty">Nothing saved yet. Start celebrating!</div>';return;}
+  var catColors={business:'var(--text-accent)',health:'var(--text-success)',family:'var(--text-warning)',other:'var(--text-muted)'};
+  el.innerHTML=D.celebrations.map(function(c,i){
+    var d=new Date(c.date);
+    var ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return '<div style="padding:10px 0;border-bottom:0.5px solid var(--border)">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      +'<div style="font-size:14px;font-weight:600;color:var(--text-primary)">'+esc(c.title)+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-size:11px;color:'+catColors[c.category||'other']+';text-transform:uppercase;letter-spacing:0.04em">'+(c.category||'other')+'</span>'
+      +'<span style="font-size:12px;color:var(--text-muted)">'+ds+'</span>'
+      +'<button class="btn sm danger" onclick="delCelebration('+i+')"><i class="ti ti-x"></i></button>'
+      +'</div></div>'
+      +(c.note?'<div style="font-size:13px;color:var(--text-secondary);margin-top:3px">'+esc(c.note)+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function delCelebration(i){
+  D.celebrations.splice(i,1);
+  persist();
+  renderCelebrations();
+  renderTodayCelebration();
+}
+
+function renderTodayCelebration(){
+  var el=document.getElementById('today-celebration');
+  if(!el) return;
+  if(!D.celebrations||!D.celebrations.length){el.style.display='none';return;}
+  // Pick a random recent celebration
+  var recent=D.celebrations.slice(0,Math.min(10,D.celebrations.length));
+  var pick=recent[Math.floor(Math.random()*recent.length)];
+  el.style.display='block';
+  el.innerHTML='<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-warning);margin-bottom:4px"><i class="ti ti-star"></i> Recent celebration</div>'
+    +'<div style="font-size:13px;color:var(--text-secondary)">'+esc(pick.title)+(pick.note?' - '+esc(pick.note):'')+'</div>';
+}
+
+function checkWeeklyReview(){
+  var now=Date.now();
+  var last=D.lastReviewPrompt||0;
+  var sevenDays=7*24*60*60*1000;
+  if(now-last > sevenDays){
+    setTimeout(function(){
+      var popup=document.getElementById('review-popup');
+      if(popup) popup.style.display='flex';
+    },2000);
+  }
+}
+
+function dismissReview(){
+  var popup=document.getElementById('review-popup');
+  if(popup) popup.style.display='none';
+  D.lastReviewPrompt=Date.now();
+  persist();
+}
+
+function saveReviewWin(){
+  var inp=document.getElementById('review-input');
+  var v=inp?inp.value.trim():'';
+  var catEl=document.getElementById('review-cat');
+  var cat=catEl?catEl.value:'other';
+  if(v) addCelebration(v,'',cat);
+  dismissReview();
+}
+
+function addVisionImage(){
+  var label = document.getElementById('vi-label').value.trim();
+  var url = document.getElementById('vi-url').value.trim();
+  if(!url) return;
+  if(!D.visionImages) D.visionImages=[];
+  if(D.visionImages.length >= 8){ alert('Max 8 images — remove one first.'); return; }
+  D.visionImages.push({label:label||'', url:url});
+  document.getElementById('vi-label').value='';
+  document.getElementById('vi-url').value='';
+  persist();
+  renderVisionImagesList();
+  renderVisionStrip();
+}
+
+function delVisionImage(i){
+  D.visionImages.splice(i,1);
+  persist();
+  renderVisionImagesList();
+  renderVisionStrip();
+}
+
+function renderVisionImagesList(){
+  var el=document.getElementById('vision-images-list');
+  if(!el) return;
+  if(!D.visionImages||!D.visionImages.length){ el.innerHTML='<div style="font-size:13px;color:var(--text-muted);padding:6px 0">No images yet.</div>'; return; }
+  el.innerHTML=D.visionImages.map(function(img,i){
+    return '<div class="vision-img-item">'
+      +'<img class="vision-img-preview" src="'+esc(img.url)+'" onerror="this.style.display=\'none\'"/>'
+      +'<span style="flex:1;font-size:13px;color:var(--text-secondary)">'+esc(img.label||'No label')+'</span>'
+      +'<button class="btn sm danger" onclick="delVisionImage('+i+')"><i class="ti ti-x"></i></button>'
+      +'</div>';
+  }).join('');
+}
+
+function renderVisionStrip(){
+  var el=document.getElementById('vision-board-strip');
+  if(!el) return;
+  if(!D.visionImages||!D.visionImages.length){ el.innerHTML=''; return; }
+  el.innerHTML='<div class="vision-strip">'
+    +D.visionImages.map(function(img,i){
+      return '<div class="vision-thumb-wrap">'
+        +'<img class="vision-thumb" src="'+esc(img.url)+'" onclick="openLightbox('+i+')" onerror="this.style.display=\'none\'"/>'
+        +(img.label?'<div class="vision-thumb-label">'+esc(img.label)+'</div>':'')
+        +'</div>';
+    }).join('')
+    +'</div>';
+}
+
+function openLightbox(i){
+  var img=D.visionImages[i];
+  if(!img) return;
+  document.getElementById('lightbox-img').src=img.url;
+  document.getElementById('lightbox-label').textContent=img.label||'';
+  var lb=document.getElementById('img-lightbox');
+  lb.style.display='flex';
+}
+
+function closeLightbox(){
+  document.getElementById('img-lightbox').style.display='none';
+}
+
+function show(name){
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('sec-'+name).classList.add('on');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='coach'){
+    var ep=document.getElementById('coach-prompts');
+    if(ep) ep.remove();
+    if(!chat.length) renderCoachPrompts();
+  }
+  if(name==='settings'){
+    var el=document.getElementById('uid-display');
+    if(el) el.value = getUserId();
+  }
+  if(name==='celebrations'){
+    renderCelebrations();
+  }
+  if(name==='today'){
+    renderTodayCelebration();
+    renderVisionStrip();
+  }
+}
+
+load();
+show('today');
+initUID();
+
+// Splash screen
+(function(){
+  var words = ['sw1','sw2','sw3','sw4'];
+  var delays = [0, 400, 800, 1400];
+  words.forEach(function(id, i){
+    setTimeout(function(){
+      var el = document.getElementById(id);
+      if(el) el.style.opacity = '1';
+    }, delays[i]);
+  });
+  setTimeout(function(){
+    var splash = document.getElementById('splash');
+    if(splash){
+      splash.style.opacity = '0';
+      setTimeout(function(){ splash.style.display = 'none'; }, 600);
+    }
+  }, 4500);
+})();
+</script>
+</body>
+</html>
