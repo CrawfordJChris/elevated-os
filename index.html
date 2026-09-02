@@ -1108,10 +1108,12 @@ async function csend(){
   addLoad();
   try{
     var userCtx = ctx() || '';
+    var historyToSend = chat.slice(-10);
     var payload = JSON.stringify({
       message: t,
       sessionId: window._agentSessionId || null,
-      userContext: userCtx
+      userContext: userCtx,
+      chatHistory: historyToSend.slice(0,-1) // exclude the message we just added
     });
     var r = await fetch('/.netlify/functions/coach', {
       method: 'POST',
@@ -1120,13 +1122,8 @@ async function csend(){
     });
     var data = await r.json();
     if(data.error){
-      if(data.sessionExpired){
-        window._agentSessionId = null;
-        rmLoad(); addMsg('c','Session expired - please send your message again.');
-      } else {
-        rmLoad(); addMsg('c','Error: '+data.error);
-        chat.pop();
-      }
+      rmLoad(); addMsg('c','Error: '+data.error);
+      chat.pop();
     } else {
       if(data.sessionId) window._agentSessionId = data.sessionId;
       rmLoad();
