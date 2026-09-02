@@ -1107,15 +1107,16 @@ async function csend(){
   chat.push({role:'user',content:t});
   addLoad();
   try{
-    var payload = {
+    var userCtx = ctx() || '';
+    var payload = JSON.stringify({
       message: t,
       sessionId: window._agentSessionId || null,
-      userContext: ctx()
-    };
+      userContext: userCtx
+    });
     var r = await fetch('/.netlify/functions/coach', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: payload
     });
     var data = await r.json();
     if(data.error){
