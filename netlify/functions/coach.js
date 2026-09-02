@@ -1,8 +1,4 @@
-const AGENT_ID = 'agent_01VHrqN3WCGb9H6pExH4Mvg1';
-const ENV_ID = 'env_01CYx4qZVPwTxSxgdrL9Wj4L';
-
 exports.handler = async function(event, context) {
-  // Handle CORS preflight
   if(event.httpMethod === 'OPTIONS'){
     return {
       statusCode: 200,
@@ -21,88 +17,97 @@ exports.handler = async function(event, context) {
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if(!apiKey){
-    return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+    return { 
+      statusCode: 500, 
+      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'API key not configured' }) 
+    };
   }
 
   let body;
   try { 
     body = JSON.parse(event.body); 
   } catch(e) { 
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON: ' + e.message }) }; 
+    return { 
+      statusCode: 400, 
+      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Invalid JSON: ' + e.message }) 
+    }; 
   }
 
   const { message, sessionId, userContext } = body;
-  if(!message){
-    return { statusCode: 400, body: JSON.stringify({ error: 'Message required' }) };
-  }
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-api-key': apiKey,
-    'anthropic-version': '2023-06-01',
-    'anthropic-beta': 'managed-agents-2026-04-01'
-  };
 
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
   };
 
+  // Fall back to raw messages API - more reliable from Netlify Functions
+  const COACH_SYS = `You are the Elevated OS Coach - a coaching system built on Chris Crawford's methodology. You are warm, direct, and conversational. You follow the energy, never a script.
+
+Core: state first, always. One question at a time. Use their exact words back. Outcomes not actions. Brainstorm wide (6-8+ ideas) before narrowing to needle-mover. State activation before and after every decision.
+
+Purpose chain: This could [result]. That [deeper]. That opens [vision]. Use "could" on first link only.
+
+When someone mentions a win - offer to save it: SAVE_WIN:{title:x,note:x,category:business or health or family or other}
+
+Save commands (output on own line):
+SAVE_TO_PLAN:{name:x,why:x,step:x,area:business or health or other,sequence:1}
+SAVE_VISION:{their exact words}
+SAVE_IDEA:{one clear sentence}
+SAVE_WIN:{title:x,note:x,category:x}`;
+
   try {
-    if(!sessionId){
-      // Create new session - sanitize strings
-      const sanitizedMsg = String(message).trim();
-      const sanitizedCtx = userContext ? String(userContext).trim() : '';
-      const initMessage = sanitizedCtx ? sanitizedMsg + '\n\n[User context:\n' + sanitizedCtx + ']' : sanitizedMsg;
-      
-      const resp = await fetch('https://api.anthropic.com/v1/sessions', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          agent: AGENT_ID,
-          environment_id: ENV_ID,
-          initial_events: [{ type: 'user.message', content: initMessage }]
-        })
-      });
-      
-      const data = await resp.json();
-      if(data.error) return { 
+    const sysContent = userContext 
+      ? COACH_SYS + '\n\nUser context:\n' + userContext 
+      : COACH_SYS;
+
+    // Build messages array
+    const messages = [];
+    
+    // Add previous chat if resuming (sessionId used as marker only)
+    if(body.chatHistory && Array.isArray(body.chatHistory)){
+      messages.push(...body.chatHistory.slice(-10));
+    }
+    
+    messages.push({ role: 'user', content: message });
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 800,
+        system: [{ type: 'text', text: sysContent, cache_control: { type: 'ephemeral' } }],
+        messages
+      })
+    });
+
+    const data = await resp.json();
+    
+    if(data.error){
+      return { 
         statusCode: 400, 
         headers: corsHeaders,
         body: JSON.stringify({ error: data.error.message }) 
       };
-
-      const newSessionId = data.id;
-      const reply = await pollForResponse(newSessionId, headers);
-      return {
-        statusCode: 200,
-        headers: corsHeaders,
-        body: JSON.stringify({ reply, sessionId: newSessionId })
-      };
-    } else {
-      // Resume session
-      const resp = await fetch(`https://api.anthropic.com/v1/sessions/${sessionId}/events`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ type: 'user.message', content: String(message).trim() })
-      });
-      
-      const data = await resp.json();
-      if(data.error){
-        return { 
-          statusCode: 400, 
-          headers: corsHeaders,
-          body: JSON.stringify({ error: data.error.message, sessionExpired: true }) 
-        };
-      }
-
-      const reply = await pollForResponse(sessionId, headers);
-      return {
-        statusCode: 200,
-        headers: corsHeaders,
-        body: JSON.stringify({ reply, sessionId })
-      };
     }
+
+    const reply = data.content && data.content.find(b => b.type === 'text');
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: JSON.stringify({ 
+        reply: reply ? reply.text : 'Something went wrong.',
+        sessionId: sessionId || 'active'
+      })
+    };
+
   } catch(e) {
     return { 
       statusCode: 500, 
@@ -111,26 +116,3 @@ exports.handler = async function(event, context) {
     };
   }
 };
-
-async function pollForResponse(sessionId, headers) {
-  const maxAttempts = 30;
-  for(let i = 0; i < maxAttempts; i++){
-    await new Promise(r => setTimeout(r, 1000));
-    try {
-      const resp = await fetch(`https://api.anthropic.com/v1/sessions/${sessionId}`, { headers });
-      const data = await resp.json();
-      if(data.status === 'idle' || data.status === 'completed'){
-        const evResp = await fetch(`https://api.anthropic.com/v1/sessions/${sessionId}/events?limit=10`, { headers });
-        const evData = await evResp.json();
-        if(evData.events){
-          const msgs = evData.events.filter(e => e.type === 'assistant.message' || e.type === 'agent.message');
-          if(msgs.length > 0) return msgs[msgs.length - 1].content || msgs[msgs.length - 1].text || '';
-        }
-        return 'Session completed.';
-      }
-    } catch(e) { 
-      console.error('Poll error:', e); 
-    }
-  }
-  return 'Response took too long - try again.';
-}
