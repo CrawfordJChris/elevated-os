@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="netlify-disable-badge" content="true">
+<style>
+@keyframes splashOut { 0%,88% { opacity:1; } 100% { opacity:0; visibility:hidden; } }
+#splash { animation: splashOut 5s ease forwards; pointer-events:none; }
+</style>
 <style>.netlify-badge { display: none !important; }</style>
 <title>Elevated OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -470,20 +474,18 @@ function renderSetupGoals(){
     html+='</div>';
     html+='<div class="lbl">Where do you want to be 3 months from now?</div>';
     html+='<input type="text" id="goal-text-'+a.key+'" value="'+esc(g.goal||'')+'" placeholder="Your 90-day result..." style="margin-bottom:12px"/>';
-    html+='<div style="font-size:13px;color:var(--text-accent);font-style:italic;margin-bottom:8px;padding:6px 10px;background:var(--bg-accent);border-radius:var(--radius)">What needs to move first this week?</div>';
+    html+='<div style="font-size:13px;color:var(--text-accent);font-style:italic;margin-bottom:8px;padding:6px 10px;background:var(--bg-accent);border-radius:var(--radius)">What are the one or two that actually move this forward?</div>';
     html+='<div id="projs-'+a.key+'">'+renderProjList(a.key,projs)+'</div>';
     html+='<div style="display:flex;gap:6px;margin-top:6px">';
-    html+='<button class="btn sm primary" onclick="planProjectWithCoach(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-messages"></i> Find steps</button>';
+    html+='<button class="btn sm primary" onclick="planProjectWithCoach(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-messages"></i> Plan with coach</button>';
     html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')"><i class="ti ti-pencil"></i> Add manually</button>';
     html+='</div>';
     html+='<div class="add-proj-form" id="add-form-'+a.key+'">';
-    html+='<div class="lbl">Project name</div>';
-    html+='<input type="text" id="pn-'+a.key+'" placeholder="e.g. Get coaching program live" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">What do you want? (goal)</div>';
-    html+='<input type="text" id="pd-'+a.key+'" placeholder="e.g. First 5 clients enrolled and paying" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">Why it matters</div>';
+    html+='<div class="lbl">What do you want? <span style="color:var(--text-muted)">(be as specific as you can)</span></div>';
+    html+='<input type="text" id="pn-'+a.key+'" placeholder="e.g. First 5 coaching clients enrolled and paying" style="margin-bottom:6px"/>';
+    html+='<div class="lbl">Why does this matter?</div>';
     html+='<input type="text" id="pw-'+a.key+'" placeholder="e.g. Income through work I love" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">How do you get there? (Steps - one per line)</div>';
+    html+='<div class="lbl">How do you get there? (one per line)</div>';
     html+='<textarea id="ps-'+a.key+'" rows="4" placeholder="Write each step on its own line..." style="margin-bottom:8px"></textarea>';
     html+='<div style="display:flex;gap:6px">';
     html+='<button class="btn sm primary" onclick="addProj(\''+a.key+'\')"><i class="ti ti-check"></i> Add project</button>';
@@ -495,16 +497,40 @@ function renderSetupGoals(){
 
 function renderProjList(akey,projs){
   if(!projs.length) return '';
+  var ACTIVE_LIMIT = 2;
   var html='';
+  // Count non-archived as we go so archived projects do not consume an active slot
+  var activeSeen = 0;
+  var parkedOpen = window._parkedOpen && window._parkedOpen[akey];
+  var parkedCount = 0;
+  projs.forEach(function(p){ if(!p.archived){ activeSeen++; if(activeSeen > ACTIVE_LIMIT) parkedCount++; } });
+  activeSeen = 0;
+  var dividerDrawn = false;
   projs.forEach(function(p,i){
+    var isParked = false;
+    if(!p.archived){
+      activeSeen++;
+      if(activeSeen > ACTIVE_LIMIT) isParked = true;
+    } else { isParked = true; }
+    if(isParked && !dividerDrawn){
+      dividerDrawn = true;
+      html+='<div style="margin:12px 0 8px;padding-top:10px;border-top:0.5px dashed var(--border)">';
+      html+='<button class="btn sm" data-ak="'+akey+'" onclick="toggleParked(this.dataset.ak)" style="font-size:12px;color:var(--text-muted);width:100%;justify-content:center">';
+      html+= (parkedOpen ? 'Hide' : 'Show') + ' parked ('+parkedCount+')</button></div>';
+    }
+    if(isParked && !parkedOpen) return;
     var steps=p.steps||[];
     var curIdx=-1;
     for(var s=0;s<steps.length;s++){ if(!steps[s].done){ curIdx=s; break; } }
     html+='<div class="proj'+(p.archived?' proj-archived':'')+'">';
     html+='<div class="proj-name">'+esc(p.name)+(p.archived?' (complete)':'')+'</div>';
-    html+='<div class="proj-meta">Goal: '+esc(p.done||'-')+'</div>';
-    html+='<div class="proj-meta">Why: '+esc(p.why||'-')+'</div>';
+    if(p.why) html+='<div class="proj-meta">Why: '+esc(p.why)+'</div>';
     if(steps.length){
+      var reorderable = steps.filter(function(s){return !s.done;}).length > 1;
+      html+='<div style="display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 2px">';
+      html+='<span style="font-size:10px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;font-weight:600">Sequence:</span>';
+      if(reorderable) html+='<span style="font-size:10px;color:var(--text-muted)">move steps</span>';
+      html+='</div>';
       html+='<div class="step-list">';
       steps.forEach(function(s,si){
         var isCur=(si===curIdx);
@@ -535,7 +561,7 @@ function renderProjList(akey,projs){
     }
     html+='<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">';
     
-    if(!p.archived) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" onclick="findStepsForProject(this.dataset.ak,parseInt(this.dataset.pi))" style="color:var(--text-accent);border-color:var(--border-accent)"><i class="ti ti-messages"></i> Plan with coach</button>';
+    if(!p.archived) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" onclick="findStepsForProject(this.dataset.ak,parseInt(this.dataset.pi))" style="color:var(--text-accent);border-color:var(--border-accent)"><i class="ti ti-messages"></i> Find steps</button>';
     // Project reorder buttons
     if(!p.archived && i > 0) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-dir="-1" onclick="moveProjBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move up">↑</button>';
     if(!p.archived && i < (D.goals[akey].projects.filter(function(x){ return !x.archived; }).length-1)) html+='<button class="btn sm" data-ak="'+akey+'" data-pi="'+i+'" data-dir="1" onclick="moveProjBtn(this)" style="padding:2px 6px;font-size:13px;line-height:1" title="Move down">↓</button>';
@@ -544,11 +570,9 @@ function renderProjList(akey,projs){
     html+='<button class="btn sm danger" onclick="delProj(\''+akey+'\','+i+')"><i class="ti ti-trash"></i> Remove</button>';
     html+='</div>';
     html+='<div class="add-proj-form" id="edit-proj-'+akey+'-'+i+'">';
-    html+='<div class="lbl" style="margin-top:4px">Project name</div>';
+    html+='<div class="lbl" style="margin-top:4px">What do you want? <span style="color:var(--text-muted)">(be as specific as you can)</span></div>';
     html+='<input type="text" id="ep-name-'+akey+'-'+i+'" value="'+esc(p.name)+'" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">What do you want? (goal)</div>';
-    html+='<input type="text" id="ep-done-'+akey+'-'+i+'" value="'+esc(p.done||'')+'" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">Why it matters</div>';
+    html+='<div class="lbl">Why does this matter?</div>';
     html+='<input type="text" id="ep-why-'+akey+'-'+i+'" value="'+esc(p.why||'')+'" style="margin-bottom:8px"/>';
     html+='<div class="lbl">How do you get there? (Steps)</div>';
     steps.forEach(function(s,si){
@@ -587,7 +611,7 @@ function addProj(akey){
   if(!n) return;
   var stepsRaw=document.getElementById('ps-'+akey).value;
   var steps=stepsRaw.split('\n').map(function(s){ return s.trim(); }).filter(Boolean).map(function(t){ return {text:t,done:false,createdAt:new Date().toISOString()}; });
-  D.goals[akey].projects.push({name:n,done:document.getElementById('pd-'+akey).value.trim(),why:document.getElementById('pw-'+akey).value.trim(),steps:steps,archived:false,todayDone:false});
+  D.goals[akey].projects.push({name:n,done:'',why:document.getElementById('pw-'+akey).value.trim(),steps:steps,archived:false,todayDone:false});
   persist(); renderSetupGoals(); renderToday();
 }
 
@@ -601,7 +625,7 @@ function saveEditProj(akey,i){
   var p=D.goals[akey].projects[i];
   var n=document.getElementById('ep-name-'+akey+'-'+i).value.trim();
   if(n) p.name=n;
-  p.done=document.getElementById('ep-done-'+akey+'-'+i).value.trim();
+
   p.why=document.getElementById('ep-why-'+akey+'-'+i).value.trim();
   var steps=p.steps||[];
   steps.forEach(function(s,si){
@@ -624,6 +648,12 @@ function addStepInline(akey,i){
   D.goals[akey].projects[i].steps.push({text:v,done:false,createdAt:new Date().toISOString()});
   inp.value='';
   persist(); renderSetupGoals(); renderToday();
+}
+
+function toggleParked(akey){
+  if(!window._parkedOpen) window._parkedOpen = {};
+  window._parkedOpen[akey] = !window._parkedOpen[akey];
+  renderSetupGoals();
 }
 
 function moveProjBtn(btn){
@@ -719,7 +749,7 @@ function renderToday(){
     if(!active.length) return;
     html+='<div class="today-area">';
     html+='<div class="today-area-title '+a.color+'"><span>'+(g.label||a.label)+'</span></div>';
-    if(g.goal) html+='<div class="today-area-goal" style="margin-bottom:14px;padding-bottom:4px">'+esc(g.goal)+'</div>';
+
     // Show only the first (highest priority) active project
     var topProject = active[0];
     active = topProject ? [topProject] : [];
@@ -736,20 +766,19 @@ function renderToday(){
         var daysSince=(Date.now()-new Date(curStep.createdAt).getTime())/(1000*60*60*24);
         if(daysSince>=7) isStale=true;
       }
+      // FOCUS label sits outside; everything else lives in the card
+      html+='<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:5px">Focus</div>';
+
       html+='<div class="move-card'+(p.todayDone?' done':'')+'" id="mc-'+a.key+'-'+ri+'">';
       html+='<div class="move-header">';
       html+='<div class="move-check'+(p.todayDone?' checked':'')+'" onclick="toggleDone(\''+a.key+'\','+ri+')">';
       html+='<i class="ti ti-check"></i></div>';
       html+='<div class="move-body">';
-      // Project name
-      html+='<div class="move-proj-name" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.2)" data-ak="'+a.key+'" data-pi="'+ri+'" onclick="jumpToPlan(this.dataset.ak,parseInt(this.dataset.pi))" title="Go to project in Plan">'+esc(p.name)+'</div>';
-
-      // Action item (next step)
+      html+='<div class="move-proj-name" style="cursor:pointer;font-size:15px;line-height:1.35;margin-bottom:2px" data-ak="'+a.key+'" data-pi="'+ri+'" onclick="jumpToPlan(this.dataset.ak,parseInt(this.dataset.pi))" title="Go to project in Plan">'+esc(p.name)+'</div>';
+      if(p.why) html+='<div class="move-why" style="margin-bottom:12px">'+esc(p.why)+'</div>';
       var stepText=curStep?curStep.text:(steps.length?'All steps complete':'No next step - go to Plan');
       html+='<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:2px">Next Step:</div>';
       html+='<div class="move-step" style="display:flex;align-items:center;gap:6px"><span class="move-step-arrow">&rarr;</span><span>'+esc(stepText)+'</span>'+(isStale?'<span data-ak="'+a.key+'" data-pi="'+ri+'" onclick="openStaleCoach(this.dataset.ak,parseInt(this.dataset.pi))" style="cursor:pointer;font-size:14px;color:var(--text-warning);flex-shrink:0" title="This has been sitting a while - get some coaching on it">&#8987;</span>':'')+'</div>';
-      // Why it matters
-      if(p.why) html+='<div class="move-why">'+esc(p.why)+'</div>';
       html+='</div></div>';
       // Next prompt
       html+='<div class="next-prompt" id="np-'+a.key+'-'+ri+'" style="display:'+(p.todayDone?'block':'none')+';margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)">';
@@ -1226,7 +1255,7 @@ function findStepsForProject(akey, i){
       // Set context
       window._activeProject = {akey:akey, i:i, name:p.name};
       chat.push({role:'user', content:prompt});
-      addMsg('u', 'Plan with coach: ' + p.name);
+      addMsg('u', 'Find steps: ' + p.name);
       var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
       chat.push({role:'assistant', content:opener});
       addMsg('c', opener);
@@ -1237,7 +1266,7 @@ function findStepsForProject(akey, i){
     document.getElementById('coach-msgs').innerHTML = '';
     window._activeProject = {akey:akey, i:i, name:p.name};
     chat.push({role:'user', content:prompt});
-    addMsg('u', 'Plan with coach: ' + p.name);
+    addMsg('u', 'Find steps: ' + p.name);
     var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
     chat.push({role:'assistant', content:opener});
     addMsg('c', opener);
@@ -1497,28 +1526,40 @@ function show(name){
   }
 }
 
-load();
-show('today');
-initUID();
-
-// Splash screen
+// Splash screen - runs FIRST so a later error can never trap the overlay
 (function(){
-  var words = ['sw1','sw2','sw3','sw4'];
-  var delays = [0, 400, 800, 1400];
-  words.forEach(function(id, i){
-    setTimeout(function(){
-      var el = document.getElementById(id);
-      if(el) el.style.opacity = '1';
-    }, delays[i]);
-  });
+  function hideSplash(){
+    var splash = document.getElementById('splash');
+    if(!splash) return;
+    splash.style.opacity = '0';
+    splash.style.pointerEvents = 'none';
+    setTimeout(function(){ if(splash) splash.style.display = 'none'; }, 600);
+  }
+  try{
+    var words = ['sw1','sw2','sw3','sw4'];
+    var delays = [0, 400, 800, 1400];
+    words.forEach(function(id, i){
+      setTimeout(function(){
+        var el = document.getElementById(id);
+        if(el) el.style.opacity = '1';
+      }, delays[i]);
+    });
+  }catch(e){ console.error('Splash words error:', e); }
+  setTimeout(hideSplash, 4500);
+  // Hard failsafe - no matter what happens, splash is gone by 6s
   setTimeout(function(){
     var splash = document.getElementById('splash');
-    if(splash){
-      splash.style.opacity = '0';
-      setTimeout(function(){ splash.style.display = 'none'; }, 600);
-    }
-  }, 4500);
+    if(splash) splash.style.display = 'none';
+  }, 6000);
+  // Tap anywhere to dismiss early
+  var sp = document.getElementById('splash');
+  if(sp) sp.addEventListener('click', hideSplash);
 })();
+
+// Init - wrapped so one failure does not cascade
+try{ load(); }catch(e){ console.error('load() failed:', e); }
+try{ show('today'); }catch(e){ console.error('show() failed:', e); }
+try{ initUID(); }catch(e){ console.error('initUID() failed:', e); }
 </script>
 </body>
 </html>
