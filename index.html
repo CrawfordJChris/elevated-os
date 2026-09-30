@@ -585,12 +585,12 @@ function renderProjList(akey,projs){
       html+='</div>';
     });
     html+='<div style="display:flex;gap:6px;margin-bottom:10px;margin-top:4px">';
-    html+='<input type="text" id="ep-newstep-'+akey+'-'+i+'" placeholder="Add a new step..." style="flex:1"/>';
+    html+='<input type="text" id="ep-newstep-'+akey+'-'+i+'" placeholder="Add a new step..." style="flex:1" data-ak="'+akey+'" data-pi="'+i+'" onkeydown="if(event.key===\'Enter\'){event.preventDefault();addStepInline(this.dataset.ak,parseInt(this.dataset.pi));}"/>';
     html+='<button class="btn sm" onclick="addStepInline(\''+akey+'\','+i+')"><i class="ti ti-plus"></i> Add</button>';
     html+='</div>';
     // Show reorder arrows in edit mode too
     if(steps.length > 1){
-      html+='<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Drag to reorder: use arrows on each step above</div>';
+      html+='<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Use the arrows to change the order</div>';
     }
     html+='<div style="display:flex;gap:6px">';
     html+='<button class="btn sm primary" onclick="saveEditProj(\''+akey+'\','+i+')"><i class="ti ti-device-floppy"></i> Save changes</button>';
@@ -615,6 +615,30 @@ function addProj(akey){
   persist(); renderSetupGoals(); renderToday();
 }
 
+function captureEditForm(akey,i){
+  // Pull any unsaved text out of the open edit form into the data model
+  var form = document.getElementById('edit-proj-'+akey+'-'+i);
+  if(!form || form.style.display !== 'block') return false;
+  var p = D.goals[akey] && D.goals[akey].projects[i];
+  if(!p) return false;
+  var nameEl = document.getElementById('ep-name-'+akey+'-'+i);
+  if(nameEl && nameEl.value.trim()) p.name = nameEl.value.trim();
+  var whyEl = document.getElementById('ep-why-'+akey+'-'+i);
+  if(whyEl) p.why = whyEl.value.trim();
+  (p.steps||[]).forEach(function(s,si){
+    var el = document.getElementById('ep-step-'+akey+'-'+i+'-'+si);
+    if(el && el.value.trim()) s.text = el.value.trim();
+  });
+  return true;
+}
+
+function reopenEditForm(akey,i){
+  setTimeout(function(){
+    var form = document.getElementById('edit-proj-'+akey+'-'+i);
+    if(form) form.style.display = 'block';
+  }, 0);
+}
+
 function toggleEditProj(akey,i){
   var el=document.getElementById('edit-proj-'+akey+'-'+i);
   el.style.display=el.style.display==='block'?'none':'block';
@@ -636,18 +660,22 @@ function saveEditProj(akey,i){
 }
 
 function delStep(akey,i,si){
+  var wasOpen = captureEditForm(akey,i);
   D.goals[akey].projects[i].steps.splice(si,1);
   persist(); renderSetupGoals(); renderToday();
+  if(wasOpen) reopenEditForm(akey,i);
 }
 
 function addStepInline(akey,i){
   var inp=document.getElementById('ep-newstep-'+akey+'-'+i);
   var v=inp.value.trim();
   if(!v) return;
+  var wasOpen = captureEditForm(akey,i);
   if(!D.goals[akey].projects[i].steps) D.goals[akey].projects[i].steps=[];
   D.goals[akey].projects[i].steps.push({text:v,done:false,createdAt:new Date().toISOString()});
   inp.value='';
   persist(); renderSetupGoals(); renderToday();
+  if(wasOpen) reopenEditForm(akey,i);
 }
 
 function toggleParked(akey){
@@ -683,10 +711,13 @@ function moveStep(akey,i,si,dir){
   var steps = D.goals[akey].projects[i].steps;
   var newIdx = si + dir;
   if(newIdx < 0 || newIdx >= steps.length) return;
+  var wasOpen = captureEditForm(akey,i);
+  steps = D.goals[akey].projects[i].steps;
   var tmp = steps[si];
   steps[si] = steps[newIdx];
   steps[newIdx] = tmp;
   persist(); renderSetupGoals(); renderToday();
+  if(wasOpen) reopenEditForm(akey,i);
 }
 
 function addPriorityStepById(akey,i){
