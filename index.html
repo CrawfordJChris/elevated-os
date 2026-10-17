@@ -16,7 +16,6 @@
 <title>Elevated OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/dist/tabler-icons.min.css">
 <style>
 :root{
   --bg:#0a0a0b;--surface-1:#151517;--surface-2:#1c1c1f;--surface-3:#232326;
@@ -170,6 +169,58 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 .hero-part{font-size:12px;color:var(--text-muted);margin-top:6px}
 .hero-divider{height:0.5px;background:var(--border);margin:14px 0}
 .hero-why{font-size:14px;color:var(--text-secondary);line-height:1.55;margin-bottom:16px}
+.hero-meta{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.hm-row{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.5}
+.hm-l{flex:0 0 64px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.hm-t{color:var(--text-secondary)}
+.hm-get .hm-t{color:var(--text-primary);font-weight:500}
+.privacy-note{display:flex;gap:6px;align-items:flex-start;font-size:12px;line-height:1.4;color:var(--text-warning);margin:-2px 0 10px}
+.note-type{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:12px 0 4px}
+.note-row,.way-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:14px;line-height:1.4}
+.note-row span,.way-row span{flex:1;min-width:0;word-break:break-word}
+.way-row{font-size:13px;color:var(--text-secondary)}
+/* built-in icons: no download, no CDN */
+.ti{display:inline-block;width:1em;height:1em;vertical-align:-0.14em;flex-shrink:0;background-color:currentColor;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+.ti-arrow-up{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgNWwwIDE0IiAvPgogIDxwYXRoIGQ9Ik0xOCAxMWwtNiAtNiIgLz4KICA8cGF0aCBkPSJNNiAxMWw2IC02IiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgNWwwIDE0IiAvPgogIDxwYXRoIGQ9Ik0xOCAxMWwtNiAtNiIgLz4KICA8cGF0aCBkPSJNNiAxMWw2IC02IiAvPgo8L3N2Zz4=")}
+.ti-bolt{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTMgM2wwIDdsNiAwbC04IDExbDAgLTdsLTYgMGw4IC0xMSIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTMgM2wwIDdsNiAwbC04IDExbDAgLTdsLTYgMGw4IC0xMSIgLz4KPC9zdmc+")}
+.ti-bulb{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMyAxMmgxbTggLTl2MW04IDhoMW0tMTUuNCAtNi40bC43IC43bTEyLjEgLS43bC0uNyAuNyIgLz4KICA8cGF0aCBkPSJNOSAxNmE1IDUgMCAxIDEgNiAwYTMuNSAzLjUgMCAwIDAgLTEgM2EyIDIgMCAwIDEgLTQgMGEzLjUgMy41IDAgMCAwIC0xIC0zIiAvPgogIDxwYXRoIGQ9Ik05LjcgMTdsNC42IDAiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMyAxMmgxbTggLTl2MW04IDhoMW0tMTUuNCAtNi40bC43IC43bTEyLjEgLS43bC0uNyAuNyIgLz4KICA8cGF0aCBkPSJNOSAxNmE1IDUgMCAxIDEgNiAwYTMuNSAzLjUgMCAwIDAgLTEgM2EyIDIgMCAwIDEgLTQgMGEzLjUgMy41IDAgMCAwIC0xIC0zIiAvPgogIDxwYXRoIGQ9Ik05LjcgMTdsNC42IDAiIC8+Cjwvc3ZnPg==")}
+.ti-check{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxMmw1IDVsMTAgLTEwIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxMmw1IDVsMTAgLTEwIiAvPgo8L3N2Zz4=")}
+.ti-chevron-left{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTUgNmwtNiA2bDYgNiIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTUgNmwtNiA2bDYgNiIgLz4KPC9zdmc+")}
+.ti-copy{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA3bTAgMi42NjdhMi42NjcgMi42NjcgMCAwIDEgMi42NjcgLTIuNjY3aDguNjY2YTIuNjY3IDIuNjY3IDAgMCAxIDIuNjY3IDIuNjY3djguNjY2YTIuNjY3IDIuNjY3IDAgMCAxIC0yLjY2NyAyLjY2N2gtOC42NjZhMi42NjcgMi42NjcgMCAwIDEgLTIuNjY3IC0yLjY2N3oiIC8+CiAgPHBhdGggZD0iTTQuMDEyIDE2LjczN2EyLjAwNSAyLjAwNSAwIDAgMSAtMS4wMTIgLTEuNzM3di0xMGMwIC0xLjEgLjkgLTIgMiAtMmgxMGMuNzUgMCAxLjE1OCAuMzg1IDEuNSAxIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA3bTAgMi42NjdhMi42NjcgMi42NjcgMCAwIDEgMi42NjcgLTIuNjY3aDguNjY2YTIuNjY3IDIuNjY3IDAgMCAxIDIuNjY3IDIuNjY3djguNjY2YTIuNjY3IDIuNjY3IDAgMCAxIC0yLjY2NyAyLjY2N2gtOC42NjZhMi42NjcgMi42NjcgMCAwIDEgLTIuNjY3IC0yLjY2N3oiIC8+CiAgPHBhdGggZD0iTTQuMDEyIDE2LjczN2EyLjAwNSAyLjAwNSAwIDAgMSAtMS4wMTIgLTEuNzM3di0xMGMwIC0xLjEgLjkgLTIgMiAtMmgxMGMuNzUgMCAxLjE1OCAuMzg1IDEuNSAxIiAvPgo8L3N2Zz4=")}
+.ti-device-floppy{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNiA0aDEwbDQgNHYxMGEyIDIgMCAwIDEgLTIgMmgtMTJhMiAyIDAgMCAxIC0yIC0ydi0xMmEyIDIgMCAwIDEgMiAtMiIgLz4KICA8cGF0aCBkPSJNMTIgMTRtLTIgMGEyIDIgMCAxIDAgNCAwYTIgMiAwIDEgMCAtNCAwIiAvPgogIDxwYXRoIGQ9Ik0xNCA0bDAgNGwtNiAwbDAgLTQiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNiA0aDEwbDQgNHYxMGEyIDIgMCAwIDEgLTIgMmgtMTJhMiAyIDAgMCAxIC0yIC0ydi0xMmEyIDIgMCAwIDEgMiAtMiIgLz4KICA8cGF0aCBkPSJNMTIgMTRtLTIgMGEyIDIgMCAxIDAgNCAwYTIgMiAwIDEgMCAtNCAwIiAvPgogIDxwYXRoIGQ9Ik0xNCA0bDAgNGwtNiAwbDAgLTQiIC8+Cjwvc3ZnPg==")}
+.ti-dots{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxMm0tMSAwYTEgMSAwIDEgMCAyIDBhMSAxIDAgMSAwIC0yIDAiIC8+CiAgPHBhdGggZD0iTTEyIDEybS0xIDBhMSAxIDAgMSAwIDIgMGExIDEgMCAxIDAgLTIgMCIgLz4KICA8cGF0aCBkPSJNMTkgMTJtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxMm0tMSAwYTEgMSAwIDEgMCAyIDBhMSAxIDAgMSAwIC0yIDAiIC8+CiAgPHBhdGggZD0iTTEyIDEybS0xIDBhMSAxIDAgMSAwIDIgMGExIDEgMCAxIDAgLTIgMCIgLz4KICA8cGF0aCBkPSJNMTkgMTJtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPgo8L3N2Zz4=")}
+.ti-download{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCAxN3YyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDIgLTJ2LTIiIC8+CiAgPHBhdGggZD0iTTcgMTFsNSA1bDUgLTUiIC8+CiAgPHBhdGggZD0iTTEyIDRsMCAxMiIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCAxN3YyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDIgLTJ2LTIiIC8+CiAgPHBhdGggZD0iTTcgMTFsNSA1bDUgLTUiIC8+CiAgPHBhdGggZD0iTTEyIDRsMCAxMiIgLz4KPC9zdmc+")}
+.ti-edit{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA3aC0xYTIgMiAwIDAgMCAtMiAydjlhMiAyIDAgMCAwIDIgMmg5YTIgMiAwIDAgMCAyIC0ydi0xIiAvPgogIDxwYXRoIGQ9Ik0yMC4zODUgNi41ODVhMi4xIDIuMSAwIDAgMCAtMi45NyAtMi45N2wtOC40MTUgOC4zODV2M2gzbDguMzg1IC04LjQxNXoiIC8+CiAgPHBhdGggZD0iTTE2IDVsMyAzIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA3aC0xYTIgMiAwIDAgMCAtMiAydjlhMiAyIDAgMCAwIDIgMmg5YTIgMiAwIDAgMCAyIC0ydi0xIiAvPgogIDxwYXRoIGQ9Ik0yMC4zODUgNi41ODVhMi4xIDIuMSAwIDAgMCAtMi45NyAtMi45N2wtOC40MTUgOC4zODV2M2gzbDguMzg1IC04LjQxNXoiIC8+CiAgPHBhdGggZD0iTTE2IDVsMyAzIiAvPgo8L3N2Zz4=")}
+.ti-folder-plus{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTloLTdhMiAyIDAgMCAxIC0yIC0ydi0xMWEyIDIgMCAwIDEgMiAtMmg0bDMgM2g3YTIgMiAwIDAgMSAyIDJ2My41IiAvPgogIDxwYXRoIGQ9Ik0xNiAxOWg2IiAvPgogIDxwYXRoIGQ9Ik0xOSAxNnY2IiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTloLTdhMiAyIDAgMCAxIC0yIC0ydi0xMWEyIDIgMCAwIDEgMiAtMmg0bDMgM2g3YTIgMiAwIDAgMSAyIDJ2My41IiAvPgogIDxwYXRoIGQ9Ik0xNiAxOWg2IiAvPgogIDxwYXRoIGQ9Ik0xOSAxNnY2IiAvPgo8L3N2Zz4=")}
+.ti-inbox{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCA0bTAgMmEyIDIgMCAwIDEgMiAtMmgxMmEyIDIgMCAwIDEgMiAydjEyYTIgMiAwIDAgMSAtMiAyaC0xMmEyIDIgMCAwIDEgLTIgLTJ6IiAvPgogIDxwYXRoIGQ9Ik00IDEzaDNsMyAzaDRsMyAtM2gzIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCA0bTAgMmEyIDIgMCAwIDEgMiAtMmgxMmEyIDIgMCAwIDEgMiAydjEyYTIgMiAwIDAgMSAtMiAyaC0xMmEyIDIgMCAwIDEgLTIgLTJ6IiAvPgogIDxwYXRoIGQ9Ik00IDEzaDNsMyAzaDRsMyAtM2gzIiAvPgo8L3N2Zz4=")}
+.ti-lifebuoy{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTJtLTQgMGE0IDQgMCAxIDAgOCAwYTQgNCAwIDEgMCAtOCAwIiAvPgogIDxwYXRoIGQ9Ik0xMiAxMm0tOSAwYTkgOSAwIDEgMCAxOCAwYTkgOSAwIDEgMCAtMTggMCIgLz4KICA8cGF0aCBkPSJNMTUgMTVsMy4zNSAzLjM1IiAvPgogIDxwYXRoIGQ9Ik05IDE1bC0zLjM1IDMuMzUiIC8+CiAgPHBhdGggZD0iTTUuNjUgNS42NWwzLjM1IDMuMzUiIC8+CiAgPHBhdGggZD0iTTE4LjM1IDUuNjVsLTMuMzUgMy4zNSIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTJtLTQgMGE0IDQgMCAxIDAgOCAwYTQgNCAwIDEgMCAtOCAwIiAvPgogIDxwYXRoIGQ9Ik0xMiAxMm0tOSAwYTkgOSAwIDEgMCAxOCAwYTkgOSAwIDEgMCAtMTggMCIgLz4KICA8cGF0aCBkPSJNMTUgMTVsMy4zNSAzLjM1IiAvPgogIDxwYXRoIGQ9Ik05IDE1bC0zLjM1IDMuMzUiIC8+CiAgPHBhdGggZD0iTTUuNjUgNS42NWwzLjM1IDMuMzUiIC8+CiAgPHBhdGggZD0iTTE4LjM1IDUuNjVsLTMuMzUgMy4zNSIgLz4KPC9zdmc+")}
+.ti-list-details{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTMgNWg4IiAvPgogIDxwYXRoIGQ9Ik0xMyA5aDUiIC8+CiAgPHBhdGggZD0iTTEzIDE1aDgiIC8+CiAgPHBhdGggZD0iTTEzIDE5aDUiIC8+CiAgPHBhdGggZD0iTTMgNG0wIDFhMSAxIDAgMCAxIDEgLTFoNGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz4KICA8cGF0aCBkPSJNMyAxNG0wIDFhMSAxIDAgMCAxIDEgLTFoNGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTMgNWg4IiAvPgogIDxwYXRoIGQ9Ik0xMyA5aDUiIC8+CiAgPHBhdGggZD0iTTEzIDE1aDgiIC8+CiAgPHBhdGggZD0iTTEzIDE5aDUiIC8+CiAgPHBhdGggZD0iTTMgNG0wIDFhMSAxIDAgMCAxIDEgLTFoNGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz4KICA8cGF0aCBkPSJNMyAxNG0wIDFhMSAxIDAgMCAxIDEgLTFoNGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxIC0xIDFoLTRhMSAxIDAgMCAxIC0xIC0xeiIgLz4KPC9zdmc+")}
+.ti-lock{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxM2EyIDIgMCAwIDEgMiAtMmgxMGEyIDIgMCAwIDEgMiAydjZhMiAyIDAgMCAxIC0yIDJoLTEwYTIgMiAwIDAgMSAtMiAtMnYtNnoiIC8+CiAgPHBhdGggZD0iTTExIDE2YTEgMSAwIDEgMCAyIDBhMSAxIDAgMCAwIC0yIDAiIC8+CiAgPHBhdGggZD0iTTggMTF2LTRhNCA0IDAgMSAxIDggMHY0IiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNSAxM2EyIDIgMCAwIDEgMiAtMmgxMGEyIDIgMCAwIDEgMiAydjZhMiAyIDAgMCAxIC0yIDJoLTEwYTIgMiAwIDAgMSAtMiAtMnYtNnoiIC8+CiAgPHBhdGggZD0iTTExIDE2YTEgMSAwIDEgMCAyIDBhMSAxIDAgMCAwIC0yIDAiIC8+CiAgPHBhdGggZD0iTTggMTF2LTRhNCA0IDAgMSAxIDggMHY0IiAvPgo8L3N2Zz4=")}
+.ti-messages{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMjEgMTRsLTMgLTNoLTdhMSAxIDAgMCAxIC0xIC0xdi02YTEgMSAwIDAgMSAxIC0xaDlhMSAxIDAgMCAxIDEgMXYxMCIgLz4KICA8cGF0aCBkPSJNMTQgMTV2MmExIDEgMCAwIDEgLTEgMWgtN2wtMyAzdi0xMGExIDEgMCAwIDEgMSAtMWgyIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMjEgMTRsLTMgLTNoLTdhMSAxIDAgMCAxIC0xIC0xdi02YTEgMSAwIDAgMSAxIC0xaDlhMSAxIDAgMCAxIDEgMXYxMCIgLz4KICA8cGF0aCBkPSJNMTQgMTV2MmExIDEgMCAwIDEgLTEgMWgtN2wtMyAzdi0xMGExIDEgMCAwIDEgMSAtMWgyIiAvPgo8L3N2Zz4=")}
+.ti-player-play{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA0djE2bDEzIC04eiIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNyA0djE2bDEzIC04eiIgLz4KPC9zdmc+")}
+.ti-plus{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgNWwwIDE0IiAvPgogIDxwYXRoIGQ9Ik01IDEybDE0IDAiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgNWwwIDE0IiAvPgogIDxwYXRoIGQ9Ik01IDEybDE0IDAiIC8+Cjwvc3ZnPg==")}
+.ti-refresh{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMjAgMTFhOC4xIDguMSAwIDAgMCAtMTUuNSAtMm0tLjUgLTR2NGg0IiAvPgogIDxwYXRoIGQ9Ik00IDEzYTguMSA4LjEgMCAwIDAgMTUuNSAybS41IDR2LTRoLTQiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMjAgMTFhOC4xIDguMSAwIDAgMCAtMTUuNSAtMm0tLjUgLTR2NGg0IiAvPgogIDxwYXRoIGQ9Ik00IDEzYTguMSA4LjEgMCAwIDAgMTUuNSAybS41IDR2LTRoLTQiIC8+Cjwvc3ZnPg==")}
+.ti-route{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMyAxOWEyIDIgMCAxIDAgNCAwYTIgMiAwIDAgMCAtNCAwIiAvPgogIDxwYXRoIGQ9Ik0xOSA3YTIgMiAwIDEgMCAwIC00YTIgMiAwIDAgMCAwIDR6IiAvPgogIDxwYXRoIGQ9Ik0xMSAxOWg1LjVhMy41IDMuNSAwIDAgMCAwIC03aC04YTMuNSAzLjUgMCAwIDEgMCAtN2g0LjUiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMyAxOWEyIDIgMCAxIDAgNCAwYTIgMiAwIDAgMCAtNCAwIiAvPgogIDxwYXRoIGQ9Ik0xOSA3YTIgMiAwIDEgMCAwIC00YTIgMiAwIDAgMCAwIDR6IiAvPgogIDxwYXRoIGQ9Ik0xMSAxOWg1LjVhMy41IDMuNSAwIDAgMCAwIC03aC04YTMuNSAzLjUgMCAwIDEgMCAtN2g0LjUiIC8+Cjwvc3ZnPg==")}
+.ti-settings{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTAuMzI1IDQuMzE3Yy40MjYgLTEuNzU2IDIuOTI0IC0xLjc1NiAzLjM1IDBhMS43MjQgMS43MjQgMCAwIDAgMi41NzMgMS4wNjZjMS41NDMgLS45NCAzLjMxIC44MjYgMi4zNyAyLjM3YTEuNzI0IDEuNzI0IDAgMCAwIDEuMDY1IDIuNTcyYzEuNzU2IC40MjYgMS43NTYgMi45MjQgMCAzLjM1YTEuNzI0IDEuNzI0IDAgMCAwIC0xLjA2NiAyLjU3M2MuOTQgMS41NDMgLS44MjYgMy4zMSAtMi4zNyAyLjM3YTEuNzI0IDEuNzI0IDAgMCAwIC0yLjU3MiAxLjA2NWMtLjQyNiAxLjc1NiAtMi45MjQgMS43NTYgLTMuMzUgMGExLjcyNCAxLjcyNCAwIDAgMCAtMi41NzMgLTEuMDY2Yy0xLjU0MyAuOTQgLTMuMzEgLS44MjYgLTIuMzcgLTIuMzdhMS43MjQgMS43MjQgMCAwIDAgLTEuMDY1IC0yLjU3MmMtMS43NTYgLS40MjYgLTEuNzU2IC0yLjkyNCAwIC0zLjM1YTEuNzI0IDEuNzI0IDAgMCAwIDEuMDY2IC0yLjU3M2MtLjk0IC0xLjU0MyAuODI2IC0zLjMxIDIuMzcgLTIuMzdjMSAuNjA4IDIuMjk2IC4wNyAyLjU3MiAtMS4wNjV6IiAvPgogIDxwYXRoIGQ9Ik05IDEyYTMgMyAwIDEgMCA2IDBhMyAzIDAgMCAwIC02IDAiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTAuMzI1IDQuMzE3Yy40MjYgLTEuNzU2IDIuOTI0IC0xLjc1NiAzLjM1IDBhMS43MjQgMS43MjQgMCAwIDAgMi41NzMgMS4wNjZjMS41NDMgLS45NCAzLjMxIC44MjYgMi4zNyAyLjM3YTEuNzI0IDEuNzI0IDAgMCAwIDEuMDY1IDIuNTcyYzEuNzU2IC40MjYgMS43NTYgMi45MjQgMCAzLjM1YTEuNzI0IDEuNzI0IDAgMCAwIC0xLjA2NiAyLjU3M2MuOTQgMS41NDMgLS44MjYgMy4zMSAtMi4zNyAyLjM3YTEuNzI0IDEuNzI0IDAgMCAwIC0yLjU3MiAxLjA2NWMtLjQyNiAxLjc1NiAtMi45MjQgMS43NTYgLTMuMzUgMGExLjcyNCAxLjcyNCAwIDAgMCAtMi41NzMgLTEuMDY2Yy0xLjU0MyAuOTQgLTMuMzEgLS44MjYgLTIuMzcgLTIuMzdhMS43MjQgMS43MjQgMCAwIDAgLTEuMDY1IC0yLjU3MmMtMS43NTYgLS40MjYgLTEuNzU2IC0yLjkyNCAwIC0zLjM1YTEuNzI0IDEuNzI0IDAgMCAwIDEuMDY2IC0yLjU3M2MtLjk0IC0xLjU0MyAuODI2IC0zLjMxIDIuMzcgLTIuMzdjMSAuNjA4IDIuMjk2IC4wNyAyLjU3MiAtMS4wNjV6IiAvPgogIDxwYXRoIGQ9Ik05IDEyYTMgMyAwIDEgMCA2IDBhMyAzIDAgMCAwIC02IDAiIC8+Cjwvc3ZnPg==")}
+.ti-star{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTcuNzVsLTYuMTcyIDMuMjQ1bDEuMTc5IC02Ljg3M2wtNSAtNC44NjdsNi45IC0xbDMuMDg2IC02LjI1M2wzLjA4NiA2LjI1M2w2LjkgMWwtNSA0Ljg2N2wxLjE3OSA2Ljg3M3oiIC8+Cjwvc3ZnPg==");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTcuNzVsLTYuMTcyIDMuMjQ1bDEuMTc5IC02Ljg3M2wtNSAtNC44NjdsNi45IC0xbDMuMDg2IC02LjI1M2wzLjA4NiA2LjI1M2w2LjkgMWwtNSA0Ljg2N2wxLjE3OSA2Ljg3M3oiIC8+Cjwvc3ZnPg==")}
+.ti-target-arrow{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTJtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPgogIDxwYXRoIGQ9Ik0xMiA3YTUgNSAwIDEgMCA1IDUiIC8+CiAgPHBhdGggZD0iTTEzIDMuMDU1YTkgOSAwIDEgMCA3Ljk0MSA3Ljk0NSIgLz4KICA8cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM3oiIC8+CiAgPHBhdGggZD0iTTE1IDlsLTMgMyIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNMTIgMTJtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPgogIDxwYXRoIGQ9Ik0xMiA3YTUgNSAwIDEgMCA1IDUiIC8+CiAgPHBhdGggZD0iTTEzIDMuMDU1YTkgOSAwIDEgMCA3Ljk0MSA3Ljk0NSIgLz4KICA8cGF0aCBkPSJNMTUgNnYzaDNsMyAtM2gtM3YtM3oiIC8+CiAgPHBhdGggZD0iTTE1IDlsLTMgMyIgLz4KPC9zdmc+")}
+.ti-trash{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCA3bDE2IDAiIC8+CiAgPHBhdGggZD0iTTEwIDExbDAgNiIgLz4KICA8cGF0aCBkPSJNMTQgMTFsMCA2IiAvPgogIDxwYXRoIGQ9Ik01IDdsMSAxMmEyIDIgMCAwIDAgMiAyaDhhMiAyIDAgMCAwIDIgLTJsMSAtMTIiIC8+CiAgPHBhdGggZD0iTTkgN3YtM2ExIDEgMCAwIDEgMSAtMWg0YTEgMSAwIDAgMSAxIDF2MyIgLz4KPC9zdmc+");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCA3bDE2IDAiIC8+CiAgPHBhdGggZD0iTTEwIDExbDAgNiIgLz4KICA8cGF0aCBkPSJNMTQgMTFsMCA2IiAvPgogIDxwYXRoIGQ9Ik01IDdsMSAxMmEyIDIgMCAwIDAgMiAyaDhhMiAyIDAgMCAwIDIgLTJsMSAtMTIiIC8+CiAgPHBhdGggZD0iTTkgN3YtM2ExIDEgMCAwIDEgMSAtMWg0YTEgMSAwIDAgMSAxIDF2MyIgLz4KPC9zdmc+")}
+.ti-trophy{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNOCAyMWw4IDAiIC8+CiAgPHBhdGggZD0iTTEyIDE3bDAgNCIgLz4KICA8cGF0aCBkPSJNNyA0bDEwIDAiIC8+CiAgPHBhdGggZD0iTTE3IDR2OGE1IDUgMCAwIDEgLTEwIDB2LTgiIC8+CiAgPHBhdGggZD0iTTUgOW0tMiAwYTIgMiAwIDEgMCA0IDBhMiAyIDAgMSAwIC00IDAiIC8+CiAgPHBhdGggZD0iTTE5IDltLTIgMGEyIDIgMCAxIDAgNCAwYTIgMiAwIDEgMCAtNCAwIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNOCAyMWw4IDAiIC8+CiAgPHBhdGggZD0iTTEyIDE3bDAgNCIgLz4KICA8cGF0aCBkPSJNNyA0bDEwIDAiIC8+CiAgPHBhdGggZD0iTTE3IDR2OGE1IDUgMCAwIDEgLTEwIDB2LTgiIC8+CiAgPHBhdGggZD0iTTUgOW0tMiAwYTIgMiAwIDEgMCA0IDBhMiAyIDAgMSAwIC00IDAiIC8+CiAgPHBhdGggZD0iTTE5IDltLTIgMGEyIDIgMCAxIDAgNCAwYTIgMiAwIDEgMCAtNCAwIiAvPgo8L3N2Zz4=")}
+.ti-upload{-webkit-mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCAxN3YyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDIgLTJ2LTIiIC8+CiAgPHBhdGggZD0iTTcgOWw1IC01bDUgNSIgLz4KICA8cGF0aCBkPSJNMTIgNGwwIDEyIiAvPgo8L3N2Zz4=");mask-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAKICA8cGF0aCBkPSJNNCAxN3YyYTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDIgLTJ2LTIiIC8+CiAgPHBhdGggZD0iTTcgOWw1IC01bDUgNSIgLz4KICA8cGF0aCBkPSJNMTIgNGwwIDEyIiAvPgo8L3N2Zz4=")}
+.modal-head .btn[aria-label="Close"]{font-size:20px;line-height:1;padding:2px 12px}
+.pi-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.pi-chip{padding:9px 14px;border-radius:999px;border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:var(--font-sans);cursor:pointer}
+.pi-chip.on{background:var(--fill-accent);border-color:var(--fill-accent);color:#fff}
+.pi-edit{margin-left:8px;font-size:12px;color:var(--text-accent);background:none;border:none;cursor:pointer;font-family:var(--font-sans);text-decoration:underline;padding:0}
+.pi-hint{font-size:13px;color:var(--text-muted);margin:-4px 0 12px;line-height:1.45}
+.hero-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.hero-area{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-accent)}
+.hero-actions .btn-state{flex:2;width:auto;padding:13px 12px}
+.start-row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;margin-top:10px;border-radius:14px;border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);cursor:pointer;font-family:var(--font-sans)}
+.start-row.primary{background:var(--fill-accent);border-color:var(--fill-accent);color:#fff}
+.start-row i{font-size:22px;flex-shrink:0}
+.start-row .t{font-size:16px;font-weight:600}
+.start-row .s{font-size:12px;opacity:.78;margin-top:2px;line-height:1.35}
 .btn-state{width:100%;justify-content:center;font-size:16px;font-weight:600;padding:15px 16px;border-radius:14px;background:var(--fill-accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:var(--font-sans)}
 .btn-state small{font-size:12px;font-weight:500;opacity:0.85}
 .hero-actions{display:flex;gap:10px;margin-top:10px}
@@ -331,6 +382,7 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
         <button class="btn sm" onclick="syncNow()" style="flex-shrink:0"><i class="ti ti-refresh"></i> Sync now</button>
       </div>
       <div class="lbl">Your user ID - copy this and paste it on any other device to sync your data.</div>
+      <div class="privacy-note"><i class="ti ti-lock"></i><span>Keep this ID private. Anyone who has it can open your plan and notes.</span></div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <input type="text" id="uid-display" readonly style="flex:1;color:var(--text-accent);background:var(--surface-2);cursor:text"/>
         <button class="btn sm" onclick="copyUID()"><i class="ti ti-copy"></i> Copy</button>
@@ -341,6 +393,11 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
         <button class="btn sm primary" onclick="applyUID()"><i class="ti ti-check"></i> Apply</button>
       </div>
       <span class="ok-msg" id="uid-ok" style="display:none;margin-top:6px">Applied - reloading your data...</span>
+    </div>
+    <div class="card">
+      <div class="card-title">What your coach knows about you</div>
+      <div class="lbl">Short notes your coach saves when something lasts. Delete anything that is wrong or out of date.</div>
+      <div id="profile-notes"></div>
     </div>
     <div class="card">
       <div class="card-title">Backup</div>
@@ -397,9 +454,46 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 <script>
 
 // ---- Version + changelog (bump APP_VERSION and add a CHANGELOG entry each build) ----
-var APP_VERSION = '8.1';
-var APP_VERSION_DATE = 'Oct 14, 2026';
+var APP_VERSION = '9.5';
+var APP_VERSION_DATE = 'Oct 16, 2026';
 var CHANGELOG = [
+  { v:'9.5', date:'Oct 16, 2026', items:[
+    "The main button on Today is now Elevate. It opens your options: Get in state, Help me start, or Replan it",
+    "Plan it no longer shows a stuck link once you say you know your next action, and every other question now has one simple link to think it through with the coach"
+  ]},
+  { v:'9.4', date:'Oct 16, 2026', items:[
+    "Replan it: when a step is too big or not working, start the brain dump again from what you have already written, pick the few that matter, then plan the next action",
+    "A clearer stuck link when you are breaking a step into smaller steps"
+  ]},
+  { v:'9.3', date:'Oct 16, 2026', items:[
+    "Today is simpler: Focus at the top, then your Next step",
+    "One Get started button opens your options: Get in state, Help me start with the coach, or break the step into smaller steps",
+    "The Plan it link is gone from Today. You can still break a step down from Get started"
+  ]},
+  { v:'9.2', date:'Oct 16, 2026', items:[
+    "You can now edit the result right inside Plan it",
+    "On the ways question, the stuck link now opens the coach so you can brainstorm together",
+    "Icons are now built into the app, so they no longer show up as empty boxes"
+  ]},
+  { v:'9.1', date:'Oct 16, 2026', items:[
+    "Plan it now asks for all the ways to get your result, then helps you pick the few that matter most, before it asks for your next action",
+    "One Add project button, with a link to the coach if you are not sure what you want yet",
+    "Fixed icons that were not showing, including the close button on pop-ups",
+    "The result question now reminds you to name the result, not the activity"
+  ]},
+  { v:'9.0', date:'Oct 16, 2026', items:[
+    "Your coach can now run a full planning session: dump everything, find the real outcome behind it, and pick the one move that matters",
+    "New Weekly reset and Life check-in sessions in the Coach tab",
+    "Your coach keeps short notes about what you want and what lifts you. See them, and delete any, in Settings",
+    "A coach conversation now survives switching apps, so a long session picks up where you left off",
+    "Where you want to be is now 3 to 6 months, and Today shows it as your 3 to 6 month result",
+    "Today now reads: your action, To get: what it gets you, Why: why it matters",
+    "Other ways you brainstormed stay with the project, out of sight, inside Edit",
+    "A reminder in Settings to keep your user ID private"
+  ]},
+  { v:'8.2', date:'Oct 14, 2026', items:[
+    "Today now reads as one line of thought: your action, what it gets you, and why"
+  ]},
   { v:'8.1', date:'Oct 14, 2026', items:[
     "Your big vision is back on Today, above your 90-day result. Tap it to read the whole thing"
   ]},
@@ -441,12 +535,11 @@ var CHANGELOG = [
     "Tap a project on This Week to jump straight to it in Plan"
   ]}
 ];
-var COACH_SYS = "You are the Elevated OS Coach - a coaching system built on Chris Crawford's methodology. You are warm, direct, and conversational. You follow the energy, never a script. You never announce what you are doing - you just do it.\n\nCore identity: state first, always. From the right state of mind, the right actions become obvious. Your job is to get them elevated before any planning, deciding, or prioritizing happens.\n\nOne question at a time. Ask. Stop. Wait. Never stack questions.\n\nUse their exact words back - never coach jargon. When something lands emotionally, slow down there. Let it breathe before moving on.\n\nCORE PRINCIPLES:\n- Outcomes not actions - if they name a task, surface the result behind it\n- Nothing gets abandoned, everything gets sequenced\n- Default mode interrupt: From your elevated version - what would that person do?\n- Let feeling moments breathe\n- Brainstorm wide before narrowing - minimum 6-8 ideas, always ask what else\n- Needle-mover: which one move makes the others easier or unnecessary\n- State activation before and after every decision\n- Purpose chain: This could [result]. That [deeper]. That opens [vision]. Use could on first link only\n\nPROCRASTINATION: Find what they avoid, ask them to guess why - do not suggest first. Listen for PRACTICAL block (missing info, unclear plan) or EMOTIONAL block (fear, belief, resistance). Practical: solve the gap. Emotional: cost of avoiding, gain of doing, feel the gain, activate. Watch for beliefs.\n\nCELEBRATIONS: When someone mentions a win or progress - offer to save it. If yes: SAVE_WIN:{title:x,note:x,category:business or health or family or other}\n\nSAVE COMMANDS (output on own line):\nSAVE_TO_PLAN:{name:x,why:x,step:x,area:business or health or other,sequence:1}\nSAVE_VISION:{their exact words}\nSAVE_IDEA:{one clear sentence}\nSAVE_WIN:{title:x,note:x,category:x}\n\nNEW PROJECT: Understand outcome, why it matters, brainstorm wide, find needle-mover, save 2-3 steps. Never skip the brainstorm.\n\nWhen stuck: Why does this matter? What becomes possible? Stay curious. Stay warm.";
 
 var AREAS = [
   {key:'business',label:'Business',color:'business'},
   {key:'health',label:'Health',color:'health'},
-  {key:'other',label:'Other',color:'other'}
+  {key:'other',label:'Home',color:'other'}
 ];
 
 var D = {
@@ -454,10 +547,11 @@ var D = {
   goals:{
     business:{label:'Business',goal:'',projects:[]},
     health:{label:'Health',goal:'',projects:[]},
-    other:{label:'Other',goal:'',projects:[]}
+    other:{label:'Home',goal:'',projects:[]}
   },
   waiting:[],
   ideas:[],
+  profileNotes:[],
   stateAnchor:'',
   celebrations:[],
   lastReviewPrompt:0,
@@ -524,7 +618,8 @@ function rowToDoc(row){
     waiting: asArray(parseJsonField(row.waiting, [])),
     ideas: asArray(parseJsonField(row.ideas, [])),
     celebrations: asArray(parseJsonField(row.celebrations, [])),
-    visionImages: asArray(parseJsonField(row.vision_images, []))
+    visionImages: asArray(parseJsonField(row.vision_images, [])),
+    profileNotes: row.profile_notes === undefined ? null : asArray(parseJsonField(row.profile_notes, []))
   };
 }
 function currentDoc(){
@@ -534,7 +629,8 @@ function currentDoc(){
     waiting: asArray(D.waiting),
     ideas: asArray(D.ideas),
     celebrations: asArray(D.celebrations),
-    visionImages: asArray(D.visionImages)
+    visionImages: asArray(D.visionImages),
+    profileNotes: asArray(D.profileNotes)
   };
 }
 function docIsEmpty(d){
@@ -545,7 +641,7 @@ function docIsEmpty(d){
     return x && ((x.goal && String(x.goal).trim()) || (x.projects && x.projects.length));
   });
   if(hasArea) return false;
-  return !((d.waiting||[]).length || (d.ideas||[]).length || (d.celebrations||[]).length);
+  return !((d.waiting||[]).length || (d.ideas||[]).length || (d.celebrations||[]).length || (d.profileNotes||[]).length);
 }
 function stable(v){
   if(v === null || typeof v !== 'object') return JSON.stringify(v === undefined ? null : v);
@@ -554,7 +650,15 @@ function stable(v){
     return JSON.stringify(k) + ':' + stable(v[k]);
   }).join(',') + '}';
 }
-function docsEqual(a, b){ return stable(a) === stable(b); }
+function docsEqual(a, b){
+  // if the cloud has no profile_notes column yet, compare everything else
+  if(a && b && (a.profileNotes === null || b.profileNotes === null)){
+    var a2 = Object.assign({}, a), b2 = Object.assign({}, b);
+    delete a2.profileNotes; delete b2.profileNotes;
+    return stable(a2) === stable(b2);
+  }
+  return stable(a) === stable(b);
+}
 function sameStamp(a, b){ return !!a && !!b && a === b; }
 
 async function fetchRow(uid){
@@ -577,6 +681,7 @@ function applyCloudDoc(doc){
   D.ideas = asArray(doc.ideas);
   D.celebrations = asArray(doc.celebrations);
   D.visionImages = asArray(doc.visionImages);
+  if(doc.profileNotes !== null && doc.profileNotes !== undefined) D.profileNotes = asArray(doc.profileNotes);
   try{ localStorage.setItem('eos6', JSON.stringify(D)); }catch(e){}
 }
 
@@ -643,6 +748,16 @@ function scheduleSync(){
   syncTimer = setTimeout(function(){ syncSave(); }, 2000);
 }
 
+async function postRow(payload){
+  var body = JSON.stringify(payload);
+  var opts = { method:'POST', headers: Object.assign({}, sbHeaders(), {'Prefer':'resolution=merge-duplicates,return=representation'}), body: body };
+  if(body.length < 60000) opts.keepalive = true;
+  var resp = await fetch(SB_URL+'/rest/v1/elevated_os_users?on_conflict=user_id', opts);
+  var errText = '';
+  if(!resp.ok){ try{ errText = await resp.text(); }catch(e){} }
+  return { resp: resp, errText: errText };
+}
+
 async function syncSave(){
   if(SYNC.saving){ SYNC.again = true; return; }
   SYNC.saving = true;
@@ -665,10 +780,15 @@ async function syncSave(){
       celebrations: D.celebrations || [],
       updated_at: new Date().toISOString()
     };
-    var body = JSON.stringify(payload);
-    var opts = { method:'POST', headers: Object.assign({}, sbHeaders(), {'Prefer':'resolution=merge-duplicates,return=representation'}), body: body };
-    if(body.length < 60000) opts.keepalive = true;
-    var resp = await fetch(SB_URL+'/rest/v1/elevated_os_users?on_conflict=user_id', opts);
+    if(!SYNC.notesBlocked) payload.profile_notes = D.profileNotes || [];
+    var sent = await postRow(payload);
+    if(!sent.resp.ok && !SYNC.notesBlocked && /profile_notes/.test(sent.errText)){
+      // the profile_notes column does not exist yet: keep syncing everything else
+      SYNC.notesBlocked = true;
+      delete payload.profile_notes;
+      sent = await postRow(payload);
+    }
+    var resp = sent.resp;
     if(resp.ok){
       var rows = null; try{ rows = await resp.json(); }catch(e){}
       var stamp = (rows && rows[0] && rows[0].updated_at) ? rows[0].updated_at : null;
@@ -679,8 +799,7 @@ async function syncSave(){
       else { SYNC.again = true; }   // edited while saving: go again
       showSyncStatus('Synced');
     } else {
-      var err = ''; try{ err = await resp.text(); }catch(e){}
-      SYNC.lastError = ('HTTP '+resp.status+' '+err).slice(0,240);
+      SYNC.lastError = ('HTTP '+resp.status+' '+sent.errText).slice(0,240);
       console.error('Supabase save error:', SYNC.lastError);
       showSyncStatus('Sync failed - saved locally');
     }
@@ -746,6 +865,7 @@ function renderLastSynced(){
   if(SYNC.dirty) line += ' - changes waiting to upload';
   var html = '<div>' + esc(line) + '</div>';
   if(SYNC.lastError) html += '<div style="color:var(--text-danger);font-size:12px;margin-top:4px;word-break:break-word">Sync problem: ' + esc(SYNC.lastError) + '</div>';
+  if(SYNC.notesBlocked) html += '<div style="color:var(--text-warning);font-size:12px;margin-top:4px">Coach notes are saved on this device only until the profile_notes column exists in Supabase. Everything else is syncing.</div>';
   el.innerHTML = html;
 }
 
@@ -783,6 +903,7 @@ function restorePrevCopy(){
   D.ideas = asArray(prev.doc.ideas);
   D.celebrations = asArray(prev.doc.celebrations);
   D.visionImages = asArray(prev.doc.visionImages);
+  if(prev.doc.profileNotes) D.profileNotes = asArray(prev.doc.profileNotes);
   try{ localStorage.setItem('eos6-prev', JSON.stringify({ savedAt: Date.now(), reason: 'swap', doc: cur })); }catch(e){}
   persist();
   render(); hideSyncNotice(); renderPrevCopy();
@@ -800,7 +921,7 @@ async function applyUID(){
     return;
   }
   localStorage.setItem('eos6-userid', val);
-  D = { vision:'', goals:{business:{label:'Business',goal:'',projects:[]},health:{label:'Health',goal:'',projects:[]},other:{label:'Other',goal:'',projects:[]}}, waiting:[], ideas:[], stateAnchor:'', celebrations:[], lastReviewPrompt:0, visionImages:[] };
+  D = { vision:'', goals:{business:{label:'Business',goal:'',projects:[]},health:{label:'Health',goal:'',projects:[]},other:{label:'Home',goal:'',projects:[]}}, waiting:[], ideas:[], profileNotes:[], stateAnchor:'', celebrations:[], lastReviewPrompt:0, visionImages:[] };
   loadSyncMeta(); SYNC.stamp = null; SYNC.dirty = false; setDirtyFlag(false);
   await syncPull('init');
   render();
@@ -821,6 +942,7 @@ function persist(){
 
 function load(){
   try{ var r=localStorage.getItem('eos6'); if(r) D=JSON.parse(r); }catch(e){}
+  if(!Array.isArray(D.profileNotes)) D.profileNotes=[];
   render();
   sbLoad().then(function(){ render(); });
 }
@@ -845,6 +967,7 @@ function save(){
 
 function render(){
   document.getElementById('vision-in').value=D.vision||'';
+  renderProfileNotes();
   renderSetupGoals();
   renderSetupWaiting();
   renderToday();
@@ -869,23 +992,22 @@ function renderSetupGoals(){
     html+='<div class="goal-header"><div class="goal-dot '+a.color+'"></div>';
     html+='<input type="text" id="goal-label-'+a.key+'" value="'+esc(g.label||a.label)+'" style="width:120px;font-size:13px;font-weight:600;padding:3px 7px;border-radius:6px"/>';
     html+='</div>';
-    html+='<div class="lbl">Where do you want to be 3 months from now?</div>';
-    html+='<input type="text" id="goal-text-'+a.key+'" value="'+esc(g.goal||'')+'" placeholder="Your 90-day result..." style="margin-bottom:12px"/>';
+    html+='<div class="lbl">Where do you want to be in 3 to 6 months?</div>';
+    html+='<input type="text" id="goal-text-'+a.key+'" value="'+esc(g.goal||'')+'" placeholder="Your 3 to 6 month result..." style="margin-bottom:12px"/>';
     html+='<div style="font-size:13px;color:var(--text-accent);font-style:italic;margin-bottom:8px;padding:6px 10px;background:var(--bg-accent);border-radius:var(--radius)">What are the one or two that actually move this forward?</div>';
     html+='<div id="projs-'+a.key+'">'+renderProjList(a.key,projs)+'</div>';
     html+='<div style="display:flex;gap:6px;margin-top:6px">';
-    html+='<button class="btn sm primary" onclick="planProjectWithCoach(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-messages"></i> Add with coach</button>';
-    html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')"><i class="ti ti-pencil"></i> Add manually</button>';
+    html+='<button class="btn sm primary" onclick="toggleAddForm(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-plus"></i> Add project</button>';
     html+='</div>';
     html+='<div class="add-proj-form" id="add-form-'+a.key+'">';
-    html+='<div class="lbl">What do you want? <span style="color:var(--text-muted)">(be as specific as you can)</span></div>';
+    html+='<div class="lbl">What do you want? <span style="color:var(--text-muted)">(the result, not the activity)</span></div>';
     html+='<input type="text" id="pn-'+a.key+'" placeholder="e.g. First 5 coaching clients enrolled and paying" style="margin-bottom:6px"/>';
     html+='<div class="lbl">Why does this matter?</div>';
     html+='<input type="text" id="pw-'+a.key+'" placeholder="e.g. Income through work I love" style="margin-bottom:6px"/>';
     html+='<div style="display:flex;gap:6px">';
     html+='<button class="btn sm primary" onclick="addProj(\''+a.key+'\')"><i class="ti ti-route"></i> Save and plan it</button>';
     html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')">Cancel</button>';
-    html+='</div></div></div>';
+    html+='</div><div><button class="pi-stuck" style="margin:10px 0 0" onclick="openPlanSession()">Not sure what you want yet? Talk it through with the coach</button></div></div></div>';
   });
   el.innerHTML=html;
   try{ initStepSorting(); }catch(err){ console.error('Step sorting init failed:', err); }
@@ -961,7 +1083,7 @@ function renderProjList(akey,projs){
     html+='<button class="btn sm danger" onclick="delProj(\''+akey+'\','+i+')"><i class="ti ti-trash"></i> Remove</button>';
     html+='</div>';
     html+='<div class="add-proj-form" id="edit-proj-'+akey+'-'+i+'">';
-    html+='<div class="lbl" style="margin-top:4px">What do you want? <span style="color:var(--text-muted)">(be as specific as you can)</span></div>';
+    html+='<div class="lbl" style="margin-top:4px">What do you want? <span style="color:var(--text-muted)">(the result, not the activity)</span></div>';
     html+='<input type="text" id="ep-name-'+akey+'-'+i+'" value="'+esc(p.name)+'" style="margin-bottom:6px"/>';
     html+='<div class="lbl">Why does this matter?</div>';
     html+='<input type="text" id="ep-why-'+akey+'-'+i+'" value="'+esc(p.why||'')+'" style="margin-bottom:8px"/>';
@@ -972,7 +1094,7 @@ function renderProjList(akey,projs){
       html+='<span style="font-size:12px;color:var(--text-muted);width:18px">'+(si+1)+'.</span>';
       html+='<input type="text" id="ep-step-'+akey+'-'+i+'-'+si+'" value="'+esc(s.text)+'" style="flex:1"/>';
       if(steps.length>1) html+='<span class="drag-handle" title="Drag to reorder">&#10303;</span>';
-      html+='<button class="btn sm danger" onclick="delStep(\''+akey+'\','+i+','+si+')"><i class="ti ti-x"></i></button>';
+      html+='<button class="btn sm danger" onclick="delStep(\''+akey+'\','+i+','+si+')">&times;</button>';
       html+='</div>';
     });
     html+='</div>';
@@ -983,6 +1105,12 @@ function renderProjList(akey,projs){
     // Show reorder arrows in edit mode too
     if(steps.length > 1){
       html+='<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Drag the handle to change the order</div>';
+    }
+    if(p.ways && p.ways.length){
+      var wopen = (window._waysOpen === akey+'-'+i);
+      html+='<div class="ways-wrap"><button class="pi-stuck" style="margin:2px 0 8px" onclick="toggleWays(this)">Other ways ('+p.ways.length+')</button><div class="ways-list" style="display:'+(wopen?'block':'none')+'">';
+      p.ways.forEach(function(wy,wi){ html+='<div class="way-row"><span>'+esc(wy)+'</span><button class="btn sm danger" aria-label="Delete" data-ak="'+akey+'" data-pi="'+i+'" data-wi="'+wi+'" onclick="deleteWay(this.dataset.ak,parseInt(this.dataset.pi),parseInt(this.dataset.wi))">&times;</button></div>'; });
+      html+='</div></div>';
     }
     html+='<div style="display:flex;gap:6px">';
     html+='<button class="btn sm primary" onclick="saveEditProj(\''+akey+'\','+i+')"><i class="ti ti-device-floppy"></i> Save changes</button>';
@@ -1169,7 +1297,7 @@ function renderSetupWaiting(){
     html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)">';
     html+='<div><div style="font-size:13px;color:var(--text-primary)">'+esc(w.what)+'</div>';
     if(w.who) html+='<div style="font-size:12px;color:var(--text-warning)">'+esc(w.who)+'</div>';
-    html+='</div><button class="btn sm danger" onclick="delWaiting('+i+')"><i class="ti ti-x"></i></button></div>';
+    html+='</div><button class="btn sm danger" onclick="delWaiting('+i+')">&times;</button></div>';
   });
   el.innerHTML=html;
 }
@@ -1215,7 +1343,12 @@ function toggleVision(){
 }
 
 function heroWhy(p){
-  return p.why ? '<div class="hero-divider"></div><div class="hero-why">' + esc(p.why) + '</div>' : '<div style="height:16px"></div>';
+  return p.why ? '<div class="hero-divider"></div><div class="hero-meta"><div class="hm-row"><span class="hm-l">Why:</span><span class="hm-t">' + esc(p.why) + '</span></div></div>' : '<div style="height:16px"></div>';
+}
+function heroMeta(p){
+  var rows = '<div class="hm-row hm-get"><span class="hm-l">To get:</span><span class="hm-t">' + esc(p.name) + '</span></div>';
+  if(p.why) rows += '<div class="hm-row"><span class="hm-l">Why:</span><span class="hm-t">' + esc(p.why) + '</span></div>';
+  return '<div class="hero-divider"></div><div class="hero-meta">' + rows + '</div>';
 }
 
 function renderToday(){
@@ -1254,7 +1387,7 @@ function renderToday(){
   var cur = idx >= 0 ? steps[idx] : null;
   var at = 'data-ak="' + ak + '" data-pi="' + pi + '"';
 
-  rEl.innerHTML = '<div class="today-result"><div class="r-label">90-day result</div>'
+  rEl.innerHTML = '<div class="today-result"><div class="r-label">Focus:</div>'
     + (g.goal ? '<div class="r-text">' + esc(g.goal) + '</div>'
       : '<div class="r-text" style="font-size:15px;font-weight:400;color:var(--text-muted)">Not set yet. <a href="#" style="color:var(--text-accent)" onclick="show(\'setup\');return false">Set it in Plan</a></div>')
     + '</div>';
@@ -1262,14 +1395,14 @@ function renderToday(){
   var h = '';
   var w = window._wrap;
   if(w && w.akey === ak && w.i === pi) h += wrapHtml(w);
-  h += '<div class="hero"><div class="hero-top"><span class="dot ' + a.color + '"></span><span class="area">' + esc(label) + '</span>';
-  if(cur) h += '<button class="link" ' + at + ' data-si="' + idx + '" onclick="planItStep(this.dataset.ak,parseInt(this.dataset.pi),parseInt(this.dataset.si))">Plan it</button>';
-  h += '</div>';
+  h += '<div class="hero">';
+  if(cur || !steps.length){
+    h += '<div class="hero-top"><span class="hero-label">Next step:</span>' + (ak !== 'business' ? '<span class="hero-area"> &middot; ' + esc(label) + '</span>' : '') + '</div>';
+  }
 
   if(!steps.length){
     h += '<div class="hero-step">What\'s the very next action?</div>';
-    h += '<div class="hero-part">Toward: ' + esc(p.name) + '</div>';
-    h += heroWhy(p);
+    h += heroMeta(p);
     h += '<button class="btn-state" ' + at + ' onclick="planItProject(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-route"></i> Plan it</button>';
   } else if(!cur){
     h += '<div class="hero-step">That\'s every step.</div>';
@@ -1281,11 +1414,10 @@ function renderToday(){
     var stale = false;
     if(cur.createdAt){ stale = (Date.now() - new Date(cur.createdAt).getTime()) >= 7 * 86400000; }
     h += '<div class="hero-step">' + esc(cur.text) + '</div>';
-    h += '<div class="hero-part">' + (cur.parent ? 'Part of: ' + esc(cur.parent) : 'Toward: ' + esc(p.name)) + '</div>';
-    if(stale) h += '<div class="hero-part" style="color:var(--text-warning)">Sitting a while. Help me start is for exactly this.</div>';
-    h += heroWhy(p);
-    h += '<button class="btn-state" ' + at + ' onclick="openState(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-player-play"></i> Get in state <small>' + (STATE_AUDIO_URL ? 'audio' : '60 sec') + '</small></button>';
-    h += '<div class="hero-actions"><button class="btn" ' + at + ' onclick="helpMeStart(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-lifebuoy"></i> Help me start</button>'
+    if(cur.parent) h += '<div class="hero-part">Part of: ' + esc(cur.parent) + '</div>';
+    if(stale) h += '<div class="hero-part" style="color:var(--text-warning)">Sitting a while? Tap Elevate and pick Help me start.</div>';
+    h += heroMeta(p);
+    h += '<div class="hero-actions"><button class="btn-state" ' + at + ' onclick="openStart(this.dataset.ak,parseInt(this.dataset.pi))">Elevate</button>'
       + '<button class="btn" ' + at + ' onclick="doneStep(this.dataset.ak,parseInt(this.dataset.pi))"><i class="ti ti-check"></i> Done</button></div>';
   }
   h += '</div>';
@@ -1394,82 +1526,11 @@ function trainingEmbed(){
 function planItProject(akey, pi){ openPlanIt({ akey: akey, pi: pi, mode: 'new' }); }
 function planItStep(akey, pi, si){ openPlanIt({ akey: akey, pi: pi, mode: 'step', stepIdx: si }); }
 
-function openPlanIt(o){
-  var p = D.goals[o.akey] && D.goals[o.akey].projects[o.pi];
-  if(!p) return;
-  var mode = o.mode || 'new';
-  var cur = '';
-  if(mode === 'step'){
-    var st = (p.steps || [])[o.stepIdx];
-    if(!st) return;
-    cur = st.text;
-  }
-  PLANIT = {
-    akey: o.akey, pi: o.pi, mode: mode,
-    base: mode === 'more' ? (o.parent || null) : null,
-    result: mode === 'more' ? (o.parent || p.name) : p.name,
-    stepIdx: mode === 'step' ? o.stepIdx : null,
-    chain: [], current: cur, later: [], depth: 0, final: '',
-    stage: mode === 'step' ? 'q2' : 'q1',
-    pieces: ['', ''], stuckFrom: null, video: false
-  };
-  planItRender();
-}
-
-function planItRender(){
-  var P = PLANIT;
-  if(!P) return;
-  var hasVideo = !!ytId(TRAINING_VIDEO_URL);
-  var head = '<div class="modal-head"><div class="modal-title">Plan it</div><div class="spacer"></div>'
-    + (hasVideo ? '<button class="btn sm" onclick="planItVideo(true)"><i class="ti ti-player-play"></i> Watch training</button>' : '')
-    + '<button class="btn sm" onclick="planItClose()" aria-label="Close"><i class="ti ti-x"></i></button></div>';
-  if(P.video){
-    showModal(head + trainingEmbed() + '<div style="margin-top:14px"><button class="btn primary" onclick="planItVideo(false)">Back to planning</button></div>');
-    return;
-  }
-  var chainHtml = '<div class="pi-chain"><div class="pi-result"><span>Result</span>' + esc(P.result) + '</div>';
-  P.chain.forEach(function(t){ chainHtml += '<div class="pi-link">&rarr; ' + esc(t) + '</div>'; });
-  if(P.current && P.stage !== 'q1' && P.stage !== 'done') chainHtml += '<div class="pi-link pi-current">&rarr; ' + esc(P.current) + '</div>';
-  chainHtml += '</div>';
-
-  var stuck = '<div><button class="pi-stuck" onclick="planItStuck()">Not sure? If you did know, what would it be?</button></div>';
-  var body = '';
-  if(P.stage === 'q1'){
-    body = '<div class="pi-q">What\'s the very next action to make that happen?</div>'
-      + '<input type="text" id="pi-input" placeholder="Type it..." onkeydown="if(event.key===\'Enter\'){planItQ1()}"/>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItQ1()">Next</button></div>' + stuck;
-  } else if(P.stage === 'q2'){
-    body = '<div class="pi-q">Can you take that action right now, or does it need to be broken into smaller steps?</div>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItDoNow()">I can do it now</button><button class="btn" onclick="planItBreak()">Break it into smaller steps</button></div>';
-    if(P.depth >= 4) body += '<div class="pi-offer">This is getting deep. Want to think it through with the coach? <button class="pi-stuck" style="margin:0 0 0 4px" onclick="planItCoach()">Open the coach</button></div>';
-  } else if(P.stage === 'break'){
-    body = '<div class="pi-q">What are the smaller steps, in order?</div>';
-    P.pieces.forEach(function(t, k){
-      body += '<input type="text" class="pi-piece" id="pi-piece-' + k + '" value="' + esc(t) + '" placeholder="Smaller step ' + (k + 1) + '"/>';
-    });
-    body += '<div class="pi-actions">' + (P.pieces.length < 4 ? '<button class="btn" onclick="planItAddPiece()"><i class="ti ti-plus"></i> Add another</button>' : '')
-      + '<button class="btn primary" onclick="planItContinue()">Continue</button></div>' + stuck;
-  } else if(P.stage === 'stuck'){
-    body = '<div class="pi-q">If you did know, what would it be?</div>'
-      + '<input type="text" id="pi-guess" placeholder="Your best guess..." onkeydown="if(event.key===\'Enter\'){planItGuess()}"/>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItGuess()">Use it</button><button class="btn" onclick="planItBack()">Back</button></div>'
-      + '<div><button class="pi-stuck" onclick="planItCoach()">Still stuck? Think it through with the coach</button></div>';
-  } else if(P.stage === 'done'){
-    body = '<div class="pi-q">That\'s your next action.</div>'
-      + '<div class="pi-final">' + esc(P.final) + '</div>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItStart()">Start now</button></div>';
-  }
-  showModal(head + chainHtml + body);
-  var inp = document.getElementById('pi-input') || document.getElementById('pi-guess');
-  if(inp){ try{ inp.focus(); }catch(e){} }
-}
-
 function planItVal(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
 function planItSyncPieces(){
   if(!PLANIT) return;
   PLANIT.pieces = PLANIT.pieces.map(function(t, k){ var e = document.getElementById('pi-piece-' + k); return e ? e.value : t; });
 }
-function planItVideo(on){ if(!PLANIT) return; planItSyncPieces(); PLANIT.video = !!on; planItRender(); }
 function planItClose(){ PLANIT = null; hideModal(); }
 function planItQ1(){ var v = planItVal('pi-input'); if(!v || !PLANIT) return; PLANIT.current = v; PLANIT.stage = 'q2'; planItRender(); }
 function planItDoNow(){ if(!PLANIT) return; PLANIT.final = PLANIT.current; PLANIT.stage = 'done'; planItRender(); }
@@ -1496,8 +1557,111 @@ function planItContinue(){
   PLANIT.stage = 'q2';
   planItRender();
 }
-function planItStuck(){ if(!PLANIT) return; planItSyncPieces(); PLANIT.stuckFrom = PLANIT.stage; PLANIT.stage = 'stuck'; planItRender(); }
 function planItBack(){ if(!PLANIT) return; PLANIT.stage = PLANIT.stuckFrom || 'q1'; planItRender(); }
+function planItRender(){
+  var P = PLANIT;
+  if(!P) return;
+  var hasVideo = !!ytId(TRAINING_VIDEO_URL);
+  var head = '<div class="modal-head"><div class="modal-title">Plan it</div><div class="spacer"></div>'
+    + (hasVideo ? '<button class="btn sm" onclick="planItVideo(true)"><i class="ti ti-player-play"></i> Watch training</button>' : '')
+    + '<button class="btn sm" onclick="planItClose()" aria-label="Close">&times;</button></div>';
+  if(P.video){
+    showModal(head + trainingEmbed() + '<div style="margin-top:14px"><button class="btn primary" onclick="planItVideo(false)">Back to planning</button></div>');
+    return;
+  }
+  var chainHtml;
+  if(P.editingResult){
+    chainHtml = '<div class="pi-chain"><div class="pi-result"><span>Result</span>The result you want, not the activity</div>'
+      + '<input type="text" id="pi-result-in" value="' + esc(P.result) + '" style="margin:8px 0 6px" onkeydown="if(event.key===\'Enter\'){planItSaveResult()}"/>'
+      + '<div class="pi-actions" style="margin-top:6px"><button class="btn sm primary" onclick="planItSaveResult()">Save</button><button class="btn sm" onclick="planItCancelResult()">Cancel</button></div>';
+  } else {
+    chainHtml = '<div class="pi-chain"><div class="pi-result"><span>Result</span>' + esc(P.result)
+      + (P.mode !== 'more' ? ' <button class="pi-edit" onclick="planItEditResult()">Edit</button>' : '') + '</div>';
+  }
+  P.chain.forEach(function(t){ chainHtml += '<div class="pi-link">&rarr; ' + esc(t) + '</div>'; });
+  if(P.current && P.stage !== 'q1' && P.stage !== 'done') chainHtml += '<div class="pi-link pi-current">&rarr; ' + esc(P.current) + '</div>';
+  chainHtml += '</div>';
+
+  var body = '';
+  if(P.stage === 'ways'){
+    body = '<div class="pi-q">What are all the ways to get that?</div>' + (P.mode === 'replan' ? '<div class="pi-hint">Here is what you have already written for this. Edit it or add anything new.</div>' : '');
+    P.ways.forEach(function(t, k){
+      body += '<input type="text" class="pi-piece" id="pi-way-' + k + '" value="' + esc(t) + '" placeholder="A way ' + (k + 1) + '"/>';
+    });
+    body += '<div class="pi-actions">' + (P.ways.length < 8 ? '<button class="btn" onclick="planItAddWay()"><i class="ti ti-plus"></i> Add another</button>' : '')
+      + '<button class="btn primary" onclick="planItWaysNext()">Next</button></div>'
+      + '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Brainstorm it with the coach</button></div>'
+      + '<div><button class="pi-stuck" style="margin-top:6px" onclick="planItSkipWays()">I already know my first action</button></div>';
+  } else if(P.stage === 'pick'){
+    body = '<div class="pi-q">Which one or two would get you most of the way?</div><div class="pi-chips">';
+    P.allWays.forEach(function(t, k){
+      body += '<button class="pi-chip' + (P.picks.indexOf(t) >= 0 ? ' on' : '') + '" data-wi="' + k + '" onclick="planItTogglePick(parseInt(this.dataset.wi))">' + esc(t) + '</button>';
+    });
+    body += '</div><input type="text" id="pi-newpick" placeholder="Or type something new..." value="' + esc(P.newPick || '') + '" onkeydown="if(event.key===\'Enter\'){planItPickNext()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItPickNext()">Next</button></div>';
+  } else if(P.stage === 'q1'){
+    body = '<div class="pi-q">What\'s the very next action to make that happen?</div>'
+      + '<input type="text" id="pi-input" placeholder="Type it..." onkeydown="if(event.key===\'Enter\'){planItQ1()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItQ1()">Next</button></div>'
+      + (P.skipped ? '' : '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Think it through with the coach</button></div>');
+  } else if(P.stage === 'q2'){
+    body = '<div class="pi-q">Can you take that action right now, or does it need to be broken into smaller steps?</div>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItDoNow()">I can do it now</button><button class="btn" onclick="planItBreak()">Break it into smaller steps</button></div>';
+    if(P.depth >= 4) body += '<div class="pi-offer">This is getting deep. Want to think it through with the coach? <button class="pi-stuck" style="margin:0 0 0 4px" onclick="planItCoach()">Open the coach</button></div>';
+  } else if(P.stage === 'break'){
+    body = '<div class="pi-q">What are the smaller steps, in order?</div>';
+    P.pieces.forEach(function(t, k){
+      body += '<input type="text" class="pi-piece" id="pi-piece-' + k + '" value="' + esc(t) + '" placeholder="Smaller step ' + (k + 1) + '"/>';
+    });
+    body += '<div class="pi-actions">' + (P.pieces.length < 4 ? '<button class="btn" onclick="planItAddPiece()"><i class="ti ti-plus"></i> Add another</button>' : '')
+      + '<button class="btn primary" onclick="planItContinue()">Continue</button></div>'
+      + '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Think it through with the coach</button></div>';
+  } else if(P.stage === 'stuck'){
+    body = '<div class="pi-q">If you did know, what would it be?</div>'
+      + '<input type="text" id="pi-guess" placeholder="Your best guess..." onkeydown="if(event.key===\'Enter\'){planItGuess()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItGuess()">Use it</button><button class="btn" onclick="planItBack()">Back</button></div>'
+      + '<div><button class="pi-stuck" onclick="planItCoach()">Still stuck? Think it through with the coach</button></div>';
+  } else if(P.stage === 'done'){
+    body = '<div class="pi-q">That\'s your next action.</div>'
+      + '<div class="pi-final">' + esc(P.final) + '</div>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItStart()">Start now</button></div>';
+  }
+  showModal(head + chainHtml + body);
+  var inp = document.getElementById('pi-result-in') || document.getElementById('pi-input') || document.getElementById('pi-guess') || document.getElementById('pi-way-0');
+  if(inp){ try{ inp.focus(); }catch(e){} }
+}
+
+function planItSkipWays(){
+  if(!PLANIT) return;
+  PLANIT.skipped = true;
+  PLANIT.stage = 'q1';
+  planItRender();
+}
+function planItTogglePick(k){
+  if(!PLANIT) return;
+  var t = PLANIT.allWays[k];
+  if(t === undefined) return;
+  PLANIT.newPick = planItVal('pi-newpick');
+  var at = PLANIT.picks.indexOf(t);
+  if(at >= 0) PLANIT.picks.splice(at, 1);
+  else if(PLANIT.picks.length < 2) PLANIT.picks.push(t);
+  planItRender();
+}
+function planItPickNext(){
+  if(!PLANIT) return;
+  var typed = planItVal('pi-newpick');
+  var picks = PLANIT.picks.slice();
+  if(typed && picks.length < 2 && picks.map(function(x){ return x.toLowerCase(); }).indexOf(typed.toLowerCase()) < 0) picks.push(typed);
+  if(!picks.length) return;
+  PLANIT.picks = picks;
+  PLANIT.chain.push(picks[0]);
+  if(picks[1]) PLANIT.later = PLANIT.later.concat([{ text: picks[1] }]);
+  PLANIT.stage = 'q1';
+  planItRender();
+}
+
+function planItVideo(on){ if(!PLANIT) return; planItSyncPieces(); planItSyncWays(); PLANIT.video = !!on; planItRender(); }
+function planItStuck(){ if(!PLANIT) return; planItSyncPieces(); planItSyncWays(); PLANIT.stuckFrom = PLANIT.stage; PLANIT.stage = 'stuck'; planItRender(); }
 function planItGuess(){
   var v = planItVal('pi-guess');
   if(!v || !PLANIT) return;
@@ -1506,10 +1670,113 @@ function planItGuess(){
     if(k < 0) k = PLANIT.pieces.length - 1;
     PLANIT.pieces[k] = v;
     PLANIT.stage = 'break';
+  } else if(PLANIT.stuckFrom === 'ways'){
+    var j = PLANIT.ways.findIndex(function(t){ return !t.trim(); });
+    if(j < 0){ if(PLANIT.ways.length < 8) PLANIT.ways.push(v); else PLANIT.ways[7] = v; }
+    else PLANIT.ways[j] = v;
+    PLANIT.stage = 'ways';
   } else {
     PLANIT.current = v;
     PLANIT.stage = 'q2';
   }
+  planItRender();
+}
+
+function openPlanSession(){
+  show('coach');
+  setTimeout(function(){ resetChatState(); startPrompt('plan', 'Plan my goals'); }, 100);
+}
+
+function planItEditResult(){
+  if(!PLANIT || PLANIT.mode === 'more') return;
+  planItSyncPieces(); planItSyncWays();
+  PLANIT.editingResult = true;
+  planItRender();
+}
+function planItCancelResult(){ if(!PLANIT) return; PLANIT.editingResult = false; planItRender(); }
+function planItSaveResult(){
+  if(!PLANIT) return;
+  var v = planItVal('pi-result-in');
+  if(!v) return;
+  var p = D.goals[PLANIT.akey] && D.goals[PLANIT.akey].projects[PLANIT.pi];
+  if(!p) return;
+  p.name = v;
+  PLANIT.result = v;
+  PLANIT.editingResult = false;
+  persist(); renderSetupGoals(); renderToday();
+  planItRender();
+}
+
+function openPlanIt(o){
+  var p = D.goals[o.akey] && D.goals[o.akey].projects[o.pi];
+  if(!p) return;
+  var mode = o.mode || 'new';
+  var cur = '';
+  if(mode === 'step'){
+    var st = (p.steps || [])[o.stepIdx];
+    if(!st) return;
+    cur = st.text;
+  }
+  var fresh = mode === 'new' && !(p.steps && p.steps.length);
+  var ways = ['', '', ''], waySrc = [null, null, null];
+  if(mode === 'replan'){
+    // start from everything already written for this project: unfinished steps first, then parked ways
+    var items = [], seen = {};
+    (p.steps || []).forEach(function(s){
+      if(s.done || items.length >= 8) return;
+      var low = String(s.text).toLowerCase();
+      if(seen[low]) return;
+      seen[low] = 1; items.push({ text: s.text, src: { k: 's', text: s.text } });
+    });
+    asArray(p.ways).forEach(function(w){
+      if(items.length >= 8) return;
+      var low = String(w).toLowerCase();
+      if(seen[low]) return;
+      seen[low] = 1; items.push({ text: w, src: { k: 'w', text: w } });
+    });
+    if(items.length){
+      ways = items.map(function(i){ return i.text; });
+      waySrc = items.map(function(i){ return i.src; });
+      if(ways.length < 8){ ways.push(''); waySrc.push(null); }
+    }
+  }
+  PLANIT = {
+    akey: o.akey, pi: o.pi, mode: mode,
+    base: mode === 'more' ? (o.parent || null) : null,
+    result: mode === 'more' ? (o.parent || p.name) : p.name,
+    stepIdx: mode === 'step' ? o.stepIdx : null,
+    chain: [], current: cur, later: [], depth: 0, final: '',
+    stage: mode === 'step' ? 'q2' : ((fresh || mode === 'replan') ? 'ways' : 'q1'),
+    pieces: ['', ''], ways: ways, waySrc: waySrc, srcByText: {}, allWays: [], picks: [], newPick: '', stuckFrom: null, video: false, skipped: false
+  };
+  planItRender();
+}
+
+function planItSyncWays(){
+  if(!PLANIT) return;
+  PLANIT.ways = PLANIT.ways.map(function(t, k){ var e = document.getElementById('pi-way-' + k); return e ? e.value : t; });
+  while(PLANIT.waySrc.length < PLANIT.ways.length) PLANIT.waySrc.push(null);
+}
+function planItAddWay(){
+  if(!PLANIT) return;
+  planItSyncWays();
+  if(PLANIT.ways.length < 8){ PLANIT.ways.push(''); PLANIT.waySrc.push(null); }
+  planItRender();
+  var e = document.getElementById('pi-way-' + (PLANIT.ways.length - 1));
+  if(e){ try{ e.focus(); }catch(x){} }
+}
+function planItWaysNext(){
+  if(!PLANIT) return;
+  planItSyncWays();
+  var seen = {}, list = [], srcMap = {};
+  PLANIT.ways.forEach(function(t, k){
+    t = t.trim();
+    var key = t.toLowerCase();
+    if(t && !seen[key]){ seen[key] = 1; list.push(t); srcMap[key] = PLANIT.waySrc[k] || null; }
+  });
+  if(!list.length) return;
+  PLANIT.allWays = list; PLANIT.srcByText = srcMap; PLANIT.picks = []; PLANIT.newPick = '';
+  PLANIT.stage = 'pick';
   planItRender();
 }
 
@@ -1528,12 +1795,51 @@ function planItStart(){
     list.push(s);
   });
   if(!p.steps) p.steps = [];
+  var srcMap = P.srcByText || {};
+  var pickedLow = P.picks.map(function(t){ return t.toLowerCase(); });
+  if(P.mode === 'replan'){
+    // picked items that were already written become the plan, so they leave the lists
+    P.picks.forEach(function(t){
+      var src = srcMap[t.toLowerCase()];
+      if(!src) return;
+      if(src.k === 's'){
+        var at0 = p.steps.findIndex(function(s){ return !s.done && s.text === src.text; });
+        if(at0 >= 0) p.steps.splice(at0, 1);
+      } else if(src.k === 'w'){
+        p.ways = asArray(p.ways).filter(function(w){ return w !== src.text; });
+      }
+    });
+    // items that were edited but not picked keep their new wording
+    P.allWays.forEach(function(t){
+      var src = srcMap[t.toLowerCase()];
+      if(!src || pickedLow.indexOf(t.toLowerCase()) >= 0 || t === src.text) return;
+      if(src.k === 's'){
+        var st = p.steps.find(function(s){ return !s.done && s.text === src.text; });
+        if(st) st.text = t;
+      } else if(src.k === 'w'){
+        var wi = asArray(p.ways).indexOf(src.text);
+        if(wi >= 0) p.ways[wi] = t;
+      }
+    });
+  }
   if(P.mode === 'step'){
     if(P.chain.length > 0) p.steps.splice.apply(p.steps, [P.stepIdx, 1].concat(list));
   } else {
     var at = firstUndoneIdx(p.steps);
     if(at < 0) at = p.steps.length;
     p.steps.splice.apply(p.steps, [at, 0].concat(list));
+  }
+  // new ideas they listed but did not pick stay with the project, out of sight
+  if(P.allWays && P.allWays.length){
+    var cur = asArray(p.ways);
+    var curLow = cur.map(function(t){ return t.toLowerCase(); });
+    P.allWays.forEach(function(t){
+      var low = t.toLowerCase();
+      if(pickedLow.indexOf(low) >= 0) return;
+      if(P.mode === 'replan' && srcMap[low]) return;   // already-written items stay where they are
+      if(curLow.indexOf(low) < 0){ cur.push(t); curLow.push(low); }
+    });
+    p.ways = cur.slice(-WAYS_CAP);
   }
   persist();
   PLANIT = null;
@@ -1548,10 +1854,13 @@ function planItCoach(){
   var P = PLANIT;
   if(!P) return;
   planItSyncPieces();
+  planItSyncWays();
   var akey = P.akey, i = P.pi;
   var p = D.goals[akey].projects[i];
   var trail = P.chain.concat(P.current ? [P.current] : []);
+  var listed = (P.allWays && P.allWays.length ? P.allWays : (P.ways || []).map(function(t){ return t.trim(); }).filter(Boolean));
   var prompt = 'I am stuck planning the next action for my result: ' + P.result + '.'
+    + (listed.length ? ' Ways I have listed so far: ' + listed.join(', ') + '.' : '')
     + (trail.length ? ' So far I have: ' + trail.join(' > ') + '.' : '')
     + ' I do not know what the next action is. Help me find it.';
   var opener = 'Let\'s think it through. Your result is: ' + P.result + '.'
@@ -1563,8 +1872,7 @@ function planItCoach(){
   setTimeout(function(){
     var el = document.getElementById('coach-prompts');
     if(el) el.remove();
-    chat = [];
-    document.getElementById('coach-msgs').innerHTML = '';
+    resetChatState();
     window._activeProject = { akey: akey, i: i, name: p ? p.name : '' };
     chat.push({ role: 'user', content: prompt });
     addMsg('u', 'Plan it: I am stuck');
@@ -1574,6 +1882,28 @@ function planItCoach(){
 }
 
 // ---------- Help me start ----------
+function openStart(akey, pi){
+  var p = D.goals[akey] && D.goals[akey].projects[pi];
+  if(!p) return;
+  var at = 'data-ak="' + akey + '" data-pi="' + pi + '"';
+  var row = function(which, icon, title, sub, primary){
+    return '<button class="start-row' + (primary ? ' primary' : '') + '" ' + at + ' data-w="' + which + '" onclick="startChoice(this.dataset.w,this.dataset.ak,parseInt(this.dataset.pi))">'
+      + '<i class="ti ti-' + icon + '"></i><div><div class="t">' + title + '</div><div class="s">' + sub + '</div></div></button>';
+  };
+  showModal('<div class="modal-head"><div class="modal-title">How do you want to start?</div><div class="spacer"></div><button class="btn sm" onclick="hideModal()" aria-label="Close">&times;</button></div>'
+    + row('state', 'player-play', 'Get in state', STATE_AUDIO_URL ? 'A short guided audio to get focused and energized' : '60 seconds to get focused and energized', true)
+    + row('help', 'lifebuoy', 'Help me start', 'Talk it through with the coach if something is making it hard', false)
+    + row('plan', 'route', 'Replan it', 'Too big or not working? Start from what you have already written', false));
+}
+function startChoice(which, akey, pi){
+  hideModal();
+  if(which === 'state') openState(akey, pi);
+  else if(which === 'help') helpMeStart(akey, pi);
+  else if(which === 'plan'){
+    openPlanIt({ akey: akey, pi: pi, mode: 'replan' });
+  }
+}
+
 function helpMeStart(akey, pi){
   var p = D.goals[akey] && D.goals[akey].projects[pi];
   if(!p) return;
@@ -1584,8 +1914,7 @@ function helpMeStart(akey, pi){
   setTimeout(function(){
     var el = document.getElementById('coach-prompts');
     if(el) el.remove();
-    chat = [];
-    document.getElementById('coach-msgs').innerHTML = '';
+    resetChatState();
     window._activeProject = { akey: akey, i: pi, name: p.name };
     var prompt = 'I am having a hard time starting this step: "' + stepText + '" (toward: ' + p.name + '). Help me get going.';
     chat.push({ role: 'user', content: prompt });
@@ -1689,12 +2018,12 @@ function show(name){
   if(name === 'coach'){
     var ep = document.getElementById('coach-prompts');
     if(ep) ep.remove();
-    if(!chat.length) renderCoachPrompts();
+    if(!chat.length && !restoreChat()) renderCoachPrompts();
   }
   if(name === 'settings'){
     var el = document.getElementById('uid-display');
     if(el) el.value = getUserId();
-    renderLastSynced(); renderPrevCopy();
+    renderLastSynced(); renderPrevCopy(); renderProfileNotes();
   }
   if(name === 'celebrations') renderCelebrations();
   if(name === 'today'){
@@ -1712,7 +2041,7 @@ function renderIdeas(){
     html+='<div class="idea-row"><span class="idea-text">'+esc(x)+'</span>';
     html+='<div class="idea-btns">';
     html+='<button class="btn sm accent" onclick="toggleConvert('+i+')"><i class="ti ti-folder-plus"></i> To project</button>';
-    html+='<button class="btn sm danger" onclick="delIdea('+i+')"><i class="ti ti-x"></i></button>';
+    html+='<button class="btn sm danger" onclick="delIdea('+i+')">&times;</button>';
     html+='</div></div>';
     html+='<div class="convert-form" id="cf-'+i+'">';
     html+='<div class="lbl">Add to area</div>';
@@ -1799,6 +2128,7 @@ function importData(event){
       var imported=JSON.parse(e.target.result);
       if(imported.vision!==undefined||imported.goals!==undefined){
         D=imported;
+        if(!Array.isArray(D.profileNotes)) D.profileNotes=[];
         persist();
         render();
         var el=document.getElementById('import-ok');
@@ -1829,63 +2159,242 @@ function importData(event){
 
 
 
+// ===== v9: coach profile notes, other ways, session checkpoint, saved conversation =====
+var NOTE_TYPES = ['want', 'why', 'lifts', 'trips', 'pattern', 'style', 'fact'];
+var NOTE_LABELS = { want: 'What they want', why: 'Why it matters to them', lifts: 'What lifts them', trips: 'What knocks them off', pattern: 'Patterns they named', style: 'How they like to be coached', fact: 'Key facts' };
+var NOTE_CAP = 30;
+var WAYS_CAP = 8;
+var SESSION_KEY = 'eos6-session';
+var CHAT_KEY = 'eos6-chat';
+var CHAT_MAX_AGE = 12 * 3600 * 1000;
+var BUBBLES = [];
+
+// ---------- profile notes ----------
+function dropOldestOfBusiest(){
+  var counts = {}, busiest = null;
+  D.profileNotes.forEach(function(n){ counts[n.type] = (counts[n.type] || 0) + 1; });
+  Object.keys(counts).forEach(function(t){ if(busiest === null || counts[t] > counts[busiest]) busiest = t; });
+  var idx = D.profileNotes.findIndex(function(n){ return n.type === busiest; });
+  if(idx >= 0) D.profileNotes.splice(idx, 1);
+}
+function addProfileNote(type, text){
+  text = String(text || '').trim().slice(0, 160);
+  if(!text) return false;
+  type = NOTE_TYPES.indexOf(type) >= 0 ? type : 'fact';
+  if(!Array.isArray(D.profileNotes)) D.profileNotes = [];
+  var low = text.toLowerCase();
+  if(D.profileNotes.some(function(n){ return n.type === type && String(n.text).toLowerCase() === low; })) return false;
+  D.profileNotes.push({ type: type, text: text, at: new Date().toISOString() });
+  while(D.profileNotes.length > NOTE_CAP) dropOldestOfBusiest();
+  persist(); renderProfileNotes();
+  return true;
+}
+function deleteProfileNote(i){
+  if(!Array.isArray(D.profileNotes) || !D.profileNotes[i]) return;
+  D.profileNotes.splice(i, 1);
+  persist(); renderProfileNotes();
+}
+function profileCtx(){
+  var notes = asArray(D.profileNotes);
+  if(!notes.length) return '';
+  var out = [];
+  NOTE_TYPES.forEach(function(t){
+    var items = notes.filter(function(n){ return n.type === t; }).map(function(n){ return n.text; });
+    if(items.length) out.push(NOTE_LABELS[t] + ': ' + items.join('; '));
+  });
+  return out.join('\n');
+}
+function renderProfileNotes(){
+  var el = document.getElementById('profile-notes');
+  if(!el) return;
+  var notes = asArray(D.profileNotes);
+  if(!notes.length){
+    el.innerHTML = '<div style="font-size:13px;color:var(--text-muted);line-height:1.5">Nothing saved yet. Your coach only saves a short note when something lasts, like what you want, why it matters, or what lifts you.</div>';
+    return;
+  }
+  var html = '';
+  NOTE_TYPES.forEach(function(t){
+    var rows = '';
+    notes.forEach(function(n, i){
+      if(n.type !== t) return;
+      rows += '<div class="note-row"><span>' + esc(n.text) + '</span><button class="btn sm danger" aria-label="Delete note" data-ni="' + i + '" onclick="deleteProfileNote(parseInt(this.dataset.ni))">&times;</button></div>';
+    });
+    if(rows) html += '<div class="note-type">' + esc(NOTE_LABELS[t]) + '</div>' + rows;
+  });
+  html += '<div style="font-size:11px;color:var(--text-muted);margin-top:8px">' + notes.length + ' of ' + NOTE_CAP + ' notes</div>';
+  el.innerHTML = html;
+}
+
+// ---------- other ways (kept on the project, out of sight) ----------
+function findProjectByName(name, akeyHint){
+  var low = String(name || '').toLowerCase();
+  if(!low) return null;
+  var keys = (akeyHint && D.goals[akeyHint]) ? [akeyHint] : AREAS.map(function(a){ return a.key; });
+  for(var k = 0; k < keys.length; k++){
+    var projs = D.goals[keys[k]].projects || [];
+    for(var i = 0; i < projs.length; i++){
+      var pn = String(projs[i].name || '').toLowerCase();
+      if(pn && (pn.indexOf(low) >= 0 || low.indexOf(pn) >= 0)) return { akey: keys[k], i: i, p: projs[i] };
+    }
+  }
+  return null;
+}
+function addWays(name, area, ways){
+  if(!Array.isArray(ways)) return false;
+  var f = findProjectByName(name, area) || findProjectByName(name, null);
+  if(!f) return false;
+  var cur = asArray(f.p.ways);
+  ways.forEach(function(w){
+    w = String(w || '').trim().slice(0, 120);
+    if(w && cur.map(function(x){ return x.toLowerCase(); }).indexOf(w.toLowerCase()) < 0) cur.push(w);
+  });
+  f.p.ways = cur.slice(-WAYS_CAP);
+  persist(); renderSetupGoals();
+  return true;
+}
+function toggleWays(btn){
+  var l = btn.nextElementSibling;
+  if(l) l.style.display = l.style.display === 'none' ? 'block' : 'none';
+}
+function deleteWay(akey, pi, wi){
+  var p = D.goals[akey] && D.goals[akey].projects[pi];
+  if(!p || !p.ways) return;
+  var was = captureEditForm(akey, pi);
+  p.ways.splice(wi, 1);
+  window._waysOpen = akey + '-' + pi;
+  persist(); renderSetupGoals();
+  if(was) reopenEditForm(akey, pi);
+}
+
+// ---------- 3 to 6 month result from the coach ----------
+function applyGoalFromCoach(area, text){
+  var akey = D.goals[area] ? area : 'business';
+  text = String(text || '').trim().slice(0, 200);
+  if(!text) return false;
+  D.goals[akey].goal = text;
+  persist(); renderSetupGoals(); renderToday();
+  showSyncStatus('3 to 6 month result saved');
+  return true;
+}
+
+// ---------- session checkpoint + saved conversation (this device only) ----------
+function getSession(){ try{ return localStorage.getItem(SESSION_KEY) || ''; }catch(e){ return ''; } }
+function setSession(t){ try{ if(t) localStorage.setItem(SESSION_KEY, t); else localStorage.removeItem(SESSION_KEY); }catch(e){} }
+function persistChat(){
+  try{
+    if(!chat.length){ localStorage.removeItem(CHAT_KEY); return; }
+    localStorage.setItem(CHAT_KEY, JSON.stringify({ t: Date.now(), chat: chat.slice(-80), bubbles: BUBBLES.slice(-80) }));
+  }catch(e){}
+}
+function bubbleNode(role, text){
+  var d = document.createElement('div'); d.className = 'msg ' + role;
+  var av = document.createElement('div'); av.className = 'av ' + role; av.textContent = role === 'c' ? 'EO' : 'You';
+  var b = document.createElement('div'); b.className = 'bubble ' + role; b.textContent = text;
+  d.appendChild(av); d.appendChild(b);
+  return d;
+}
+function restoreChat(){
+  var raw = null;
+  try{ raw = localStorage.getItem(CHAT_KEY); }catch(e){}
+  if(!raw) return false;
+  var o = null;
+  try{ o = JSON.parse(raw); }catch(e){}
+  if(!o || !Array.isArray(o.chat) || !o.chat.length || (Date.now() - (o.t || 0)) > CHAT_MAX_AGE){
+    try{ localStorage.removeItem(CHAT_KEY); }catch(e){}
+    setSession('');
+    return false;
+  }
+  var c = document.getElementById('coach-msgs');
+  if(!c) return false;
+  chat = o.chat;
+  BUBBLES = Array.isArray(o.bubbles) ? o.bubbles : [];
+  c.innerHTML = '';
+  BUBBLES.forEach(function(b){ c.appendChild(bubbleNode(b.r, b.t)); });
+  c.scrollTop = c.scrollHeight;
+  return true;
+}
+function resetChatState(){
+  chat = []; BUBBLES = [];
+  window._agentSessionId = null;
+  var c = document.getElementById('coach-msgs');
+  if(c) c.innerHTML = '';
+  try{ localStorage.removeItem(CHAT_KEY); }catch(e){}
+  setSession('');
+}
+
+// ---------- coach save lines ----------
+function runSaveCommand(cmd, rest){
+  if(cmd === 'SAVE_TO_PLAN'){
+    savePlanFromCoach(parseCoachFields(rest));
+  } else if(cmd === 'SAVE_VISION'){
+    var vision = stripOuterBraces(rest);
+    if(vision){ D.vision = vision; persist(); var vi = document.getElementById('vision-in'); if(vi) vi.value = vision; showSyncStatus('Vision saved'); }
+  } else if(cmd === 'SAVE_IDEA'){
+    var idea = stripOuterBraces(rest);
+    if(idea){ if(!D.ideas) D.ideas = []; D.ideas.push(idea); persist(); renderIdeas(); showSyncStatus('Idea captured'); }
+  } else if(cmd === 'SAVE_WIN'){
+    var winData = parseCoachFields(rest);
+    if(winData.title){ addCelebration(winData.title, winData.note || '', winData.category || 'other'); showSyncStatus('Celebration saved'); }
+  } else if(cmd === 'SAVE_GOAL'){
+    var gd = parseCoachFields(rest);
+    applyGoalFromCoach(gd.area, gd.text);
+  } else if(cmd === 'SAVE_NOTE'){
+    var nd = parseCoachFields(rest);
+    if(addProfileNote(nd.type, nd.text)) showSyncStatus('Noted');
+  } else if(cmd === 'SAVE_WAYS'){
+    var wd = parseCoachFields(rest);
+    addWays(wd.name, wd.area, wd.ways);
+  } else if(cmd === 'SAVE_SESSION'){
+    var sn = stripOuterBraces(rest).trim();
+    setSession(/^(CLEAR|END|NONE)$/i.test(sn) ? '' : sn.slice(0, 1500));
+  }
+}
+
+function addMsg(role, text){
+  var c = document.getElementById('coach-msgs');
+  var shown = text;
+  if(role === 'c' && /(^|\n)\s*SAVE_[A-Z_]+:/.test(text)){
+    var displayLines = [];
+    text.split('\n').forEach(function(line){
+      var m = line.trim().match(/^(SAVE_[A-Z_]+):\s*([\s\S]*)$/);
+      if(!m){ displayLines.push(line); return; }
+      try{ runSaveCommand(m[1], m[2]); }catch(e){ console.error('Save command error:', m[1], e); }
+    });
+    shown = displayLines.join('\n').trim();
+  }
+  c.appendChild(bubbleNode(role, shown));
+  c.scrollTop = c.scrollHeight;
+  var isErr = role === 'c' && (/^Error: /.test(text) || text === 'Connection error - try again.');
+  if(!isErr){ BUBBLES.push({ r: role, t: shown }); setTimeout(persistChat, 0); }
+}
+
 function ctx(){
-  var v=D.vision?'Vision: '+D.vision:'';
-  var parts=[v];
+  var v = D.vision ? 'Vision: ' + D.vision : '';
+  var parts = [v];
   AREAS.forEach(function(a){
-    var g=D.goals[a.key];
-    if(g.goal) parts.push((g.label||a.label)+' 90-day goal: '+g.goal);
-    var active=(g.projects||[]).filter(function(p){ return !p.archived; });
+    var g = D.goals[a.key];
+    if(g.goal) parts.push((g.label || a.label) + ' 3 to 6 month goal: ' + g.goal);
+    var active = (g.projects || []).filter(function(p){ return !p.archived; });
     if(active.length){
-      parts.push((g.label||a.label)+' projects: '+active.map(function(p){
-        var steps=p.steps||[];
-        var cur=null;
-        for(var i=0;i<steps.length;i++){ if(!steps[i].done){ cur=steps[i]; break; } }
-        return p.name+(p.why?' (why: '+p.why+')':'')+(cur?' next step: '+cur.text:'');
+      parts.push((g.label || a.label) + ' projects: ' + active.map(function(p, pi){
+        var steps = p.steps || [];
+        var cur = null;
+        for(var i = 0; i < steps.length; i++){ if(!steps[i].done){ cur = steps[i]; break; } }
+        var ways = (pi === 0 && p.ways && p.ways.length) ? ' (other ways they listed: ' + p.ways.join(', ') + ')' : '';
+        return p.name + (p.why ? ' (why: ' + p.why + ')' : '') + (cur ? ' next step: ' + cur.text : '') + ways;
       }).join('; '));
     }
   });
-  if(D.waiting&&D.waiting.length) parts.push('Waiting on: '+D.waiting.map(function(w){ return w.what+(w.who?' from '+w.who:''); }).join(', '));
-  if(D.stateAnchor) parts.push('Their state activation anchor: '+D.stateAnchor);
+  if(D.waiting && D.waiting.length) parts.push('Waiting on: ' + D.waiting.map(function(w){ return w.what + (w.who ? ' from ' + w.who : ''); }).join(', '));
+  if(D.stateAnchor) parts.push('Their state activation anchor: ' + D.stateAnchor);
+  var sn = getSession();
+  if(sn) parts.push('Session notes so far (your own running checkpoint, keep them current):\n' + sn);
   return parts.filter(Boolean).join('\n');
 }
 
-function addMsg(role,text){
-  var c=document.getElementById('coach-msgs');
-  var d=document.createElement('div'); d.className='msg '+role;
-  var av=document.createElement('div'); av.className='av '+role; av.textContent=role==='c'?'EO':'You';
-  var b=document.createElement('div'); b.className='bubble '+role;
-
-  // Check for save commands
-  if(role==='c' && (text.indexOf('SAVE_TO_PLAN:') >= 0 || text.indexOf('SAVE_VISION:') >= 0 || text.indexOf('SAVE_IDEA:') >= 0 || text.indexOf('SAVE_WIN:') >= 0)){
-    var lines = text.split('\n');
-    var displayLines = [];
-    lines.forEach(function(line){
-      var trimmed = line.trim();
-      if(trimmed.indexOf('SAVE_TO_PLAN:') === 0){
-        try{
-          var data = parseCoachFields(trimmed.replace('SAVE_TO_PLAN:',''));
-          savePlanFromCoach(data);
-        }catch(e){ console.error('Save plan error:', e); }
-      } else if(trimmed.indexOf('SAVE_VISION:') === 0){
-        var vision = stripOuterBraces(trimmed.replace('SAVE_VISION:',''));
-        if(vision){ D.vision = vision; persist(); var vi=document.getElementById('vision-in'); if(vi)vi.value=vision; showSyncStatus('Vision saved'); }
-      } else if(trimmed.indexOf('SAVE_IDEA:') === 0){
-        var idea = stripOuterBraces(trimmed.replace('SAVE_IDEA:',''));
-        if(idea){ if(!D.ideas)D.ideas=[]; D.ideas.push(idea); persist(); renderIdeas(); showSyncStatus('Idea captured'); }
-      } else if(trimmed.indexOf('SAVE_WIN:') === 0){
-        var winData = parseCoachFields(trimmed.replace('SAVE_WIN:',''));
-        if(winData.title){ addCelebration(winData.title, winData.note||'', winData.category||'other'); showSyncStatus('Celebration saved'); }
-      } else {
-        displayLines.push(line);
-      }
-    });
-    b.textContent = displayLines.join('\n').trim();
-  } else {
-    b.textContent = text;
-  }
-
-  d.appendChild(av); d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
+function resetCoach(){
+  resetChatState();
+  renderCoachPrompts();
 }
 
 function savePlanFromCoach(data){
@@ -1969,6 +2478,7 @@ async function csend(){
       message: t,
       sessionId: window._agentSessionId || null,
       userContext: userCtx,
+      profileNotes: profileCtx(),
       chatHistory: historyToSend.slice(0,-1) // exclude the message we just added
     });
     var r = await fetch('/.netlify/functions/coach', {
@@ -2012,11 +2522,11 @@ function renderCoachPrompts(){
   intro.style.cssText='max-width:100%;margin-bottom:4px';
   d.appendChild(intro);
   var prompts=[
-    {label:'Find my needle-mover this week', key:'needle'},
-    {label:'I am avoiding or procrastinating something - help me', key:'procrastination'},
-    {label:'I have too many competing priorities', key:'priorities'},
-    {label:'Activate my state for something important', key:'activate'},
-    {label:'Help me find the steps on a project', key:'findsteps'}
+    {label:'Plan my goals', key:'plan'},
+    {label:'Weekly reset', key:'weekly'},
+    {label:'Life check-in', key:'checkin'},
+    {label:'I\'m avoiding something', key:'procrastination'},
+    {label:'Activate my state', key:'activate'}
   ];
   prompts.forEach(function(p){
     var btn=document.createElement('button');
@@ -2035,110 +2545,16 @@ function startPrompt(key, label){
   if(el) el.remove();
   addMsg('u', label);
   var openers={
-    needle:"Let's find it. What are the big things competing for your attention right now?",
+    plan:"Let's plan from a strong place. First, what's your energy right now, 1 to 10?",
+    weekly:"Let's reset your week. First, what's your energy right now, 1 to 10?",
+    checkin:"Quick pulse. Rate each of these 1 to 10, however you honestly feel today: Business, Health, Relationship, Kids.",
     procrastination:"Tell me what you've been avoiding or procrastinating on. What is it?",
-    priorities:"Let's get everything out first. What are all the things competing for your attention right now? No filter - just get them all out.",
-    findsteps:"Which project do you want to find the steps for? Tell me about it - what are you trying to accomplish?",
     activate:"What's the thing you need to get moving on?"
   };
   var opener = openers[key] || "What would you like to work on?";
   chat.push({role:'user',content:label});
   chat.push({role:'assistant',content:opener});
   addMsg('c', opener);
-}
-
-function planProjectWithCoach(akey){
-  var g = D.goals[akey];
-  var goal = g ? g.goal : '';
-  var label = g ? (g.label || akey) : akey;
-  // Switch to coach tab
-  show('coach');
-  setTimeout(function(){
-    var el = document.getElementById('coach-prompts');
-    if(el) el.remove();
-    window._newProjectArea = akey;
-    var userMsg = 'Help me plan a new project for ' + label;
-    chat.push({role:'user', content:userMsg});
-    addMsg('u', userMsg);
-    var goalLine = goal ? ' Your 90-day goal for ' + label + ' is: ' + goal + '.' : '';
-    var opener = 'Let\'s build this out properly.' + goalLine + ' What project or initiative are you thinking about that could move you toward that? Tell me about it - what are you trying to accomplish?';
-    chat.push({role:'assistant', content:opener});
-    addMsg('c', opener);
-  }, 100);
-}
-
-function findStepsForProject(akey, i){
-  var p = D.goals[akey].projects[i];
-  if(!p) return;
-  var prompt = 'I want to find the steps for my project: ' + p.name + (p.why ? '. The reason this matters to me is: ' + p.why : '') + '. Help me brainstorm and find the right sequence.';
-  // Switch to coach tab
-  show('coach');
-  // If chat is empty show prompts first, then auto-start
-  if(chat.length === 0){
-    setTimeout(function(){
-      // Remove prompts if showing
-      var el = document.getElementById('coach-prompts');
-      if(el) el.remove();
-      // Set context
-      window._activeProject = {akey:akey, i:i, name:p.name};
-      chat.push({role:'user', content:prompt});
-      addMsg('u', 'Find steps: ' + p.name);
-      var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
-      chat.push({role:'assistant', content:opener});
-      addMsg('c', opener);
-    }, 100);
-  } else {
-    // Clear and start fresh
-    chat = [];
-    document.getElementById('coach-msgs').innerHTML = '';
-    window._activeProject = {akey:akey, i:i, name:p.name};
-    chat.push({role:'user', content:prompt});
-    addMsg('u', 'Find steps: ' + p.name);
-    var goal = D.goals[akey] ? D.goals[akey].goal : ''; var goalLine = goal ? ' Your 90-day goal is: ' + goal + '.' : ''; var opener = "Let's find the right steps for " + p.name + "." + goalLine + " With that in mind - what are all the ways you could move " + p.name + " forward? Don't filter, throw everything out. The more the better.";
-    chat.push({role:'assistant', content:opener});
-    addMsg('c', opener);
-  }
-}
-
-function jumpToPlan(akey, i){
-  show('setup');
-  // Scroll to project after tab switch
-  setTimeout(function(){
-    var el = document.getElementById('projs-'+akey);
-    if(el){
-      var projCards = el.querySelectorAll('.proj');
-      if(projCards[i]) projCards[i].scrollIntoView({behavior:'smooth', block:'center'});
-    }
-  }, 150);
-}
-
-function openStaleCoach(akey, i){
-  var p = D.goals[akey] ? D.goals[akey].projects[i] : null;
-  if(!p) return;
-  var steps = p.steps||[];
-  var curIdx = steps.findIndex(function(s){ return !s.done; });
-  var curStep = curIdx>=0 ? steps[curIdx] : null;
-  if(!curStep) return;
-  show('coach');
-  setTimeout(function(){
-    var el=document.getElementById('coach-prompts');
-    if(el) el.remove();
-    var prompt = 'I notice "'+curStep.text+'" on my project "'+p.name+'" has been sitting for a while. Help me figure out what is going on.';
-    chat=[];
-    document.getElementById('coach-msgs').innerHTML='';
-    chat.push({role:'user',content:prompt});
-    addMsg('u','Coach me on a step that has been sitting');
-    var opener = 'Let\'s look at this. "'+curStep.text+'" - you haven\'t moved on it. What do you think is going on?';
-    chat.push({role:'assistant',content:opener});
-    addMsg('c',opener);
-  },100);
-}
-
-function resetCoach(){
-  chat=[];
-  window._agentSessionId = null;
-  document.getElementById('coach-msgs').innerHTML='';
-  renderCoachPrompts();
 }
 
 function ck(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); csend(); } }
@@ -2183,7 +2599,7 @@ function renderCelebrations(){
       +'<div style="display:flex;align-items:center;gap:8px">'
       +'<span style="font-size:11px;color:'+catColors[c.category||'other']+';text-transform:uppercase;letter-spacing:0.04em">'+(c.category||'other')+'</span>'
       +'<span style="font-size:12px;color:var(--text-muted)">'+ds+'</span>'
-      +'<button class="btn sm danger" onclick="delCelebration('+i+')"><i class="ti ti-x"></i></button>'
+      +'<button class="btn sm danger" onclick="delCelebration('+i+')">&times;</button>'
       +'</div></div>'
       +(c.note?'<div style="font-size:13px;color:var(--text-secondary);margin-top:3px">'+esc(c.note)+'</div>':'')
       +'</div>';
@@ -2269,7 +2685,7 @@ function renderVisionImagesList(){
     return '<div class="vision-img-item">'
       +'<img class="vision-img-preview" src="'+esc(img.url)+'" onerror="this.style.display=\'none\'"/>'
       +'<span style="flex:1;font-size:13px;color:var(--text-secondary)">'+esc(img.label||'No label')+'</span>'
-      +'<button class="btn sm danger" onclick="delVisionImage('+i+')"><i class="ti ti-x"></i></button>'
+      +'<button class="btn sm danger" onclick="delVisionImage('+i+')">&times;</button>'
       +'</div>';
   }).join('');
 }
@@ -2334,7 +2750,7 @@ function parseCoachFields(raw){
   raw = String(raw || '').trim();
   try{ var j = JSON.parse(raw); if(j && typeof j === 'object') return j; }catch(e){}
   var body = stripOuterBraces(raw);
-  var re = /(?:^|,)\s*(name|why|step|area|sequence|title|note|category)\s*:/g;
+  var re = /(?:^|,)\s*(name|why|step|area|sequence|title|note|category|text|type)\s*:/g;
   var hits = [], m;
   while((m = re.exec(body)) !== null){ hits.push({ key: m[1], start: m.index, valStart: re.lastIndex }); }
   var out = {};
