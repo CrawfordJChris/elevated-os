@@ -213,6 +213,9 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 .pi-chip.on{background:var(--fill-accent);border-color:var(--fill-accent);color:#fff}
 .pi-edit{margin-left:8px;font-size:12px;color:var(--text-accent);background:none;border:none;cursor:pointer;font-family:var(--font-sans);text-decoration:underline;padding:0}
 .pi-hint{font-size:13px;color:var(--text-muted);margin:-4px 0 12px;line-height:1.45}
+.pi-steprow{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.pi-steprow .pi-piece{margin-bottom:0;flex:1;min-width:0}
+.pi-why-label{font-size:13px;color:var(--text-secondary);margin:10px 0 4px}
 .hero-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
 .hero-area{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-accent)}
 .hero-actions .btn-state{flex:2;width:auto;padding:13px 12px}
@@ -454,9 +457,17 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 <script>
 
 // ---- Version + changelog (bump APP_VERSION and add a CHANGELOG entry each build) ----
-var APP_VERSION = '9.5';
-var APP_VERSION_DATE = 'Oct 16, 2026';
+var APP_VERSION = '9.7';
+var APP_VERSION_DATE = 'Oct 17, 2026';
 var CHANGELOG = [
+  { v:'9.7', date:'Oct 17, 2026', items:[
+    "Find the needle-movers: under each goal, brainstorm all the ways to reach it, pick the one or two that matter most, and they become your top projects",
+    "Plan it on a project now asks for all the steps to make it happen, in order, with the steps you already have filled in",
+    "The ways you did not pick stay saved under the goal, out of sight"
+  ]},
+  { v:'9.6', date:'Oct 17, 2026', items:[
+    "Plan it on the Plan page now starts the brain dump from what you have already written, the same as Replan it"
+  ]},
   { v:'9.5', date:'Oct 16, 2026', items:[
     "The main button on Today is now Elevate. It opens your options: Get in state, Help me start, or Replan it",
     "Plan it no longer shows a stuck link once you say you know your next action, and every other question now has one simple link to think it through with the coach"
@@ -607,7 +618,7 @@ function normalizeGoals(g){
   var out = {};
   AREAS.forEach(function(a){
     var src = (g && g[a.key]) || {};
-    out[a.key] = { label: src.label || a.label, goal: src.goal || '', projects: asArray(src.projects) };
+    out[a.key] = { label: src.label || a.label, goal: src.goal || '', projects: asArray(src.projects), ways: asArray(src.ways) };
   });
   return out;
 }
@@ -996,8 +1007,14 @@ function renderSetupGoals(){
     html+='<input type="text" id="goal-text-'+a.key+'" value="'+esc(g.goal||'')+'" placeholder="Your 3 to 6 month result..." style="margin-bottom:12px"/>';
     html+='<div style="font-size:13px;color:var(--text-accent);font-style:italic;margin-bottom:8px;padding:6px 10px;background:var(--bg-accent);border-radius:var(--radius)">What are the one or two that actually move this forward?</div>';
     html+='<div id="projs-'+a.key+'">'+renderProjList(a.key,projs)+'</div>';
+    if(g.ways && g.ways.length){
+      html+='<div class="ways-wrap"><button class="pi-stuck" style="margin:6px 0" onclick="toggleWays(this)">Other ways to get there ('+g.ways.length+')</button><div class="ways-list" style="display:'+(window._areaWaysOpen === a.key ? 'block' : 'none')+'">';
+      g.ways.forEach(function(wy,wi){ html+='<div class="way-row"><span>'+esc(wy)+'</span><button class="btn sm danger" aria-label="Delete" data-ak="'+a.key+'" data-wi="'+wi+'" onclick="deleteAreaWay(this.dataset.ak,parseInt(this.dataset.wi))">&times;</button></div>'; });
+      html+='</div></div>';
+    }
     html+='<div style="display:flex;gap:6px;margin-top:6px">';
-    html+='<button class="btn sm primary" onclick="toggleAddForm(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-plus"></i> Add project</button>';
+    html+='<button class="btn sm primary" onclick="openNeedleMovers(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-route"></i> Find the needle-movers</button>';
+    html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-plus"></i> Add project</button>';
     html+='</div>';
     html+='<div class="add-proj-form" id="add-form-'+a.key+'">';
     html+='<div class="lbl">What do you want? <span style="color:var(--text-muted)">(the result, not the activity)</span></div>';
@@ -1512,6 +1529,8 @@ function hideModal(){
 
 // ---------- Plan it ----------
 var PLANIT = null;
+var STEPS_CAP = 10;
+var AREA_WAYS_CAP = 8;
 
 function ytId(url){
   var m = String(url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
@@ -1523,15 +1542,272 @@ function trainingEmbed(){
   return '<div class="pi-video"><iframe src="https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1" title="Training" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>';
 }
 
-function planItProject(akey, pi){ openPlanIt({ akey: akey, pi: pi, mode: 'new' }); }
+function planItProject(akey, pi){ openPlanIt({ akey: akey, pi: pi, mode: 'replan' }); }
 function planItStep(akey, pi, si){ openPlanIt({ akey: akey, pi: pi, mode: 'step', stepIdx: si }); }
 
+// ---------- project level: all the steps to make it happen ----------
+function openPlanIt(o){
+  var p = D.goals[o.akey] && D.goals[o.akey].projects[o.pi];
+  if(!p) return;
+  var mode = o.mode || 'replan';
+  var cur = '';
+  if(mode === 'step'){
+    var st = (p.steps || [])[o.stepIdx];
+    if(!st) return;
+    cur = st.text;
+  }
+  var steps = ['', '', ''], stepSrc = [null, null, null], overflow = [];
+  if(mode === 'new' || mode === 'replan'){
+    var undone = (p.steps || []).filter(function(s){ return !s.done; });
+    if(undone.length){
+      steps = undone.slice(0, STEPS_CAP).map(function(s){ return s.text; });
+      stepSrc = undone.slice(0, STEPS_CAP).map(function(s){ return { text: s.text }; });
+      overflow = undone.slice(STEPS_CAP).map(function(s){ return s.text; });
+      if(steps.length < STEPS_CAP){ steps.push(''); stepSrc.push(null); }
+    }
+  }
+  PLANIT = {
+    kind: 'project', akey: o.akey, pi: o.pi, mode: mode,
+    base: mode === 'more' ? (o.parent || null) : null,
+    result: mode === 'more' ? (o.parent || p.name) : p.name,
+    stepIdx: mode === 'step' ? o.stepIdx : null,
+    chain: [], current: cur, later: [], depth: 0, final: '', rows: null, firstSrc: null,
+    stage: mode === 'step' ? 'q2' : (mode === 'more' ? 'q1' : 'steps'),
+    steps: steps, stepSrc: stepSrc, overflow: overflow, hadSteps: stepSrc.some(Boolean),
+    pieces: ['', ''], video: false, editingResult: false
+  };
+  planItRender();
+}
+
+// ---------- area level: all the ways to reach the 3 to 6 month goal ----------
+function openNeedleMovers(akey){
+  var g = D.goals[akey];
+  if(!g) return;
+  var hasGoal = !!(g.goal && String(g.goal).trim());
+  var items = [], seen = {};
+  (g.projects || []).forEach(function(pr){
+    if(pr.archived || items.length >= 8) return;
+    var low = String(pr.name).toLowerCase();
+    if(seen[low]) return;
+    seen[low] = 1; items.push({ text: pr.name, src: { k: 'p', text: pr.name } });
+  });
+  asArray(g.ways).forEach(function(w){
+    if(items.length >= 8) return;
+    var low = String(w).toLowerCase();
+    if(seen[low]) return;
+    seen[low] = 1; items.push({ text: w, src: { k: 'w', text: w } });
+  });
+  var ways = ['', '', ''], waySrc = [null, null, null];
+  if(items.length){
+    ways = items.map(function(i){ return i.text; });
+    waySrc = items.map(function(i){ return i.src; });
+    if(ways.length < 8){ ways.push(''); waySrc.push(null); }
+  }
+  PLANIT = {
+    kind: 'area', akey: akey, mode: 'area', result: g.goal || '',
+    stage: hasGoal ? 'ways' : 'goal',
+    ways: ways, waySrc: waySrc, allWays: [], srcByText: {}, picks: [], newPick: '', newPicks: [], whys: [],
+    chain: [], current: '', later: [], depth: 0, video: false, editingResult: false
+  };
+  planItRender();
+}
+
+// ---------- rendering ----------
+function planItRender(){
+  var P = PLANIT;
+  if(!P) return;
+  var isArea = P.kind === 'area';
+  var hasVideo = !isArea && !!ytId(TRAINING_VIDEO_URL);
+  var head = '<div class="modal-head"><div class="modal-title">' + (isArea ? 'Find the needle-movers' : 'Plan it') + '</div><div class="spacer"></div>'
+    + (hasVideo ? '<button class="btn sm" onclick="planItVideo(true)"><i class="ti ti-player-play"></i> Watch training</button>' : '')
+    + '<button class="btn sm" onclick="planItClose()" aria-label="Close">&times;</button></div>';
+  if(P.video){
+    showModal(head + trainingEmbed() + '<div style="margin-top:14px"><button class="btn primary" onclick="planItVideo(false)">Back to planning</button></div>');
+    return;
+  }
+  var chainHtml = '';
+  if(P.stage !== 'goal'){
+    if(P.editingResult){
+      chainHtml = '<div class="pi-chain"><div class="pi-result"><span>' + (isArea ? 'Goal' : 'Result') + '</span>The result you want, not the activity</div>'
+        + '<input type="text" id="pi-result-in" value="' + esc(P.result) + '" style="margin:8px 0 6px" onkeydown="if(event.key===\'Enter\'){planItSaveResult()}"/>'
+        + '<div class="pi-actions" style="margin-top:6px"><button class="btn sm primary" onclick="planItSaveResult()">Save</button><button class="btn sm" onclick="planItCancelResult()">Cancel</button></div>';
+    } else {
+      chainHtml = '<div class="pi-chain"><div class="pi-result"><span>' + (isArea ? 'Goal' : 'Result') + '</span>' + esc(P.result)
+        + (P.mode !== 'more' ? ' <button class="pi-edit" onclick="planItEditResult()">Edit</button>' : '') + '</div>';
+    }
+    P.chain.forEach(function(t){ chainHtml += '<div class="pi-link">&rarr; ' + esc(t) + '</div>'; });
+    if(P.current && P.stage !== 'q1' && P.stage !== 'done' && P.stage !== 'steps') chainHtml += '<div class="pi-link pi-current">&rarr; ' + esc(P.current) + '</div>';
+    chainHtml += '</div>';
+  }
+
+  var coachLink = function(label){ return '<div><button class="pi-stuck" onclick="planItCoach()">' + label + '</button></div>'; };
+  var body = '';
+  if(P.stage === 'goal'){
+    body = '<div class="pi-q">Where do you want to be in 3 to 6 months?</div>'
+      + '<input type="text" id="pi-goal-in" placeholder="The result you want, not the activity" onkeydown="if(event.key===\'Enter\'){planItGoalNext()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItGoalNext()">Next</button></div>';
+  } else if(P.stage === 'ways'){
+    var prefilled = P.waySrc.some(Boolean);
+    body = '<div class="pi-q">What are all the ways to get that?</div>'
+      + (prefilled ? '<div class="pi-hint">Here are your projects and saved ideas for this goal. Edit them or add anything new.</div>' : '');
+    P.ways.forEach(function(t, k){
+      body += '<input type="text" class="pi-piece" id="pi-way-' + k + '" value="' + esc(t) + '" placeholder="A way ' + (k + 1) + '"/>';
+    });
+    body += '<div class="pi-actions">' + (P.ways.length < 8 ? '<button class="btn" onclick="planItAddWay()"><i class="ti ti-plus"></i> Add another</button>' : '')
+      + '<button class="btn primary" onclick="planItWaysNext()">Next</button></div>' + coachLink('Stuck? Brainstorm it with the coach');
+  } else if(P.stage === 'pick'){
+    body = '<div class="pi-q">Which one or two would move it most?</div><div class="pi-chips">';
+    P.allWays.forEach(function(t, k){
+      body += '<button class="pi-chip' + (P.picks.indexOf(t) >= 0 ? ' on' : '') + '" data-wi="' + k + '" onclick="planItTogglePick(parseInt(this.dataset.wi))">' + esc(t) + '</button>';
+    });
+    body += '</div><input type="text" id="pi-newpick" placeholder="Or type something new..." value="' + esc(P.newPick || '') + '" onkeydown="if(event.key===\'Enter\'){planItPickNext()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItPickNext()">Next</button></div>';
+  } else if(P.stage === 'why'){
+    body = '<div class="pi-q">Why ' + (P.newPicks.length > 1 ? 'do these' : 'does this') + ' matter?</div>';
+    P.newPicks.forEach(function(t, k){
+      body += '<div class="pi-why-label">' + esc(t) + '</div><input type="text" class="pi-piece" id="pi-why-' + k + '" value="' + esc(P.whys[k] || '') + '" placeholder="Why this matters to you"/>';
+    });
+    body += '<div class="pi-actions"><button class="btn primary" onclick="planItWhyNext()">Save as projects</button></div>';
+  } else if(P.stage === 'steps'){
+    body = '<div class="pi-q">What are all the steps to make that happen?</div>'
+      + '<div class="pi-hint">' + (P.hadSteps ? 'Here is what you have already written. ' : '') + 'Put them in the order you would do them. Drag a handle to reorder.</div>'
+      + '<div id="pi-steps">';
+    P.steps.forEach(function(t, k){
+      body += '<div class="pi-steprow" data-k="' + k + '"><span class="drag-handle" title="Drag to reorder">&#10303;</span><input type="text" class="pi-piece" id="pi-step-' + k + '" value="' + esc(t) + '" placeholder="Step ' + (k + 1) + '"/></div>';
+    });
+    body += '</div><div class="pi-actions">' + (P.steps.length < STEPS_CAP ? '<button class="btn" onclick="planItAddStep()"><i class="ti ti-plus"></i> Add another</button>' : '')
+      + '<button class="btn primary" onclick="planItStepsNext()">Next</button></div>' + coachLink('Stuck? Brainstorm it with the coach');
+  } else if(P.stage === 'q1'){
+    body = '<div class="pi-q">What\'s the very next action to make that happen?</div>'
+      + '<input type="text" id="pi-input" placeholder="Type it..." onkeydown="if(event.key===\'Enter\'){planItQ1()}"/>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItQ1()">Next</button></div>' + coachLink('Stuck? Think it through with the coach');
+  } else if(P.stage === 'q2'){
+    body = '<div class="pi-q">Can you take that action right now, or does it need to be broken into smaller steps?</div>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItDoNow()">I can do it now</button><button class="btn" onclick="planItBreak()">Break it into smaller steps</button></div>';
+    if(P.depth >= 4) body += '<div class="pi-offer">This is getting deep. Want to think it through with the coach? <button class="pi-stuck" style="margin:0 0 0 4px" onclick="planItCoach()">Open the coach</button></div>';
+    if(P.rows) body += '<div><button class="pi-stuck" style="margin-top:10px" onclick="planItBackToSteps()">Back to my steps</button></div>';
+  } else if(P.stage === 'break'){
+    body = '<div class="pi-q">What are the smaller steps, in order?</div>';
+    P.pieces.forEach(function(t, k){
+      body += '<input type="text" class="pi-piece" id="pi-piece-' + k + '" value="' + esc(t) + '" placeholder="Smaller step ' + (k + 1) + '"/>';
+    });
+    body += '<div class="pi-actions">' + (P.pieces.length < 4 ? '<button class="btn" onclick="planItAddPiece()"><i class="ti ti-plus"></i> Add another</button>' : '')
+      + '<button class="btn primary" onclick="planItContinue()">Continue</button></div>' + coachLink('Stuck? Think it through with the coach');
+  } else if(P.stage === 'done'){
+    body = '<div class="pi-q">That\'s your next action.</div>'
+      + '<div class="pi-final">' + esc(P.final) + '</div>'
+      + '<div class="pi-actions"><button class="btn primary" onclick="planItStart()">Start now</button></div>';
+  }
+  showModal(head + chainHtml + body);
+  if(P.stage === 'steps') initStepsSort();
+  var inp = document.getElementById('pi-result-in') || document.getElementById('pi-goal-in') || document.getElementById('pi-input') || document.getElementById('pi-way-0') || document.getElementById('pi-why-0');
+  if(inp){ try{ inp.focus(); }catch(e){} }
+}
+
+// ---------- shared helpers ----------
 function planItVal(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
 function planItSyncPieces(){
-  if(!PLANIT) return;
+  if(!PLANIT || !PLANIT.pieces) return;
   PLANIT.pieces = PLANIT.pieces.map(function(t, k){ var e = document.getElementById('pi-piece-' + k); return e ? e.value : t; });
 }
+function planItSyncSteps(){
+  if(!PLANIT || !PLANIT.steps) return;
+  PLANIT.steps = PLANIT.steps.map(function(t, k){ var e = document.getElementById('pi-step-' + k); return e ? e.value : t; });
+  while(PLANIT.stepSrc.length < PLANIT.steps.length) PLANIT.stepSrc.push(null);
+}
+function planItSyncWays(){
+  if(!PLANIT || !PLANIT.ways) return;
+  PLANIT.ways = PLANIT.ways.map(function(t, k){ var e = document.getElementById('pi-way-' + k); return e ? e.value : t; });
+  while(PLANIT.waySrc.length < PLANIT.ways.length) PLANIT.waySrc.push(null);
+}
+function planItSyncWhys(){
+  if(!PLANIT || !PLANIT.whys) return;
+  PLANIT.whys = (PLANIT.newPicks || []).map(function(t, k){ var e = document.getElementById('pi-why-' + k); return e ? e.value : (PLANIT.whys[k] || ''); });
+}
+function planItSyncAll(){ planItSyncPieces(); planItSyncSteps(); planItSyncWays(); planItSyncWhys(); }
+function planItVideo(on){ if(!PLANIT) return; planItSyncAll(); PLANIT.video = !!on; planItRender(); }
 function planItClose(){ PLANIT = null; hideModal(); }
+
+function planItEditResult(){
+  if(!PLANIT || PLANIT.mode === 'more') return;
+  planItSyncAll();
+  PLANIT.editingResult = true;
+  planItRender();
+}
+function planItCancelResult(){ if(!PLANIT) return; PLANIT.editingResult = false; planItRender(); }
+function planItSaveResult(){
+  if(!PLANIT) return;
+  var v = planItVal('pi-result-in');
+  if(!v) return;
+  if(PLANIT.kind === 'area'){
+    if(!D.goals[PLANIT.akey]) return;
+    D.goals[PLANIT.akey].goal = v;
+  } else {
+    var p = D.goals[PLANIT.akey] && D.goals[PLANIT.akey].projects[PLANIT.pi];
+    if(!p) return;
+    p.name = v;
+  }
+  PLANIT.result = v;
+  PLANIT.editingResult = false;
+  persist(); renderSetupGoals(); renderToday();
+  planItRender();
+}
+
+// ---------- project steps: list, reorder, check the first one ----------
+function planItAddStep(){
+  if(!PLANIT) return;
+  planItSyncSteps();
+  if(PLANIT.steps.length < STEPS_CAP){ PLANIT.steps.push(''); PLANIT.stepSrc.push(null); }
+  planItRender();
+  var e = document.getElementById('pi-step-' + (PLANIT.steps.length - 1));
+  if(e){ try{ e.focus(); }catch(x){} }
+}
+function initStepsSort(){
+  var el = document.getElementById('pi-steps');
+  if(!el || typeof Sortable === 'undefined') return;
+  Sortable.create(el, {
+    handle: '.drag-handle', draggable: '.pi-steprow', animation: 150, forceFallback: true, fallbackOnBody: true,
+    fallbackTolerance: 3, fallbackClass: 'sortable-fallback', ghostClass: 'sortable-ghost',
+    onEnd: function(){
+      var order = Array.prototype.map.call(el.children, function(n){ return parseInt(n.getAttribute('data-k'), 10); });
+      setTimeout(function(){ planItReorderSteps(order); }, 0);
+    }
+  });
+}
+function planItReorderSteps(order){
+  if(!PLANIT || PLANIT.stage !== 'steps') return;
+  planItSyncSteps();
+  if(order.length !== PLANIT.steps.length || order.some(function(k){ return isNaN(k) || k < 0 || k >= PLANIT.steps.length; })) return;
+  var steps = PLANIT.steps, src = PLANIT.stepSrc;
+  PLANIT.steps = order.map(function(k){ return steps[k]; });
+  PLANIT.stepSrc = order.map(function(k){ return src[k]; });
+  planItRender();
+}
+function planItStepsNext(){
+  if(!PLANIT) return;
+  planItSyncSteps();
+  var rows = [];
+  PLANIT.steps.forEach(function(t, k){
+    t = t.trim();
+    if(t) rows.push({ text: t, src: PLANIT.stepSrc[k] || null });
+  });
+  if(!rows.length) return;
+  PLANIT.rows = rows;
+  PLANIT.current = rows[0].text;
+  PLANIT.firstSrc = rows[0].src;
+  PLANIT.later = rows.slice(1).map(function(r){ return { text: r.text, src: r.src }; });
+  PLANIT.chain = []; PLANIT.depth = 0;
+  PLANIT.stage = 'q2';
+  planItRender();
+}
+function planItBackToSteps(){
+  if(!PLANIT || !PLANIT.rows) return;
+  PLANIT.chain = []; PLANIT.later = []; PLANIT.depth = 0; PLANIT.current = '';
+  PLANIT.stage = 'steps';
+  planItRender();
+}
+
+// ---------- the next action and the break-down (used inside a bigger step too) ----------
 function planItQ1(){ var v = planItVal('pi-input'); if(!v || !PLANIT) return; PLANIT.current = v; PLANIT.stage = 'q2'; planItRender(); }
 function planItDoNow(){ if(!PLANIT) return; PLANIT.final = PLANIT.current; PLANIT.stage = 'done'; planItRender(); }
 function planItBreak(){ if(!PLANIT) return; PLANIT.pieces = ['', '']; PLANIT.stage = 'break'; planItRender(); }
@@ -1557,205 +1833,17 @@ function planItContinue(){
   PLANIT.stage = 'q2';
   planItRender();
 }
-function planItBack(){ if(!PLANIT) return; PLANIT.stage = PLANIT.stuckFrom || 'q1'; planItRender(); }
-function planItRender(){
-  var P = PLANIT;
-  if(!P) return;
-  var hasVideo = !!ytId(TRAINING_VIDEO_URL);
-  var head = '<div class="modal-head"><div class="modal-title">Plan it</div><div class="spacer"></div>'
-    + (hasVideo ? '<button class="btn sm" onclick="planItVideo(true)"><i class="ti ti-player-play"></i> Watch training</button>' : '')
-    + '<button class="btn sm" onclick="planItClose()" aria-label="Close">&times;</button></div>';
-  if(P.video){
-    showModal(head + trainingEmbed() + '<div style="margin-top:14px"><button class="btn primary" onclick="planItVideo(false)">Back to planning</button></div>');
-    return;
-  }
-  var chainHtml;
-  if(P.editingResult){
-    chainHtml = '<div class="pi-chain"><div class="pi-result"><span>Result</span>The result you want, not the activity</div>'
-      + '<input type="text" id="pi-result-in" value="' + esc(P.result) + '" style="margin:8px 0 6px" onkeydown="if(event.key===\'Enter\'){planItSaveResult()}"/>'
-      + '<div class="pi-actions" style="margin-top:6px"><button class="btn sm primary" onclick="planItSaveResult()">Save</button><button class="btn sm" onclick="planItCancelResult()">Cancel</button></div>';
-  } else {
-    chainHtml = '<div class="pi-chain"><div class="pi-result"><span>Result</span>' + esc(P.result)
-      + (P.mode !== 'more' ? ' <button class="pi-edit" onclick="planItEditResult()">Edit</button>' : '') + '</div>';
-  }
-  P.chain.forEach(function(t){ chainHtml += '<div class="pi-link">&rarr; ' + esc(t) + '</div>'; });
-  if(P.current && P.stage !== 'q1' && P.stage !== 'done') chainHtml += '<div class="pi-link pi-current">&rarr; ' + esc(P.current) + '</div>';
-  chainHtml += '</div>';
 
-  var body = '';
-  if(P.stage === 'ways'){
-    body = '<div class="pi-q">What are all the ways to get that?</div>' + (P.mode === 'replan' ? '<div class="pi-hint">Here is what you have already written for this. Edit it or add anything new.</div>' : '');
-    P.ways.forEach(function(t, k){
-      body += '<input type="text" class="pi-piece" id="pi-way-' + k + '" value="' + esc(t) + '" placeholder="A way ' + (k + 1) + '"/>';
-    });
-    body += '<div class="pi-actions">' + (P.ways.length < 8 ? '<button class="btn" onclick="planItAddWay()"><i class="ti ti-plus"></i> Add another</button>' : '')
-      + '<button class="btn primary" onclick="planItWaysNext()">Next</button></div>'
-      + '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Brainstorm it with the coach</button></div>'
-      + '<div><button class="pi-stuck" style="margin-top:6px" onclick="planItSkipWays()">I already know my first action</button></div>';
-  } else if(P.stage === 'pick'){
-    body = '<div class="pi-q">Which one or two would get you most of the way?</div><div class="pi-chips">';
-    P.allWays.forEach(function(t, k){
-      body += '<button class="pi-chip' + (P.picks.indexOf(t) >= 0 ? ' on' : '') + '" data-wi="' + k + '" onclick="planItTogglePick(parseInt(this.dataset.wi))">' + esc(t) + '</button>';
-    });
-    body += '</div><input type="text" id="pi-newpick" placeholder="Or type something new..." value="' + esc(P.newPick || '') + '" onkeydown="if(event.key===\'Enter\'){planItPickNext()}"/>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItPickNext()">Next</button></div>';
-  } else if(P.stage === 'q1'){
-    body = '<div class="pi-q">What\'s the very next action to make that happen?</div>'
-      + '<input type="text" id="pi-input" placeholder="Type it..." onkeydown="if(event.key===\'Enter\'){planItQ1()}"/>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItQ1()">Next</button></div>'
-      + (P.skipped ? '' : '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Think it through with the coach</button></div>');
-  } else if(P.stage === 'q2'){
-    body = '<div class="pi-q">Can you take that action right now, or does it need to be broken into smaller steps?</div>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItDoNow()">I can do it now</button><button class="btn" onclick="planItBreak()">Break it into smaller steps</button></div>';
-    if(P.depth >= 4) body += '<div class="pi-offer">This is getting deep. Want to think it through with the coach? <button class="pi-stuck" style="margin:0 0 0 4px" onclick="planItCoach()">Open the coach</button></div>';
-  } else if(P.stage === 'break'){
-    body = '<div class="pi-q">What are the smaller steps, in order?</div>';
-    P.pieces.forEach(function(t, k){
-      body += '<input type="text" class="pi-piece" id="pi-piece-' + k + '" value="' + esc(t) + '" placeholder="Smaller step ' + (k + 1) + '"/>';
-    });
-    body += '<div class="pi-actions">' + (P.pieces.length < 4 ? '<button class="btn" onclick="planItAddPiece()"><i class="ti ti-plus"></i> Add another</button>' : '')
-      + '<button class="btn primary" onclick="planItContinue()">Continue</button></div>'
-      + '<div><button class="pi-stuck" onclick="planItCoach()">Stuck? Think it through with the coach</button></div>';
-  } else if(P.stage === 'stuck'){
-    body = '<div class="pi-q">If you did know, what would it be?</div>'
-      + '<input type="text" id="pi-guess" placeholder="Your best guess..." onkeydown="if(event.key===\'Enter\'){planItGuess()}"/>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItGuess()">Use it</button><button class="btn" onclick="planItBack()">Back</button></div>'
-      + '<div><button class="pi-stuck" onclick="planItCoach()">Still stuck? Think it through with the coach</button></div>';
-  } else if(P.stage === 'done'){
-    body = '<div class="pi-q">That\'s your next action.</div>'
-      + '<div class="pi-final">' + esc(P.final) + '</div>'
-      + '<div class="pi-actions"><button class="btn primary" onclick="planItStart()">Start now</button></div>';
-  }
-  showModal(head + chainHtml + body);
-  var inp = document.getElementById('pi-result-in') || document.getElementById('pi-input') || document.getElementById('pi-guess') || document.getElementById('pi-way-0');
-  if(inp){ try{ inp.focus(); }catch(e){} }
-}
-
-function planItSkipWays(){
-  if(!PLANIT) return;
-  PLANIT.skipped = true;
-  PLANIT.stage = 'q1';
-  planItRender();
-}
-function planItTogglePick(k){
-  if(!PLANIT) return;
-  var t = PLANIT.allWays[k];
-  if(t === undefined) return;
-  PLANIT.newPick = planItVal('pi-newpick');
-  var at = PLANIT.picks.indexOf(t);
-  if(at >= 0) PLANIT.picks.splice(at, 1);
-  else if(PLANIT.picks.length < 2) PLANIT.picks.push(t);
-  planItRender();
-}
-function planItPickNext(){
-  if(!PLANIT) return;
-  var typed = planItVal('pi-newpick');
-  var picks = PLANIT.picks.slice();
-  if(typed && picks.length < 2 && picks.map(function(x){ return x.toLowerCase(); }).indexOf(typed.toLowerCase()) < 0) picks.push(typed);
-  if(!picks.length) return;
-  PLANIT.picks = picks;
-  PLANIT.chain.push(picks[0]);
-  if(picks[1]) PLANIT.later = PLANIT.later.concat([{ text: picks[1] }]);
-  PLANIT.stage = 'q1';
-  planItRender();
-}
-
-function planItVideo(on){ if(!PLANIT) return; planItSyncPieces(); planItSyncWays(); PLANIT.video = !!on; planItRender(); }
-function planItStuck(){ if(!PLANIT) return; planItSyncPieces(); planItSyncWays(); PLANIT.stuckFrom = PLANIT.stage; PLANIT.stage = 'stuck'; planItRender(); }
-function planItGuess(){
-  var v = planItVal('pi-guess');
-  if(!v || !PLANIT) return;
-  if(PLANIT.stuckFrom === 'break'){
-    var k = PLANIT.pieces.findIndex(function(t){ return !t.trim(); });
-    if(k < 0) k = PLANIT.pieces.length - 1;
-    PLANIT.pieces[k] = v;
-    PLANIT.stage = 'break';
-  } else if(PLANIT.stuckFrom === 'ways'){
-    var j = PLANIT.ways.findIndex(function(t){ return !t.trim(); });
-    if(j < 0){ if(PLANIT.ways.length < 8) PLANIT.ways.push(v); else PLANIT.ways[7] = v; }
-    else PLANIT.ways[j] = v;
-    PLANIT.stage = 'ways';
-  } else {
-    PLANIT.current = v;
-    PLANIT.stage = 'q2';
-  }
-  planItRender();
-}
-
-function openPlanSession(){
-  show('coach');
-  setTimeout(function(){ resetChatState(); startPrompt('plan', 'Plan my goals'); }, 100);
-}
-
-function planItEditResult(){
-  if(!PLANIT || PLANIT.mode === 'more') return;
-  planItSyncPieces(); planItSyncWays();
-  PLANIT.editingResult = true;
-  planItRender();
-}
-function planItCancelResult(){ if(!PLANIT) return; PLANIT.editingResult = false; planItRender(); }
-function planItSaveResult(){
-  if(!PLANIT) return;
-  var v = planItVal('pi-result-in');
+// ---------- area: goal, ways, picks, why, save ----------
+function planItGoalNext(){
+  if(!PLANIT || PLANIT.kind !== 'area') return;
+  var v = planItVal('pi-goal-in');
   if(!v) return;
-  var p = D.goals[PLANIT.akey] && D.goals[PLANIT.akey].projects[PLANIT.pi];
-  if(!p) return;
-  p.name = v;
+  D.goals[PLANIT.akey].goal = v;
   PLANIT.result = v;
-  PLANIT.editingResult = false;
   persist(); renderSetupGoals(); renderToday();
+  PLANIT.stage = 'ways';
   planItRender();
-}
-
-function openPlanIt(o){
-  var p = D.goals[o.akey] && D.goals[o.akey].projects[o.pi];
-  if(!p) return;
-  var mode = o.mode || 'new';
-  var cur = '';
-  if(mode === 'step'){
-    var st = (p.steps || [])[o.stepIdx];
-    if(!st) return;
-    cur = st.text;
-  }
-  var fresh = mode === 'new' && !(p.steps && p.steps.length);
-  var ways = ['', '', ''], waySrc = [null, null, null];
-  if(mode === 'replan'){
-    // start from everything already written for this project: unfinished steps first, then parked ways
-    var items = [], seen = {};
-    (p.steps || []).forEach(function(s){
-      if(s.done || items.length >= 8) return;
-      var low = String(s.text).toLowerCase();
-      if(seen[low]) return;
-      seen[low] = 1; items.push({ text: s.text, src: { k: 's', text: s.text } });
-    });
-    asArray(p.ways).forEach(function(w){
-      if(items.length >= 8) return;
-      var low = String(w).toLowerCase();
-      if(seen[low]) return;
-      seen[low] = 1; items.push({ text: w, src: { k: 'w', text: w } });
-    });
-    if(items.length){
-      ways = items.map(function(i){ return i.text; });
-      waySrc = items.map(function(i){ return i.src; });
-      if(ways.length < 8){ ways.push(''); waySrc.push(null); }
-    }
-  }
-  PLANIT = {
-    akey: o.akey, pi: o.pi, mode: mode,
-    base: mode === 'more' ? (o.parent || null) : null,
-    result: mode === 'more' ? (o.parent || p.name) : p.name,
-    stepIdx: mode === 'step' ? o.stepIdx : null,
-    chain: [], current: cur, later: [], depth: 0, final: '',
-    stage: mode === 'step' ? 'q2' : ((fresh || mode === 'replan') ? 'ways' : 'q1'),
-    pieces: ['', ''], ways: ways, waySrc: waySrc, srcByText: {}, allWays: [], picks: [], newPick: '', stuckFrom: null, video: false, skipped: false
-  };
-  planItRender();
-}
-
-function planItSyncWays(){
-  if(!PLANIT) return;
-  PLANIT.ways = PLANIT.ways.map(function(t, k){ var e = document.getElementById('pi-way-' + k); return e ? e.value : t; });
-  while(PLANIT.waySrc.length < PLANIT.ways.length) PLANIT.waySrc.push(null);
 }
 function planItAddWay(){
   if(!PLANIT) return;
@@ -1779,67 +1867,143 @@ function planItWaysNext(){
   PLANIT.stage = 'pick';
   planItRender();
 }
+function planItTogglePick(k){
+  if(!PLANIT) return;
+  var t = PLANIT.allWays[k];
+  if(t === undefined) return;
+  PLANIT.newPick = planItVal('pi-newpick');
+  var at = PLANIT.picks.indexOf(t);
+  if(at >= 0) PLANIT.picks.splice(at, 1);
+  else if(PLANIT.picks.length < 2) PLANIT.picks.push(t);
+  planItRender();
+}
+function planItPickNext(){
+  if(!PLANIT || PLANIT.kind !== 'area') return;
+  var typed = planItVal('pi-newpick');
+  var picks = PLANIT.picks.slice();
+  if(typed && picks.length < 2 && picks.map(function(x){ return x.toLowerCase(); }).indexOf(typed.toLowerCase()) < 0) picks.push(typed);
+  if(!picks.length) return;
+  PLANIT.picks = picks;
+  // anything that is not already a project needs a why
+  PLANIT.newPicks = picks.filter(function(t){ var s = PLANIT.srcByText[t.toLowerCase()]; return !(s && s.k === 'p'); });
+  PLANIT.whys = PLANIT.newPicks.map(function(){ return ''; });
+  if(PLANIT.newPicks.length){ PLANIT.stage = 'why'; planItRender(); }
+  else needleSave();
+}
+function planItWhyNext(){
+  if(!PLANIT || PLANIT.kind !== 'area') return;
+  planItSyncWhys();
+  needleSave();
+}
+function needleSave(){
+  var P = PLANIT;
+  if(!P || P.kind !== 'area') return;
+  var g = D.goals[P.akey];
+  if(!g){ planItClose(); return; }
+  if(!g.projects) g.projects = [];
+  var srcMap = P.srcByText || {};
+  var pickedLow = P.picks.map(function(t){ return t.toLowerCase(); });
+  var whyBy = {};
+  (P.newPicks || []).forEach(function(t, k){ whyBy[t.toLowerCase()] = (P.whys[k] || '').trim(); });
+  var pickObjs = [];
+  P.picks.forEach(function(t){
+    var src = srcMap[t.toLowerCase()];
+    var proj = null;
+    if(src && src.k === 'p'){
+      proj = g.projects.find(function(pr){ return !pr.archived && pr.name === src.text; });
+      if(proj) proj.name = t;
+    }
+    if(!proj){
+      proj = { name: t, why: whyBy[t.toLowerCase()] || '', done: '', archived: false, todayDone: false, steps: [] };
+      g.projects.push(proj);
+      if(src && src.k === 'w') g.ways = asArray(g.ways).filter(function(w){ return w !== src.text; });
+    }
+    pickObjs.push(proj);
+  });
+  // the picks are the top projects; everything else keeps its order behind them
+  var rest = g.projects.filter(function(pr){ return pickObjs.indexOf(pr) < 0; });
+  g.projects = pickObjs.concat(rest);
+  // items that were not picked: edits are kept, brand-new ideas are parked under the goal
+  P.allWays.forEach(function(t){
+    var low = t.toLowerCase();
+    if(pickedLow.indexOf(low) >= 0) return;
+    var src = srcMap[low];
+    if(src && src.k === 'p'){
+      if(t !== src.text){ var pr2 = g.projects.find(function(x){ return !x.archived && x.name === src.text; }); if(pr2) pr2.name = t; }
+      return;
+    }
+    if(src && src.k === 'w'){
+      if(t !== src.text){ var wi = asArray(g.ways).indexOf(src.text); if(wi >= 0) g.ways[wi] = t; }
+      return;
+    }
+    var cur = asArray(g.ways);
+    if(cur.map(function(x){ return x.toLowerCase(); }).indexOf(low) < 0) cur.push(t);
+    g.ways = cur;
+  });
+  g.ways = asArray(g.ways).slice(-AREA_WAYS_CAP);
+  persist();
+  var akey = P.akey, first = pickObjs[0];
+  PLANIT = null;
+  hideModal();
+  renderSetupGoals(); renderToday();
+  showSyncStatus('Needle-movers set');
+  // straight on to the steps for the first pick, unless it is already planned
+  if(first && !(first.steps || []).some(function(s){ return !s.done; })){
+    openPlanIt({ akey: akey, pi: 0, mode: 'replan' });
+  }
+}
 
+// ---------- save the project steps ----------
 function planItStart(){
   var P = PLANIT;
-  if(!P) return;
+  if(!P || P.kind !== 'project') return;
   var p = D.goals[P.akey] && D.goals[P.akey].projects[P.pi];
   if(!p){ planItClose(); return; }
   var now = new Date().toISOString();
   var topParent = P.chain.length ? P.chain[P.chain.length - 1] : P.base;
-  var list = [{ text: P.final, done: false, createdAt: now }];
-  if(topParent) list[0].parent = topParent;
-  P.later.forEach(function(x){
-    var s = { text: x.text, done: false, createdAt: now };
-    if(x.parent) s.parent = x.parent;
-    list.push(s);
-  });
   if(!p.steps) p.steps = [];
-  var srcMap = P.srcByText || {};
-  var pickedLow = P.picks.map(function(t){ return t.toLowerCase(); });
-  if(P.mode === 'replan'){
-    // picked items that were already written become the plan, so they leave the lists
-    P.picks.forEach(function(t){
-      var src = srcMap[t.toLowerCase()];
-      if(!src) return;
-      if(src.k === 's'){
-        var at0 = p.steps.findIndex(function(s){ return !s.done && s.text === src.text; });
-        if(at0 >= 0) p.steps.splice(at0, 1);
-      } else if(src.k === 'w'){
-        p.ways = asArray(p.ways).filter(function(w){ return w !== src.text; });
-      }
+
+  if(P.mode === 'new' || P.mode === 'replan'){
+    // the list they built becomes the sequence: unchanged steps keep their history, edits keep the new wording,
+    // cleared rows leave, new rows join, and the first step may have been broken into smaller ones
+    var doneSteps = p.steps.filter(function(s){ return s.done; });
+    var pool = p.steps.filter(function(s){ return !s.done; });
+    var take = function(src){
+      if(!src) return null;
+      var i = pool.findIndex(function(s){ return s.text === src.text; });
+      return i < 0 ? null : pool.splice(i, 1)[0];
+    };
+    var out = [];
+    var broken = P.chain.length > 0;
+    var firstObj = take(P.firstSrc);
+    var finalObj;
+    if(!broken && firstObj){ finalObj = firstObj; finalObj.text = P.final; }
+    else { finalObj = { text: P.final, done: false, createdAt: now }; if(topParent) finalObj.parent = topParent; }
+    out.push(finalObj);
+    P.later.forEach(function(x){
+      var o = take(x.src);
+      if(o){ o.text = x.text; }
+      else { o = { text: x.text, done: false, createdAt: now }; if(x.parent) o.parent = x.parent; }
+      out.push(o);
     });
-    // items that were edited but not picked keep their new wording
-    P.allWays.forEach(function(t){
-      var src = srcMap[t.toLowerCase()];
-      if(!src || pickedLow.indexOf(t.toLowerCase()) >= 0 || t === src.text) return;
-      if(src.k === 's'){
-        var st = p.steps.find(function(s){ return !s.done && s.text === src.text; });
-        if(st) st.text = t;
-      } else if(src.k === 'w'){
-        var wi = asArray(p.ways).indexOf(src.text);
-        if(wi >= 0) p.ways[wi] = t;
-      }
-    });
-  }
-  if(P.mode === 'step'){
-    if(P.chain.length > 0) p.steps.splice.apply(p.steps, [P.stepIdx, 1].concat(list));
+    (P.overflow || []).forEach(function(t){ var o = take({ text: t }); if(o) out.push(o); });
+    p.steps = doneSteps.concat(out);
   } else {
-    var at = firstUndoneIdx(p.steps);
-    if(at < 0) at = p.steps.length;
-    p.steps.splice.apply(p.steps, [at, 0].concat(list));
-  }
-  // new ideas they listed but did not pick stay with the project, out of sight
-  if(P.allWays && P.allWays.length){
-    var cur = asArray(p.ways);
-    var curLow = cur.map(function(t){ return t.toLowerCase(); });
-    P.allWays.forEach(function(t){
-      var low = t.toLowerCase();
-      if(pickedLow.indexOf(low) >= 0) return;
-      if(P.mode === 'replan' && srcMap[low]) return;   // already-written items stay where they are
-      if(curLow.indexOf(low) < 0){ cur.push(t); curLow.push(low); }
+    // inside a bigger step (There's more) or one step broken down: add the chain where it belongs
+    var list = [{ text: P.final, done: false, createdAt: now }];
+    if(topParent) list[0].parent = topParent;
+    P.later.forEach(function(x){
+      var s = { text: x.text, done: false, createdAt: now };
+      if(x.parent) s.parent = x.parent;
+      list.push(s);
     });
-    p.ways = cur.slice(-WAYS_CAP);
+    if(P.mode === 'step'){
+      if(P.chain.length > 0) p.steps.splice.apply(p.steps, [P.stepIdx, 1].concat(list));
+    } else {
+      var at = firstUndoneIdx(p.steps);
+      if(at < 0) at = p.steps.length;
+      p.steps.splice.apply(p.steps, [at, 0].concat(list));
+    }
   }
   persist();
   PLANIT = null;
@@ -1850,22 +2014,37 @@ function planItStart(){
   showSyncStatus('Next action set');
 }
 
+// ---------- coach hand-off ----------
 function planItCoach(){
   var P = PLANIT;
   if(!P) return;
-  planItSyncPieces();
-  planItSyncWays();
+  planItSyncAll();
   var akey = P.akey, i = P.pi;
-  var p = D.goals[akey].projects[i];
-  var trail = P.chain.concat(P.current ? [P.current] : []);
-  var listed = (P.allWays && P.allWays.length ? P.allWays : (P.ways || []).map(function(t){ return t.trim(); }).filter(Boolean));
-  var prompt = 'I am stuck planning the next action for my result: ' + P.result + '.'
-    + (listed.length ? ' Ways I have listed so far: ' + listed.join(', ') + '.' : '')
-    + (trail.length ? ' So far I have: ' + trail.join(' > ') + '.' : '')
-    + ' I do not know what the next action is. Help me find it.';
-  var opener = 'Let\'s think it through. Your result is: ' + P.result + '.'
-    + (trail.length ? ' So far you have: ' + trail.join(' > ') + '.' : '')
-    + ' What\'s making the next piece hard to see?';
+  var p = (P.kind === 'project') ? D.goals[akey].projects[i] : null;
+  var trim = function(t){ return String(t).trim(); };
+  var prompt, opener;
+  if(P.kind === 'area'){
+    var ways = (P.allWays && P.allWays.length ? P.allWays : P.ways.map(trim).filter(Boolean));
+    prompt = 'I am stuck finding the ways to reach my 3 to 6 month goal: ' + P.result + '.'
+      + (ways.length ? ' Ways I have so far: ' + ways.join(', ') + '.' : '') + ' Help me brainstorm.';
+    opener = 'Let\'s brainstorm it. Your goal is: ' + P.result + '.'
+      + (ways.length ? ' So far you have: ' + ways.join(', ') + '.' : '') + ' What else could get you there?';
+  } else if(P.stage === 'steps'){
+    var steps = P.steps.map(trim).filter(Boolean);
+    prompt = 'I am stuck listing the steps to make this happen: ' + P.result + '.'
+      + (steps.length ? ' Steps I have so far: ' + steps.join(', ') + '.' : '') + ' Help me find the steps.';
+    opener = 'Let\'s work it out. Your result is: ' + P.result + '.'
+      + (steps.length ? ' So far you have: ' + steps.join(', ') + '.' : '') + ' What\'s the part you are not sure about?';
+  } else {
+    var trail = P.chain.concat(P.current ? [P.current] : []);
+    prompt = 'I am stuck planning the next action for my result: ' + P.result + '.'
+      + (trail.length ? ' So far I have: ' + trail.join(' > ') + '.' : '')
+      + ' I do not know what the next action is. Help me find it.';
+    opener = 'Let\'s think it through. Your result is: ' + P.result + '.'
+      + (trail.length ? ' So far you have: ' + trail.join(' > ') + '.' : '')
+      + ' What\'s making the next piece hard to see?';
+  }
+  var shown = P.kind === 'area' ? 'Find the needle-movers: I am stuck' : 'Plan it: I am stuck';
   PLANIT = null;
   hideModal();
   show('coach');
@@ -1875,10 +2054,15 @@ function planItCoach(){
     resetChatState();
     window._activeProject = { akey: akey, i: i, name: p ? p.name : '' };
     chat.push({ role: 'user', content: prompt });
-    addMsg('u', 'Plan it: I am stuck');
+    addMsg('u', shown);
     chat.push({ role: 'assistant', content: opener });
     addMsg('c', opener);
   }, 100);
+}
+
+function openPlanSession(){
+  show('coach');
+  setTimeout(function(){ resetChatState(); startPrompt('plan', 'Plan my goals'); }, 100);
 }
 
 // ---------- Help me start ----------
@@ -2267,6 +2451,27 @@ function deleteWay(akey, pi, wi){
 }
 
 // ---------- 3 to 6 month result from the coach ----------
+function addAreaWays(area, ways){
+  if(!Array.isArray(ways)) return false;
+  var g = D.goals[area] || D.goals.business;
+  var cur = asArray(g.ways);
+  var low = cur.map(function(x){ return x.toLowerCase(); });
+  ways.forEach(function(w){
+    w = String(w || '').trim().slice(0, 120);
+    if(w && low.indexOf(w.toLowerCase()) < 0){ cur.push(w); low.push(w.toLowerCase()); }
+  });
+  g.ways = cur.slice(-AREA_WAYS_CAP);
+  persist(); renderSetupGoals();
+  return true;
+}
+function deleteAreaWay(akey, wi){
+  var g = D.goals[akey];
+  if(!g || !g.ways) return;
+  g.ways.splice(wi, 1);
+  window._areaWaysOpen = akey;
+  persist(); renderSetupGoals();
+}
+
 function applyGoalFromCoach(area, text){
   var akey = D.goals[area] ? area : 'business';
   text = String(text || '').trim().slice(0, 200);
@@ -2343,7 +2548,7 @@ function runSaveCommand(cmd, rest){
     if(addProfileNote(nd.type, nd.text)) showSyncStatus('Noted');
   } else if(cmd === 'SAVE_WAYS'){
     var wd = parseCoachFields(rest);
-    addWays(wd.name, wd.area, wd.ways);
+    if(wd.name) addWays(wd.name, wd.area, wd.ways); else addAreaWays(wd.area, wd.ways);
   } else if(cmd === 'SAVE_SESSION'){
     var sn = stripOuterBraces(rest).trim();
     setSession(/^(CLEAR|END|NONE)$/i.test(sn) ? '' : sn.slice(0, 1500));
@@ -2374,6 +2579,7 @@ function ctx(){
   AREAS.forEach(function(a){
     var g = D.goals[a.key];
     if(g.goal) parts.push((g.label || a.label) + ' 3 to 6 month goal: ' + g.goal);
+    if(g.ways && g.ways.length) parts.push((g.label || a.label) + ' other ways to get there: ' + g.ways.join(', '));
     var active = (g.projects || []).filter(function(p){ return !p.archived; });
     if(active.length){
       parts.push((g.label || a.label) + ' projects: ' + active.map(function(p, pi){
