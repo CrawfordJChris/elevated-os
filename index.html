@@ -216,6 +216,15 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 .pi-steprow{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .pi-steprow .pi-piece{margin-bottom:0;flex:1;min-width:0}
 .pi-whyline{font-size:12px;color:var(--text-muted);margin-top:6px}
+.idea-main{flex:1;min-width:0}
+.idea-main .idea-text{flex:none;display:block}
+.idea-tag{display:inline-block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:2px 6px;border-radius:6px;margin-right:8px;vertical-align:1px;border:0.5px solid var(--border-strong);color:var(--text-secondary)}
+.idea-why{font-size:12px;color:var(--text-muted);margin-top:3px}
+.idea-stale{font-size:12px;color:#e0a43a;margin-top:3px}
+.cap-pick{margin-top:12px}
+.cap-msg{font-size:12px;color:#e0a43a;margin:6px 0}
+.way-why{display:block;font-size:11px;color:var(--text-muted)}
+.park-form{margin:4px 0 10px;padding:10px;border:0.5px solid var(--border);border-radius:12px}
 .hero-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
 .hero-area{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-accent)}
 .hero-actions .btn-state{flex:2;width:auto;padding:13px 12px}
@@ -319,7 +328,7 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
   <div class="section" id="sec-more">
     <div class="card" style="padding:4px 18px">
       <button class="more-row" onclick="show('coach')"><i class="ti ti-messages"></i><div><div class="t">Coach</div><div class="s">Find your needle-mover, plan a project, get unstuck</div></div></button>
-      <button class="more-row" onclick="show('capture')"><i class="ti ti-bulb"></i><div><div class="t">Ideas</div><div class="s">Capture it so it stops nagging you</div></div></button>
+      <button class="more-row" onclick="show('capture')"><i class="ti ti-bulb"></i><div><div class="t">Capture</div><div class="s">Capture it so it stops nagging you</div></div></button>
       <button class="more-row" onclick="show('settings')"><i class="ti ti-settings"></i><div><div class="t">Settings</div><div class="s">Sync, backup, version and what's new</div></div></button>
     </div>
   </div>
@@ -437,15 +446,20 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
   <!-- IDEAS -->
   <div class="section" id="sec-capture">
     <div class="card">
-      <div class="card-title">Capture an idea</div>
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <input type="text" id="idea-in" placeholder="What just came to mind?" onkeydown="if(event.key==='Enter')capIdea()" style="flex:1"/>
-        <button class="btn primary" onclick="capIdea()"><i class="ti ti-inbox"></i> Save</button>
+      <div class="card-title">Capture</div>
+      <div class="lbl">What</div>
+      <input type="text" id="cap-what" placeholder="e.g. Listen to the webinar recordings" style="margin-bottom:8px"/>
+      <div class="lbl">Why <span style="color:var(--text-muted)">(optional)</span></div>
+      <input type="text" id="cap-why" placeholder="e.g. So I stay up to speed on AI challenges" style="margin-bottom:10px"/>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" onclick="capSave('todo')"><i class="ti ti-check"></i> Save as to do</button>
+        <button class="btn" onclick="capSave('idea')"><i class="ti ti-bulb"></i> Save as idea</button>
       </div>
-      <span class="ok-msg" id="cap-ok" style="display:none">Captured.</span>
+      <div id="cap-pick"></div>
+      <span class="ok-msg" id="cap-ok" style="display:none;margin-top:8px">Captured.</span>
     </div>
     <div class="card">
-      <div class="card-title">Idea parking lot</div>
+      <div class="card-title">Inbox</div>
       <div id="idea-list"><div class="empty">No ideas yet.</div></div>
     </div>
   </div>
@@ -465,9 +479,15 @@ textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var
 <script>
 
 // ---- Version + changelog (bump APP_VERSION and add a CHANGELOG entry each build) ----
-var APP_VERSION = '9.9';
+var APP_VERSION = '9.10';
 var APP_VERSION_DATE = 'Oct 20, 2026';
 var CHANGELOG = [
+  { v:'9.10', date:'Oct 20, 2026', items:[
+    "Capture replaces Ideas: a what and an optional why, saved as a to do or an idea",
+    "An idea can be parked straight under the goal it helps, with its why, ready for the next time you look for needle-movers",
+    "Park an idea from any goal on the Plan page; a goal holds eight parked ways and tells you when it is full instead of dropping one",
+    "The inbox shows the newest seven, flags anything older than 30 days, and the coach can see it for your weekly reset"
+  ]},
   { v:'9.9', date:'Oct 20, 2026', items:[
     "Plan it now asks what needs to happen to make it real, with a time beside each step; the time shows on Plan and Today and can be edited",
     "Today shows your top two projects: the first with Elevate, the second with a Done button",
@@ -637,7 +657,7 @@ function normalizeGoals(g){
   var out = {};
   AREAS.forEach(function(a){
     var src = (g && g[a.key]) || {};
-    out[a.key] = { label: src.label || a.label, goal: src.goal || '', projects: asArray(src.projects), ways: asArray(src.ways), why: src.why || '' };
+    out[a.key] = { label: src.label || a.label, goal: src.goal || '', projects: asArray(src.projects), ways: asArray(src.ways), why: src.why || '', wayWhys: (src.wayWhys && typeof src.wayWhys === 'object' && !Array.isArray(src.wayWhys)) ? src.wayWhys : {} };
   });
   return out;
 }
@@ -646,7 +666,7 @@ function rowToDoc(row){
     vision: row.vision || '',
     goals: normalizeGoals(parseJsonField(row.goals, {})),
     waiting: asArray(parseJsonField(row.waiting, [])),
-    ideas: asArray(parseJsonField(row.ideas, [])),
+    ideas: normalizeIdeas(parseJsonField(row.ideas, [])),
     celebrations: asArray(parseJsonField(row.celebrations, [])),
     visionImages: asArray(parseJsonField(row.vision_images, [])),
     profileNotes: row.profile_notes === undefined ? null : asArray(parseJsonField(row.profile_notes, []))
@@ -657,7 +677,7 @@ function currentDoc(){
     vision: D.vision || '',
     goals: normalizeGoals(D.goals),
     waiting: asArray(D.waiting),
-    ideas: asArray(D.ideas),
+    ideas: normalizeIdeas(D.ideas),
     celebrations: asArray(D.celebrations),
     visionImages: asArray(D.visionImages),
     profileNotes: asArray(D.profileNotes)
@@ -708,7 +728,7 @@ function applyCloudDoc(doc){
   D.vision = doc.vision || '';
   D.goals = normalizeGoals(doc.goals);
   D.waiting = asArray(doc.waiting);
-  D.ideas = asArray(doc.ideas);
+  D.ideas = normalizeIdeas(doc.ideas);
   D.celebrations = asArray(doc.celebrations);
   D.visionImages = asArray(doc.visionImages);
   if(doc.profileNotes !== null && doc.profileNotes !== undefined) D.profileNotes = asArray(doc.profileNotes);
@@ -805,7 +825,7 @@ async function syncSave(){
       vision: D.vision || '',
       goals: D.goals || {},
       waiting: D.waiting || [],
-      ideas: D.ideas || [],
+      ideas: normalizeIdeas(D.ideas),
       vision_images: D.visionImages || [],
       celebrations: D.celebrations || [],
       updated_at: new Date().toISOString()
@@ -930,7 +950,7 @@ function restorePrevCopy(){
   D.vision = prev.doc.vision || '';
   D.goals = normalizeGoals(prev.doc.goals);
   D.waiting = asArray(prev.doc.waiting);
-  D.ideas = asArray(prev.doc.ideas);
+  D.ideas = normalizeIdeas(prev.doc.ideas);
   D.celebrations = asArray(prev.doc.celebrations);
   D.visionImages = asArray(prev.doc.visionImages);
   if(prev.doc.profileNotes) D.profileNotes = asArray(prev.doc.profileNotes);
@@ -973,6 +993,7 @@ function persist(){
 function load(){
   try{ var r=localStorage.getItem('eos6'); if(r) D=JSON.parse(r); }catch(e){}
   if(!Array.isArray(D.profileNotes)) D.profileNotes=[];
+  D.ideas = normalizeIdeas(D.ideas);
   render();
   sbLoad().then(function(){ render(); });
 }
@@ -1032,9 +1053,16 @@ function renderSetupGoals(){
     html+='<div id="projs-'+a.key+'">'+renderProjList(a.key,projs)+'</div>';
     if(g.ways && g.ways.length){
       html+='<div class="ways-wrap"><button class="pi-stuck" style="margin:6px 0" onclick="toggleWays(this)">Other ways to get there ('+g.ways.length+')</button><div class="ways-list" style="display:'+(window._areaWaysOpen === a.key ? 'block' : 'none')+'">';
-      g.ways.forEach(function(wy,wi){ html+='<div class="way-row"><span>'+esc(wy)+'</span><button class="btn sm danger" aria-label="Delete" data-ak="'+a.key+'" data-wi="'+wi+'" onclick="deleteAreaWay(this.dataset.ak,parseInt(this.dataset.wi))">&times;</button></div>'; });
+      g.ways.forEach(function(wy,wi){ html+='<div class="way-row"><span>'+esc(wy)+(g.wayWhys && g.wayWhys[wy] ? '<span class="way-why">Why: '+esc(g.wayWhys[wy])+'</span>' : '')+'</span><button class="btn sm danger" aria-label="Delete" data-ak="'+a.key+'" data-wi="'+wi+'" onclick="deleteAreaWay(this.dataset.ak,parseInt(this.dataset.wi))">&times;</button></div>'; });
       html+='</div></div>';
     }
+    var pk = window._parkDraft && window._parkDraft.ak === a.key ? window._parkDraft : null;
+    html+='<div class="park-wrap"><button class="pi-stuck" style="margin:6px 0" data-ak="'+a.key+'" onclick="toggleParkForm(this.dataset.ak)">+ Park an idea</button>';
+    html+='<div class="park-form" id="park-form-'+a.key+'" style="display:'+(window._parkOpen === a.key ? 'block' : 'none')+'">';
+    html+='<div class="lbl">What</div><input type="text" id="park-what-'+a.key+'" value="'+esc(pk ? pk.what : '')+'" placeholder="A way to reach this goal" style="margin-bottom:8px"/>';
+    html+='<div class="lbl">Why <span style="color:var(--text-muted)">(optional)</span></div><input type="text" id="park-why-'+a.key+'" value="'+esc(pk ? pk.why : '')+'" placeholder="Why it could matter" style="margin-bottom:8px"/>';
+    html+='<div style="display:flex;gap:6px"><button class="btn sm primary" data-ak="'+a.key+'" onclick="parkFromForm(this.dataset.ak)">Park it</button><button class="btn sm" data-ak="'+a.key+'" onclick="toggleParkForm(this.dataset.ak)">Cancel</button></div>';
+    html+='<div class="cap-msg" id="park-msg-'+a.key+'">'+(pk && pk.msg ? esc(pk.msg) : '')+'</div></div></div>';
     html+='<div style="display:flex;gap:6px;margin-top:6px">';
     html+='<button class="btn sm primary" onclick="openNeedleMovers(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-route"></i> Find the needle-movers</button>';
     html+='<button class="btn sm" onclick="toggleAddForm(\''+a.key+'\')" style="font-size:12px"><i class="ti ti-plus"></i> Add project</button>';
@@ -1995,7 +2023,11 @@ function needleSave(){
     if(!proj){
       proj = { name: t, why: '', done: '', archived: false, todayDone: false, steps: [] };
       g.projects.push(proj);
-      if(src && src.k === 'w') g.ways = asArray(g.ways).filter(function(w){ return w !== src.text; });
+      if(src && src.k === 'w'){
+        proj.why = (g.wayWhys && g.wayWhys[src.text]) || '';
+        if(g.wayWhys) delete g.wayWhys[src.text];
+        g.ways = asArray(g.ways).filter(function(w){ return w !== src.text; });
+      }
     }
     pickObjs.push(proj);
   });
@@ -2012,20 +2044,23 @@ function needleSave(){
       return;
     }
     if(src && src.k === 'w'){
-      if(t !== src.text){ var wi = asArray(g.ways).indexOf(src.text); if(wi >= 0) g.ways[wi] = t; }
+      if(t !== src.text){
+        var wi = asArray(g.ways).indexOf(src.text); if(wi >= 0) g.ways[wi] = t;
+        if(g.wayWhys && g.wayWhys[src.text] !== undefined){ g.wayWhys[t] = g.wayWhys[src.text]; delete g.wayWhys[src.text]; }
+      }
       return;
     }
     var cur = asArray(g.ways);
     if(cur.map(function(x){ return x.toLowerCase(); }).indexOf(low) < 0) cur.push(t);
     g.ways = cur;
   });
-  g.ways = asArray(g.ways).slice(-AREA_WAYS_CAP);
+  var overFull = asArray(g.ways).length > AREA_WAYS_CAP ? asArray(g.ways).length : 0;
   persist();
   var akey = P.akey, first = pickObjs[0];
   PLANIT = null;
   hideModal();
   renderSetupGoals(); renderToday();
-  showSyncStatus('Needle-movers set');
+  showSyncStatus(overFull ? 'Needle-movers set. You have ' + overFull + ' parked ways, worth clearing a few.' : 'Needle-movers set');
   // straight on to the steps for the first pick, unless it is already planned
   if(first && !(first.steps || []).some(function(s){ return !s.done; })){
     openPlanIt({ akey: akey, pi: 0, mode: 'replan' });
@@ -2142,6 +2177,11 @@ function planItCoach(){
     chat.push({ role: 'assistant', content: opener });
     addMsg('c', opener);
   }, 100);
+}
+
+function openPlanSession(){
+  show('coach');
+  setTimeout(function(){ resetChatState(); startPrompt('plan', 'Plan my goals'); }, 100);
 }
 
 function openPlanSession(){
@@ -2311,61 +2351,177 @@ function show(name){
 }
 
 
-function renderIdeas(){
-  var el=document.getElementById('idea-list');
-  if(!D.ideas||!D.ideas.length){ el.innerHTML='<div class="empty">No ideas yet.</div>'; return; }
-  var html='';
-  D.ideas.forEach(function(x,i){
-    html+='<div class="idea-row"><span class="idea-text">'+esc(x)+'</span>';
-    html+='<div class="idea-btns">';
-    html+='<button class="btn sm accent" onclick="toggleConvert('+i+')"><i class="ti ti-folder-plus"></i> To project</button>';
-    html+='<button class="btn sm danger" onclick="delIdea('+i+')">&times;</button>';
-    html+='</div></div>';
-    html+='<div class="convert-form" id="cf-'+i+'">';
-    html+='<div class="lbl">Add to area</div>';
-    html+='<select id="cf-area-'+i+'" style="margin-bottom:6px">';
-    AREAS.forEach(function(a){ html+='<option value="'+a.key+'">'+esc(D.goals[a.key].label||a.label)+'</option>'; });
-    html+='</select>';
-    html+='<div class="lbl">Why it matters</div>';
-    html+='<input type="text" id="cf-why-'+i+'" placeholder="e.g. Builds the business I love" style="margin-bottom:6px"/>';
-    html+='<div class="lbl">First next step</div>';
-    html+='<input type="text" id="cf-step-'+i+'" placeholder="e.g. Research this weekend" style="margin-bottom:8px"/>';
-    html+='<div style="display:flex;gap:6px">';
-    html+='<button class="btn sm primary" onclick="convertToProj('+i+')"><i class="ti ti-check"></i> Create project</button>';
-    html+='<button class="btn sm" onclick="toggleConvert('+i+')">Cancel</button>';
-    html+='</div></div>';
-  });
-  el.innerHTML=html;
-}
+// ---------- Capture: to dos and ideas, each with a what and an optional why ----------
+var CAP = { pending: null, moveIdx: null, showAll: false, msg: '' };
+var INBOX_SHOW = 7, IDEA_STALE_DAYS = 30;
 
-function toggleConvert(i){
-  var f=document.getElementById('cf-'+i);
-  f.style.display=f.style.display==='block'?'none':'block';
+function normalizeIdeas(arr){
+  return asArray(arr).map(function(x){
+    if(x && typeof x === 'object' && !Array.isArray(x)){
+      return { what: String(x.what || x.text || '').trim(), why: String(x.why || '').trim(), type: x.type === 'todo' ? 'todo' : 'idea', at: x.at || '' };
+    }
+    return { what: String(x == null ? '' : x).trim(), why: '', type: 'idea', at: '' };
+  }).filter(function(x){ return x.what; });
 }
-
-function convertToProj(i){
-  var akey=document.getElementById('cf-area-'+i).value;
-  var why=document.getElementById('cf-why-'+i).value.trim();
-  var step=document.getElementById('cf-step-'+i).value.trim();
-  var idea=D.ideas[i];
-  D.goals[akey].projects.push({name:idea,done:'',why:why,steps:step?[{text:step,done:false}]:[],archived:false,todayDone:false});
-  D.ideas.splice(i,1);
-  persist(); renderIdeas(); renderSetupGoals(); renderToday();
+function areaLabel(akey){
+  var ar = AREAS.filter(function(a){ return a.key === akey; })[0];
+  return (D.goals[akey] && D.goals[akey].label) || (ar && ar.label) || akey;
 }
-
-function capIdea(){
-  var v=document.getElementById('idea-in').value.trim();
-  if(!v) return;
-  if(!D.ideas) D.ideas=[];
-  D.ideas.push(v);
-  document.getElementById('idea-in').value='';
+// file a way under a goal, with its why; the list holds eight and says so rather than dropping one
+function parkWay(akey, what, why){
+  var g = D.goals[akey];
+  if(!g) return { ok: false, msg: 'That goal is not there.' };
+  what = String(what || '').trim().slice(0, 200);
+  why = String(why || '').trim().slice(0, 300);
+  if(!what) return { ok: false, msg: 'Write what it is first.' };
+  var cur = asArray(g.ways);
+  var at = cur.map(function(x){ return String(x).toLowerCase(); }).indexOf(what.toLowerCase());
+  if(!g.wayWhys || typeof g.wayWhys !== 'object' || Array.isArray(g.wayWhys)) g.wayWhys = {};
+  if(at >= 0){
+    if(why && !g.wayWhys[cur[at]]) g.wayWhys[cur[at]] = why;
+    persist();
+    return { ok: true, dup: true };
+  }
+  if(cur.length >= AREA_WAYS_CAP) return { ok: false, msg: areaLabel(akey) + ' already has ' + cur.length + ' parked ways. Clear one in Plan first, or pick another goal.' };
+  cur.push(what); g.ways = cur;
+  if(why) g.wayWhys[what] = why;
+  persist();
+  return { ok: true };
+}
+function capFlash(text){
+  var el = document.getElementById('cap-ok');
+  if(!el) return;
+  el.textContent = text; el.style.display = 'inline';
+  setTimeout(function(){ el.style.display = 'none'; }, 2500);
+}
+function capClear(){
+  var a = document.getElementById('cap-what'), b = document.getElementById('cap-why');
+  if(a) a.value = '';
+  if(b) b.value = '';
+}
+function addToInbox(what, why, type){
+  D.ideas = normalizeIdeas(D.ideas);
+  what = String(what || '').trim().slice(0, 200);
+  if(!what) return false;
+  D.ideas.push({ what: what, why: String(why || '').trim().slice(0, 300), type: type === 'todo' ? 'todo' : 'idea', at: new Date().toISOString() });
   persist(); renderIdeas();
-  var el=document.getElementById('cap-ok');
-  el.style.display='inline';
-  setTimeout(function(){ el.style.display='none'; },2000);
+  return true;
 }
-
-function delIdea(i){ D.ideas.splice(i,1); persist(); renderIdeas(); }
+function capSave(type){
+  var what = ((document.getElementById('cap-what') || {}).value || '').trim();
+  var why = ((document.getElementById('cap-why') || {}).value || '').trim();
+  if(!what) return;
+  if(type === 'idea'){
+    CAP.pending = { what: what, why: why }; CAP.msg = ''; CAP.moveIdx = null;
+    renderIdeas();
+    return;
+  }
+  addToInbox(what, why, 'todo');
+  CAP.pending = null;
+  capClear();
+  capFlash('To do captured.');
+}
+function capPick(akey){
+  var p = CAP.pending;
+  if(!p) return;
+  if(akey === 'unsure'){
+    addToInbox(p.what, p.why, 'idea');
+    CAP.pending = null; CAP.msg = ''; capClear(); capFlash('Idea captured.');
+    return;
+  }
+  var r = parkWay(akey, p.what, p.why);
+  if(!r.ok){ CAP.msg = r.msg; renderIdeas(); return; }
+  CAP.pending = null; CAP.msg = ''; capClear();
+  renderIdeas(); renderSetupGoals();
+  capFlash('Parked under ' + areaLabel(akey) + '.');
+}
+function capCancelPick(){ CAP.pending = null; CAP.msg = ''; renderIdeas(); }
+function capMoveStart(i){ CAP.moveIdx = (CAP.moveIdx === i) ? null : i; CAP.msg = ''; CAP.pending = null; renderIdeas(); }
+function capMove(i, akey){
+  D.ideas = normalizeIdeas(D.ideas);
+  var x = D.ideas[i];
+  if(!x) return;
+  var r = parkWay(akey, x.what, x.why);
+  if(!r.ok){ CAP.msg = r.msg; renderIdeas(); return; }
+  D.ideas.splice(i, 1);
+  CAP.moveIdx = null; CAP.msg = '';
+  persist(); renderIdeas(); renderSetupGoals();
+  capFlash('Parked under ' + areaLabel(akey) + '.');
+}
+function capDone(i){ D.ideas = normalizeIdeas(D.ideas); D.ideas.splice(i, 1); persist(); renderIdeas(); }
+function delIdea(i){ D.ideas = normalizeIdeas(D.ideas); D.ideas.splice(i, 1); persist(); renderIdeas(); }
+function toggleShowAll(){ CAP.showAll = !CAP.showAll; renderIdeas(); }
+function ideaAgeDays(x){
+  if(!x || !x.at) return 0;
+  var t = Date.parse(x.at);
+  return isNaN(t) ? 0 : Math.floor((Date.now() - t) / 86400000);
+}
+function toggleConvert(i){
+  var f = document.getElementById('cf-' + i);
+  if(f) f.style.display = f.style.display === 'block' ? 'none' : 'block';
+}
+function convertToProj(i){
+  D.ideas = normalizeIdeas(D.ideas);
+  var idea = D.ideas[i];
+  if(!idea) return;
+  var sel = document.getElementById('cf-area-' + i);
+  var akey = sel ? sel.value : 'business';
+  if(!D.goals[akey]) akey = 'business';
+  if(!D.goals[akey].projects) D.goals[akey].projects = [];
+  D.goals[akey].projects.push({ name: idea.what, done: '', why: idea.why || '', steps: [], archived: false, todayDone: false });
+  var pi = D.goals[akey].projects.length - 1;
+  D.ideas.splice(i, 1);
+  persist(); renderIdeas(); renderSetupGoals(); renderToday();
+  openPlanIt({ akey: akey, pi: pi, mode: 'replan' });
+}
+function renderIdeas(){
+  D.ideas = normalizeIdeas(D.ideas);
+  var pickEl = document.getElementById('cap-pick');
+  if(pickEl){
+    if(CAP.pending){
+      var h = '<div class="cap-pick"><div class="lbl">Which goal does it help?</div><div class="pi-chips">';
+      AREAS.forEach(function(a){ h += '<button class="pi-chip" data-ak="' + a.key + '" onclick="capPick(this.dataset.ak)">' + esc(areaLabel(a.key)) + '</button>'; });
+      h += '<button class="pi-chip" data-ak="unsure" onclick="capPick(this.dataset.ak)">Not sure</button></div>';
+      if(CAP.msg) h += '<div class="cap-msg">' + esc(CAP.msg) + '</div>';
+      h += '<button class="pi-stuck" onclick="capCancelPick()">Cancel</button></div>';
+      pickEl.innerHTML = h;
+    } else pickEl.innerHTML = '';
+  }
+  var el = document.getElementById('idea-list');
+  if(!el) return;
+  var n = D.ideas.length;
+  if(!n){ el.innerHTML = '<div class="empty">Nothing captured yet.</div>'; return; }
+  var items = D.ideas.map(function(x, i){ return { x: x, i: i }; }).sort(function(a, b){ return (b.x.at || '').localeCompare(a.x.at || '') || (b.i - a.i); });
+  var shown = CAP.showAll ? items : items.slice(0, INBOX_SHOW);
+  var html = '';
+  shown.forEach(function(it){
+    var x = it.x, i = it.i, isTodo = x.type === 'todo';
+    var stale = ideaAgeDays(x) > IDEA_STALE_DAYS;
+    html += '<div class="idea-row"><div class="idea-main"><div class="idea-text"><span class="idea-tag ' + (isTodo ? 'todo' : 'idea') + '">' + (isTodo ? 'To do' : 'Idea') + '</span>' + esc(x.what) + '</div>'
+      + (x.why ? '<div class="idea-why">Why: ' + esc(x.why) + '</div>' : '')
+      + (stale ? '<div class="idea-stale">Added over ' + IDEA_STALE_DAYS + ' days ago. Still want this?</div>' : '')
+      + '</div><div class="idea-btns">';
+    if(isTodo){
+      html += '<button class="btn sm accent" onclick="capDone(' + i + ')"><i class="ti ti-check"></i> Done</button>';
+    } else {
+      html += '<button class="btn sm accent" onclick="capMoveStart(' + i + ')">Park under goal</button>';
+      html += '<button class="btn sm" onclick="toggleConvert(' + i + ')"><i class="ti ti-folder-plus"></i> To project</button>';
+    }
+    html += '<button class="btn sm danger" aria-label="Delete" onclick="delIdea(' + i + ')">&times;</button></div></div>';
+    if(CAP.moveIdx === i){
+      html += '<div class="cap-pick"><div class="lbl">Which goal does it help?</div><div class="pi-chips">';
+      AREAS.forEach(function(a){ html += '<button class="pi-chip" data-i="' + i + '" data-ak="' + a.key + '" onclick="capMove(parseInt(this.dataset.i),this.dataset.ak)">' + esc(areaLabel(a.key)) + '</button>'; });
+      html += '</div>' + (CAP.msg ? '<div class="cap-msg">' + esc(CAP.msg) + '</div>' : '') + '</div>';
+    }
+    if(!isTodo){
+      html += '<div class="convert-form" id="cf-' + i + '"><div class="lbl">Add to area</div><select id="cf-area-' + i + '" style="margin-bottom:8px">';
+      AREAS.forEach(function(a){ html += '<option value="' + a.key + '">' + esc(areaLabel(a.key)) + '</option>'; });
+      html += '</select><div style="display:flex;gap:6px"><button class="btn sm primary" onclick="convertToProj(' + i + ')"><i class="ti ti-route"></i> Save and plan it</button><button class="btn sm" onclick="toggleConvert(' + i + ')">Cancel</button></div></div>';
+    }
+  });
+  if(n > INBOX_SHOW) html += '<button class="pi-stuck" style="margin-top:8px" onclick="toggleShowAll()">' + (CAP.showAll ? 'Show fewer' : 'Show all (' + n + ')') + '</button>';
+  el.innerHTML = html;
+}
 
 function copyUID(){
   var uid = getUserId();
@@ -2547,21 +2703,46 @@ function deleteWay(akey, pi, wi){
 // ---------- 3 to 6 month result from the coach ----------
 function addAreaWays(area, ways){
   if(!Array.isArray(ways)) return false;
-  var g = D.goals[area] || D.goals.business;
-  var cur = asArray(g.ways);
-  var low = cur.map(function(x){ return x.toLowerCase(); });
+  var akey = D.goals[area] ? area : 'business';
+  var full = false;
   ways.forEach(function(w){
-    w = String(w || '').trim().slice(0, 120);
-    if(w && low.indexOf(w.toLowerCase()) < 0){ cur.push(w); low.push(w.toLowerCase()); }
+    w = String(w || '').trim();
+    if(!w) return;
+    var r = parkWay(akey, w, '');
+    if(!r.ok) full = true;
   });
-  g.ways = cur.slice(-AREA_WAYS_CAP);
-  persist(); renderSetupGoals();
+  if(full) showSyncStatus(areaLabel(akey) + ' is full (' + AREA_WAYS_CAP + ' parked ways)');
+  renderSetupGoals();
   return true;
+}
+function toggleParkForm(akey){
+  window._parkOpen = window._parkOpen === akey ? null : akey;
+  window._parkDraft = null;
+  var f = document.getElementById('park-form-' + akey);
+  if(f) f.style.display = window._parkOpen === akey ? 'block' : 'none';
+  var w = document.getElementById('park-what-' + akey);
+  if(w && window._parkOpen === akey){ try{ w.focus(); }catch(e){} }
+}
+function parkFromForm(akey){
+  var what = ((document.getElementById('park-what-' + akey) || {}).value || '').trim();
+  var why = ((document.getElementById('park-why-' + akey) || {}).value || '').trim();
+  if(!what) return;
+  var r = parkWay(akey, what, why);
+  if(!r.ok){
+    window._parkDraft = { ak: akey, what: what, why: why, msg: r.msg };
+    window._parkOpen = akey; window._areaWaysOpen = akey;
+    renderSetupGoals();
+    return;
+  }
+  window._parkDraft = null; window._parkOpen = null; window._areaWaysOpen = akey;
+  renderSetupGoals();
+  showSyncStatus('Parked under ' + areaLabel(akey));
 }
 function deleteAreaWay(akey, wi){
   var g = D.goals[akey];
   if(!g || !g.ways) return;
-  g.ways.splice(wi, 1);
+  var gone = g.ways.splice(wi, 1)[0];
+  if(g.wayWhys && gone !== undefined) delete g.wayWhys[gone];
   window._areaWaysOpen = akey;
   persist(); renderSetupGoals();
 }
@@ -2631,8 +2812,21 @@ function runSaveCommand(cmd, rest){
     var vision = stripOuterBraces(rest);
     if(vision){ D.vision = vision; persist(); var vi = document.getElementById('vision-in'); if(vi) vi.value = vision; showSyncStatus('Vision saved'); }
   } else if(cmd === 'SAVE_IDEA'){
-    var idea = stripOuterBraces(rest);
-    if(idea){ if(!D.ideas) D.ideas = []; D.ideas.push(idea); persist(); renderIdeas(); showSyncStatus('Idea captured'); }
+    var idf = /^\s*\{/.test(rest) ? parseCoachFields(rest) : null;
+    var iwhat = String(idf ? (idf.text || idf.what || '') : stripOuterBraces(rest)).trim();
+    if(iwhat){
+      var iwhy = idf && idf.why ? String(idf.why).trim() : '';
+      var itype = idf && String(idf.type || '').toLowerCase() === 'todo' ? 'todo' : 'idea';
+      var iarea = idf && idf.area ? String(idf.area).toLowerCase() : '';
+      if(itype === 'idea' && D.goals[iarea]){
+        var pr = parkWay(iarea, iwhat, iwhy);
+        if(pr.ok){ renderSetupGoals(); showSyncStatus('Idea parked under ' + areaLabel(iarea)); }
+        else { addToInbox(iwhat, iwhy, 'idea'); showSyncStatus('That goal is full, so it is in your inbox'); }
+      } else {
+        addToInbox(iwhat, iwhy, itype);
+        showSyncStatus(itype === 'todo' ? 'To do captured' : 'Idea captured');
+      }
+    }
   } else if(cmd === 'SAVE_WIN'){
     var winData = parseCoachFields(rest);
     if(winData.title){ addCelebration(winData.title, winData.note || '', winData.category || 'other'); showSyncStatus('Celebration saved'); }
@@ -2672,11 +2866,13 @@ function addMsg(role, text){
 function ctx(){
   var v = D.vision ? 'Vision: ' + D.vision : '';
   var parts = [v];
+  var inbox = normalizeIdeas(D.ideas);
+  if(inbox.length) parts.push('Capture inbox (' + inbox.length + ' items, newest last): ' + inbox.slice(-10).map(function(x){ return (x.type === 'todo' ? 'to do: ' : 'idea: ') + x.what + (x.why ? ' (why: ' + x.why + ')' : ''); }).join('; '));
   AREAS.forEach(function(a){
     var g = D.goals[a.key];
     if(g.goal) parts.push((g.label || a.label) + ' 3 to 6 month goal: ' + g.goal);
     if(g.why) parts.push((g.label || a.label) + ' why the goal matters: ' + g.why);
-    if(g.ways && g.ways.length) parts.push((g.label || a.label) + ' other ways to get there: ' + g.ways.join(', '));
+    if(g.ways && g.ways.length) parts.push((g.label || a.label) + ' other ways to get there: ' + g.ways.map(function(w){ return w + (g.wayWhys && g.wayWhys[w] ? ' (why: ' + g.wayWhys[w] + ')' : ''); }).join(', '));
     var active = (g.projects || []).filter(function(p){ return !p.archived; });
     if(active.length){
       parts.push((g.label || a.label) + ' projects: ' + active.map(function(p, pi){
